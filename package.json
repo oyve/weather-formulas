@@ -1,0 +1,24 @@
+{
+  "name": "weather-temperature",
+  "version": "1.0.0",
+  "description": "Temperature calculations library",
+  "main": "temperature.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oyve/weather-temperature.git"
+  },
+  "keywords": [
+    "weather",
+    "temperature",
+    "calculations"
+  ],
+  "author": "github.com/oyve",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oyve/weather-temperature/issues"
+  },
+  "homepage": "https://github.com/oyve/weather-temperature#readme"
+}
