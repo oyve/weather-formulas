@@ -1,3 +1,4 @@
+![Node.js CI](https://github.com/oyve/weather-formulas/workflows/Node.js%20CI/badge.svg?branch=main)
 # weather-formulas
 A library of weather calculations
 
