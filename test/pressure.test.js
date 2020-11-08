@@ -1,46 +1,195 @@
-const sun = require('../sun');
+const pressure = require('../pressure');
 const assert = require('assert');
+const { clear } = require('console');
 
-const year = 2020; month = 11;  day = 5;
-const lat = 15.870039; lng = -61.586608;
+describe("Pressure - Unit Tests", function () {
+    // afterEach(function(done) {
+    //     pressure.clear();
+    //  });
 
-describe("Sun - Integration Tests", function () {
-    describe("Sunrise", function () {
-        it("it should equal", function () {
+    describe("Add pressure", function () {
+        it("it should not throw exceptions", function () {
             //arrange
-            const expected = new Date(Date.UTC(year, month, day, 6, 4, 56));
-            //const expected = new Date(year, month, day, 6, 4, 56);
             //act
-            const solarEvents = sun.calculate(year, month, day, lat, lng, -4);
-            const actual = solarEvents.sunrise;
+            pressure.addPressure(new Date().getTime(), 1015);
+
             //assert
-            assert.strictEqual(actual.toISOString(), expected.toISOString());
+            assert.ok(true, "My function does not crash");
+            pressure.clear();
         });
     });
+});
 
-    describe("Sunset", function () {
-        it("it should equal", function () {
+
+
+describe("Pressure - Integration Tests", function () {
+    // afterEach(function(done) {
+    //     pressure.clear();
+    //  });
+
+    describe("Get Trend", function () {
+        it("it should be null", function () {
             //arrange
-            const expected = new Date(Date.UTC(year, month, day, 17, 34, 53));
-            //const expected = new Date(year, month, day, 17, 34, 53);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015);
+            const expected = null;
+
             //act
-            const solarEvents = sun.calculate(year, month, day, lat, lng, -4);
-            const actual = solarEvents.sunset;
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
             //assert
-            assert.strictEqual(actual.toISOString(), expected.toISOString());
+            assert.strictEqual(actual, expected);
+            pressure.clear();
         });
-    });
 
-    describe("Solar Noon", function () {
-        it("it should equal", function () {
+        it("it should be RISING.STEADY", function () {
             //arrange
-            const expected = new Date(Date.UTC(year, month, day, 11, 49, 54));
-            //const expected = new Date(year, month, day, 11, 49, 54);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015 + 9);
+            const expected = "RISING.STEADY";
+
             //act
-            const solarEvents = sun.calculate(year, month, day, lat, lng, -4);
-            const actual = solarEvents.solarnoon;
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
             //assert
-            assert.strictEqual(actual.toISOString(), expected.toISOString());
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
+        });
+        
+        it("it should be RISING.SLOWLY", function () {
+            //arrange
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015 + 15);
+            const expected = "RISING.SLOWLY";
+
+            //act
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
+            //assert
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
+        });
+
+        it("it should be RISING.CHANGING", function () {
+            //arrange
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015 + 16);
+            const expected = "RISING.CHANGING";
+
+            //act
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
+            //assert
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
+        });
+
+        it("it should be RISING.QUICKLY", function () {
+            //arrange
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015 + 36);
+            const expected = "RISING.QUICKLY";
+
+            //act
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
+            //assert
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
+        });
+
+        it("it should be RISING.RAPIDLY", function () {
+            //arrange
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015 + 60);
+            const expected = "RISING.RAPIDLY";
+
+            //act
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
+            //assert
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
+        });
+
+        it("it should be FALLING.STEADY", function () {
+            //arrange
+            
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015 + 9);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015);
+            const expected = "FALLING.STEADY";
+
+            //act
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
+            //assert
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
+        });
+
+        it("it should be FALLING.SLOWLY", function () {
+            //arrange
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015 + 15);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015);
+            const expected = "FALLING.SLOWLY";
+
+            //act
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
+            //assert
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
+        });
+
+        it("it should be FALLING.CHANGING", function () {
+            //arrange
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015 + 16);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015);
+            const expected = "FALLING.CHANGING";
+
+            //act
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
+            //assert
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
+        });
+
+        it("it should be FALLING.QUICKLY", function () {
+            //arrange
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015 + 36);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015);
+            const expected = "FALLING.QUICKLY";
+
+            //act
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
+            //assert
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
+        });
+
+        it("it should be FALLING.RAPIDLY", function () {
+            //arrange
+            pressure.addPressure(new Date(2020, 11, 5, 12, 0, 0).getTime(), 1015 + 60);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 10, 0).getTime(), 1016);
+            pressure.addPressure(new Date(2020, 11, 5, 12, 20, 0).getTime(), 1015);
+            const expected = "FALLING.RAPIDLY";
+
+            //act
+            var actual = pressure.getTrend(new Date(2020, 11, 5, 12, 0, 0).getTime());
+
+            //assert
+            assert.strictEqual(actual.key, expected);
+            pressure.clear();
         });
     });
 });
