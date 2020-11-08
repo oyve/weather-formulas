@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/oyve/weather-temperature/issues"
   },
-  "homepage": "https://github.com/oyve/weather-temperature#readme"
+  "homepage": "https://github.com/oyve/weather-temperature#readme",
+  "devDependencies": {
+    "mocha": "^8.2.1"
+  }
 }
