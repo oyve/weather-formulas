@@ -1,5 +1,5 @@
 {
-  "name": "weather-temperature",
+  "name": "weather-formulas",
   "version": "1.0.0",
   "description": "Temperature calculations library",
   "main": "temperature.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oyve/weather-temperature.git"
+    "url": "git+https://github.com/oyve/weather-formulas.git"
   },
   "keywords": [
     "weather",
@@ -21,9 +21,9 @@
   "author": "github.com/oyve",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/oyve/weather-temperature/issues"
+    "url": "https://github.com/oyve/weather-formulas/issues"
   },
-  "homepage": "https://github.com/oyve/weather-temperature#readme",
+  "homepage": "https://github.com/oyve/weather-formulas#readme",
   "devDependencies": {
     "mocha": "^8.2.1"
   }
