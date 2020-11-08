@@ -1,6 +1,4 @@
 'use strict'
-const utils = require('./utils');
-
 // barometer trend is implemented based on discussion related
 // https://www.jollyparrot.co.uk/blog/how-to-use-barometer-when-sailing
 
@@ -57,8 +55,15 @@ function addPressure(utc, pressureSI) {
 
 const THREE_HOURS = 3 * 60;
 function removeOldPressures(threshold) {
-    var threshold = utils.MinutesFromNow(-THREE_HOURS);
+    var threshold = minutesFromNow(-THREE_HOURS);
     pressures = pressures.filter((p) => p.utc >= threshold);
+}
+
+function minutesFromNow(minutes) {
+    var now = new Date();
+    now.setMinutes(now.getMinutes() + minutes);
+    now = new Date(now);
+    return now;
 }
 
 function ascendingNumbers(a, b) {
