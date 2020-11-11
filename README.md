@@ -6,6 +6,7 @@ A library of weather calculations.
 * I/O in SI units (International System of Units)
 * Formulas and algorithms off Wikipedia with 1:1 variable naming
 * All algorithms are automatically tested
+* Use provided or custom valuation sets
 
 ## Features / Currently supported
 - [Dew Point](https://en.wikipedia.org/wiki/Dew_point)
@@ -35,6 +36,18 @@ let heatIndexText = WF.heatIndexText(heatIndex); //output heat index threshold a
 let humidex = WF.humidex(TEMPERATURE, HUMIDITY);
 let humidexText = WF.humidexText(humidex); //output humidex threshold and warning text
 
+```
+
+**Advanced examples**
+Use a provided valuation set
+```
+const valuationSet =  temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+const actual = temperature.dewPointMagnusFormula(300, 40, valuationSet);
+```
+Use a custom valuation set
+```
+const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 }; //these values are made up for the sake of example
+const actual = temperature.dewPointMagnusFormula(300, valuationSet);
 ```
 
 ## Contribute
