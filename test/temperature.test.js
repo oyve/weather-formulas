@@ -26,7 +26,7 @@ describe("Temperature Unit Tests", function () {
         });
     });
 
-    describe("Wind chill index", function () {
+    describe("Wind Chill Index", function () {
         it("it should equal", function () {
             //arrange
             const expected = 265.50;
@@ -59,6 +59,18 @@ describe("Temperature Unit Tests", function () {
         });
     });
 
+    describe("Heat Index Text", function () {
+        it("it should equal", function () {
+            //arrange
+            const expected = 33;
+            //act
+            const heatIndex = temperature.heatIndex(31 + KELVIN, 60);
+            const actual = temperature.heatIndexText(heatIndex);
+            //assert           
+            assert.strictEqual(actual.lowerLimit, expected);
+        });
+    });
+
     describe("Humidex", function () {
         it("it should equal", function () {
             //arrange
@@ -67,6 +79,18 @@ describe("Temperature Unit Tests", function () {
             const actual = temperature.humidex(31 + KELVIN, 60);
             //assert
             assert.strictEqual(actual, expected);
+        });
+    });
+
+    describe("Humidex Text", function () {
+        it("it should equal", function () {
+            //arrange
+            const expected = 40;
+            //act
+            const humidex = temperature.humidex(31 + KELVIN, 60);
+            const actual = temperature.humidexText(humidex);
+            //assert
+            assert.strictEqual(actual.lowerLimit, expected);
         });
     });
 });
