@@ -1,6 +1,6 @@
 {
   "name": "weather-formulas",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Temperature calculations library",
   "main": "temperature.js",
   "directories": {
@@ -15,8 +15,14 @@
   },
   "keywords": [
     "weather",
+    "calculations",
+    "calculation",
     "temperature",
-    "calculations"
+    "dew point",
+    "wind chill",
+    "australian apparent temperature",
+    "heat index",
+    "humidex"
   ],
   "author": "github.com/oyve",
   "license": "ISC",
