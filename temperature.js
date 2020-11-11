@@ -1,16 +1,4 @@
 'use strict'
-
-//This code uses formulas and valuations derived from several Wikipedia articles:
-//
-//https://en.wikipedia.org/wiki/Dew_point
-//https://en.wikipedia.org/wiki/Wind_chill#North_American_and_United_Kingdom_wind_chill_index
-//https://en.wikipedia.org/wiki/Wind_chill#Australian_apparent_temperature
-//https://en.wikipedia.org/wiki/Heat_index
-//https://en.wikipedia.org/wiki/Humidex
-//
-//most variable names have been kept from the Wikipedia article to ease the reading.
-
-
 const KELVIN = 273.15;
 
 const DEW_POINT_VALUATIONS = {
@@ -22,22 +10,32 @@ const DEW_POINT_VALUATIONS = {
     ARDENBUCK_MINUS: { a: 6.1121, b: 17.966, c: 247.15, d: 234.5 } //for −40 °C ≤ T ≤ 0 °C (error ≤ 0.06%).
 };
 
-
-function dewPointValuationsByTemperature(temperatureC) {
-    if (temperatureC < 0) {
+/**
+ * Gets the Dew Point Valuation by temperature
+ * @param {number} temperature Temperature in CELCIUS
+ * @returns {Array<object>} Dew Point Valuation
+ */
+function dewPointValuationsByTemperature(temperature) {
+    if (temperature < 0) {
         return DEW_POINT_VALUATIONS.ARDENBUCK_MINUS;
-    } else if (temperatureC >= 0 && temperatureC <= 50) {
+    } else if (temperature >= 0 && temperature <= 50) {
         return DEW_POINT_VALUATIONS.ARDENBUCK_PLUS;
-    } else if (temperatureC > 50) {
+    } else if (temperature > 50) {
         return DEW_POINT_VALUATIONS.PAROSCIENTIFIC;
     } else {
         return DEW_POINT_VALUATIONS.ARDENBUCK_DEFAULT;
     }
 }
 
-function dewPointMagnusFormula(temperatureSI, humiditySI) {
-    let T = kelvinToCelcius(temperatureSI);
-    let RH = humiditySI;
+/**
+ * 
+ * @param {number} temperature Temperature in K (Kelvin)
+ * @param {number} humidity Humidity in RH (Relative Humidity)
+ * @returns {number} Dew Point in Kelvin
+ */
+function dewPointMagnusFormula(temperature, humidity) {
+    let T = kelvinToCelcius(temperature);
+    let RH = humidity;
     let constants = dewPointValuationsByTemperature(T);
 
     let gammaT_RH = Math.log(RH / 100) + ((constants.b * T) / (constants.c + T));
@@ -46,9 +44,15 @@ function dewPointMagnusFormula(temperatureSI, humiditySI) {
     return celciusToKelvin(Tdp);
 }
 
-function dewPointArdenBuckEquation(temperatureSI, humiditySI) {
-    let T = kelvinToCelcius(temperatureSI);
-    let RH = humiditySI;
+/**
+ * 
+ * @param {number} temperature Temperature in K (Kelvin)
+ * @param {number} humidity Humidity in RH (Relative Humidity)
+ * @returns {number} Dew Point in Kelvin
+ */
+function dewPointArdenBuckEquation(temperature, humidity) {
+    let T = kelvinToCelcius(temperature);
+    let RH = humidity;
     let constants = dewPointValuationsByTemperature(T);
 
     let gamma_T_RH = Math.log((RH / 100) * Math.exp((constants.b - (T / constants.d)) * (T / (constants.c + T))));
@@ -57,30 +61,49 @@ function dewPointArdenBuckEquation(temperatureSI, humiditySI) {
     return celciusToKelvin(Tdp);
 }
 
-function windChillIndex(temperatureSI, windSpeedSI) {
-    let v = meterPerSecondToKilometerPerHour(windSpeedSI);
-    let Ta = kelvinToCelcius(temperatureSI);
+/**
+ * 
+ * @param {number} temperature Temperature in K (Kelvin)
+ * @param {number} windSpeed Windspeed in M/S (meter per second)
+ * @returns {number} Wind Chill Index in Kelvin
+ */
+function windChillIndex(temperature, windSpeed) {
+    let v = meterPerSecondToKilometerPerHour(windSpeed);
+    let Ta = kelvinToCelcius(temperature);
     let v_exp = (v ** 0.16);
 
     let Twc = 13.12 + (0.6215 * Ta) - (11.37 * v_exp) + (0.3965 * Ta * v_exp);
     return celciusToKelvin(Twc);
 }
 
-function australianAapparentTemperature(temperatureSI, humiditySI, windSpeedSI) {
-    let Ta = kelvinToCelcius(temperatureSI);
-    let v = windSpeedSI;
+/**
+ * 
+ * @param {number} temperature Temperature in K (Kelvin)
+ * @param {number} humidity Humidity in RH (Relative Humidity)
+ * @param {number} windSpeed Windspeed in M/S (meter per second)
+ * @returns {number} Apparent Temperature in Kelvin
+ */
+function australianAapparentTemperature(temperature, humidity, windspeed) {
+    let Ta = kelvinToCelcius(temperature);
+    let v = windspeed;
 
-    let e = (humiditySI / 100) * 6.015 * Math.exp((17.27 * Ta) / (237.7 + Ta));
+    let e = (humidity / 100) * 6.015 * Math.exp((17.27 * Ta) / (237.7 + Ta));
     let AT = Ta + (0.33 * e) - (0.7 * v) - 4.00;
 
     return celciusToKelvin(AT);
 }
 
-function heatIndex(temperatureSI, humiditySI) {
-    if (humiditySI > 100 || humiditySI < 0) return null;
+/**
+ * 
+ * @param {number} temperature Temperature in K (Kelvin)
+ * @param {number} humidity Humidity in RH (Relative Humidity)
+ * @returns {number} Heat Index in Kelvin
+ */
+function heatIndex(temperature, humidity) {
+    if (humidity > 100 || humidity < 0) return null;
 
-    let T = kelvinToCelcius(temperatureSI);
-    let R = humiditySI;
+    let T = kelvinToCelcius(temperature);
+    let R = humidity;
 
     let c1 = -8.78469475556;
     let c2 = 1.61139411;
@@ -100,7 +123,12 @@ function heatIndex(temperatureSI, humiditySI) {
     return celciusToKelvin(HI);
 }
 
-function heatIndexText(heatIndexTemperatureSI) {
+/**
+ * 
+ * @param {number} heatIndexTemperature Temperature in K (Kelvin)
+ * @returns {string} Heat Index Warning
+ */
+function heatIndexText(heatIndexTemperature) {
     let thresholds = [
         { lowerLimit: 52, text: "Extreme danger", warning: "Heat stroke is imminent." },
         { lowerLimit: 40, text: "Danger", warning: "Heat cramps and heat exhaustion are likely; heat stroke is probable with continued activity." },
@@ -108,16 +136,20 @@ function heatIndexText(heatIndexTemperatureSI) {
         { lowerLimit: 26, text: "Caution", warning: "Fatigue is possible with prolonged exposure and activity. Continuing activity could result in heat cramps." }
     ];
 
-    let result = thresholds.find((t) => {
-        return heatIndexTemperatureSI >= (t.lowerLimit + KELVIN);
-    });
+    let result = thresholds.find((t) => heatIndexTemperature >= (t.lowerLimit + KELVIN));
 
     return result == null ? "No warning" : result;
 }
 
-function humidex(temperatureSI, humiditySI) {
-    let Tair = kelvinToCelcius(temperatureSI);
-    let Tdew = dewPointMagnusFormula(temperatureSI, humiditySI);
+/**
+ * Gets the Humidex temperature
+ * @param {number} temperature Temperature in K (Kelvin)
+ * @param {number} humidity Humidity in RH (Relative Humidity)
+ * @returns {number} Humidex in Kelvin
+ */
+function humidex(temperature, humidity) {
+    let Tair = kelvinToCelcius(temperature);
+    let Tdew = dewPointMagnusFormula(temperature, humidity);
 
     let e = 6.11 * Math.exp(5417.7530 * ((1 / 273.16) - (1 / Tdew)));
     let h = (0.5555) * (e - 10.0);
@@ -126,43 +158,70 @@ function humidex(temperatureSI, humiditySI) {
     return celciusToKelvin(humidex);
 }
 
-function humidexText(humidexSI) {
+/**
+ * Gets the Humidex test warning
+ * @param {number} humidex Temperature in K (Kelvin)
+ * @returns {string} Humidex Warning
+ */
+function humidexText(humidex) {
     let thresholds = [
         { lowerLimit: 46, text: "Dangerous" },
         { lowerLimit: 40, text: "Great discomfort" },
         { lowerLimit: 30, text: "Some discomfort" }
     ];
 
-    let result = thresholds.find((t) => {
-        return humidexSI >= (t.lowerLimit + KELVIN);
-    });
+    let result = thresholds.find((t) => humidex >= (t.lowerLimit + KELVIN));
 
     return result == null ? "No warning" : result;
 }
 
-function kelvinToCelcius(temperatureSI) {
-    return temperatureSI - KELVIN;
+/**
+ * Convert Kelvin to Celcius
+ * @param {number} temperature Temperature in K (Kelvin)
+ * @returns {number} Celcius
+ */
+function kelvinToCelcius(temperature) {
+    return temperature - KELVIN;
 }
 
-function celciusToKelvin(temperatureC) {
-    return roundToTwoDecimals(temperatureC + KELVIN);
+/**
+ * Convert Celcius to Kelvin
+ * @param {number} temperature Temperature in C (Celcius)
+ * @returns {number} Kelvin
+ */
+function celciusToKelvin(temperature) {
+    return roundToTwoDecimals(temperature + KELVIN);
 }
 
+/**
+ * Round decimal number to two decimals
+ * @param {number} num Number
+ * @returns {number} num rounded to two decimals
+ */
 function roundToTwoDecimals(num) {
     return Math.round(num * 100) / 100;
 }
 
-function meterPerSecondToKilometerPerHour(meterPerSecond) {
-    return meterPerSecond * 3.6;
+/**
+ * Convert M/S to KM/H
+ * @param {number} mps Meter Per Second
+ * @returns {number} KM/H
+ */
+function meterPerSecondToKilometerPerHour(mps) {
+    return mps * 3.6;
 }
 
 module.exports = {
-    dewPointMagnusFormula: dewPointMagnusFormula,
-    dewPointArdenBuckEquation: dewPointArdenBuckEquation,
-    windChillIndex: windChillIndex,
-    australianAapparentTemperature: australianAapparentTemperature,
-    heatIndex: heatIndex,
-    heatIndexText: heatIndexText,
-    humidex: humidex,
-    humidexText: humidexText
+    dewPointMagnusFormula,
+    dewPointArdenBuckEquation,
+    windChillIndex,
+    australianAapparentTemperature,
+    heatIndex,
+    heatIndexText,
+    humidex,
+    humidexText,
+    roundToTwoDecimals,
+    kelvinToCelcius,
+    celciusToKelvin,
+    meterPerSecondToKilometerPerHour
 }
