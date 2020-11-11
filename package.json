@@ -32,5 +32,6 @@
   "homepage": "https://github.com/oyve/weather-formulas#readme",
   "devDependencies": {
     "mocha": "^8.2.1"
-  }
+  },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" }
 }
