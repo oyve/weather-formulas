@@ -13,14 +13,44 @@ describe("Temperature Unit Tests", function () {
             //assert
             assert.strictEqual(actual, expected);
         });
+
+        it("it should equal with defined valuation set", function () {
+            //arrange
+            const expected = 285.72;
+            const valuationSet = temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+            //act
+            const actual = temperature.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
+            //assert
+            assert.strictEqual(actual, expected);
+        });
+
+        it("it should equal with own custom defined valuation set", function () {
+            //arrange
+            const expected = 284.41;
+            const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 }; //these values are made up for the sake of testing
+            //act
+            const actual = temperature.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
+            //assert
+            assert.strictEqual(actual, expected);
+        });
     });
 
     describe("Ardenbuck formula", function () {
         it("it should equal", function () {
             //arrange
-            const actual = temperature.dewPointArdenBuckEquation(26.85 + KELVIN, 40);
-            //act
             const expected = 285.09;
+            //act
+            const actual = temperature.dewPointArdenBuckEquation(26.85 + KELVIN, 40);
+            //assert
+            assert.strictEqual(actual, expected);
+        });
+
+        it("it should equal", function () {
+            //arrange
+            const expected = 285.55;
+            const valuationSet = temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+            //act
+            const actual = temperature.dewPointArdenBuckEquation(26.85 + KELVIN, 40, valuationSet);
             //assert
             assert.strictEqual(actual, expected);
         });

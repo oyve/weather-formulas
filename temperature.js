@@ -27,16 +27,28 @@ function dewPointValuationsByTemperature(temperature) {
     }
 }
 
+function verifyValuationSet(valuationSet) {
+    if(valuationSet === null) throw "Not a valid Valuation Set";
+    if(!valuationSet.hasOwnProperty("a") && typeof(valuationSet.a !== 'number')) throw "'a' is not a constant or a number";
+    if(!valuationSet.hasOwnProperty("b") && typeof(valuationSet.a !== 'number')) throw "'b' is not a constant or a number";
+    if(!valuationSet.hasOwnProperty("c") && typeof(valuationSet.a !== 'number')) throw "'c' is not a constant or a number";
+    if(!valuationSet.hasOwnProperty("d") && typeof(valuationSet.a !== 'number')) throw "'d' is not a constant or a number";
+}
+
 /**
  * 
  * @param {number} temperature Temperature in K (Kelvin)
  * @param {number} humidity Humidity in RH (Relative Humidity)
+ * @param {object} valuationSet The valuation set to use in the calculation
  * @returns {number} Dew Point in Kelvin
  */
-function dewPointMagnusFormula(temperature, humidity) {
+function dewPointMagnusFormula(temperature, humidity, valuationSet = null) {
+    if(valuationSet !== null) verifyValuationSet(valuationSet);
+
     let T = kelvinToCelcius(temperature);
     let RH = humidity;
-    let constants = dewPointValuationsByTemperature(T);
+
+    let constants = valuationSet === null ? dewPointValuationsByTemperature(T) : valuationSet;
 
     let gammaT_RH = Math.log(RH / 100) + ((constants.b * T) / (constants.c + T));
     let Tdp = (constants.c * gammaT_RH) / (constants.b - gammaT_RH);
@@ -50,10 +62,13 @@ function dewPointMagnusFormula(temperature, humidity) {
  * @param {number} humidity Humidity in RH (Relative Humidity)
  * @returns {number} Dew Point in Kelvin
  */
-function dewPointArdenBuckEquation(temperature, humidity) {
+function dewPointArdenBuckEquation(temperature, humidity, valuationSet = null) {
+    if(valuationSet !== null) verifyValuationSet(valuationSet);
+    
     let T = kelvinToCelcius(temperature);
     let RH = humidity;
-    let constants = dewPointValuationsByTemperature(T);
+
+    let constants = valuationSet === null ? dewPointValuationsByTemperature(T) : valuationSet;
 
     let gamma_T_RH = Math.log((RH / 100) * Math.exp((constants.b - (T / constants.d)) * (T / (constants.c + T))));
     let Tdp = (constants.c * gamma_T_RH) / (constants.b - gamma_T_RH);
@@ -223,5 +238,6 @@ module.exports = {
     roundToTwoDecimals,
     kelvinToCelcius,
     celciusToKelvin,
-    meterPerSecondToKilometerPerHour
+    meterPerSecondToKilometerPerHour,
+    DEW_POINT_VALUATIONS
 }
