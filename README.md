@@ -39,15 +39,16 @@ let humidexText = WF.humidexText(humidex); //output humidex threshold and warnin
 ```
 
 **Advanced examples**
+
 Use a provided valuation set
 ```
 const valuationSet =  temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
-const actual = temperature.dewPointMagnusFormula(300, 40, valuationSet);
+const actual = temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 Use a custom valuation set
 ```
 const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 }; //these values are made up for the sake of example
-const actual = temperature.dewPointMagnusFormula(300, valuationSet);
+const actual = temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 
 ## Contribute
