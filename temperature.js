@@ -30,9 +30,9 @@ function dewPointValuationsByTemperature(temperature) {
 function verifyValuationSet(valuationSet) {
     if(valuationSet === null) throw "Not a valid Valuation Set";
     if(!valuationSet.hasOwnProperty("a") && typeof(valuationSet.a !== 'number')) throw "'a' is not a constant or a number";
-    if(!valuationSet.hasOwnProperty("b") && typeof(valuationSet.a !== 'number')) throw "'b' is not a constant or a number";
-    if(!valuationSet.hasOwnProperty("c") && typeof(valuationSet.a !== 'number')) throw "'c' is not a constant or a number";
-    if(!valuationSet.hasOwnProperty("d") && typeof(valuationSet.a !== 'number')) throw "'d' is not a constant or a number";
+    if(!valuationSet.hasOwnProperty("b") && typeof(valuationSet.b !== 'number')) throw "'b' is not a constant or a number";
+    if(!valuationSet.hasOwnProperty("c") && typeof(valuationSet.c !== 'number')) throw "'c' is not a constant or a number";
+    if(!valuationSet.hasOwnProperty("d") && typeof(valuationSet.d !== 'number')) throw "'d' is not a constant or a number";
 }
 
 /**
@@ -64,7 +64,7 @@ function dewPointMagnusFormula(temperature, humidity, valuationSet = null) {
  */
 function dewPointArdenBuckEquation(temperature, humidity, valuationSet = null) {
     if(valuationSet !== null) verifyValuationSet(valuationSet);
-    
+
     let T = kelvinToCelcius(temperature);
     let RH = humidity;
 
