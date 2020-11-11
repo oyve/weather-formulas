@@ -24,29 +24,17 @@ $ npm install weather-formulas
 const WF = require('weather-formulas');
 
 const TEMPERATURE = 300, HUMIDITY = 60, WINDSPEED = 10; //300 Kelvin, 60% Relative Humidity, 10 M/S
-```
 
-`let dewPointMF = WF.dewPointMagnusFormula(TEMPERATURE, HUMIDITY);`
-
-`let dewPointAF = WF.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY);`
-
-`let windChill = WF.windChillIndex(TEMPERATURE, WINDSPEED);`
-
-`let apparentTemperature = WF.australianAapparentTemperature(TEMPERATURE, HUMIDITY, WINDSPEED);`
-
-```
+let dewPointMF = WF.dewPointMagnusFormula(TEMPERATURE, HUMIDITY);
+let dewPointAF = WF.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY);
+let windChill = WF.windChillIndex(TEMPERATURE, WINDSPEED);
+let apparentTemperature = WF.australianAapparentTemperature(TEMPERATURE, HUMIDITY, WINDSPEED);
 let heatIndex = WF.heatIndex(TEMPERATURE, HUMIDITY);
 let heatIndexText = WF.heatIndexText(heatIndex); //output heat index threshold and warning text
-```
-```
+
 let humidex = WF.humidex(TEMPERATURE, HUMIDITY);
 let humidexText = WF.humidexText(humidex); //output humidex threshold and warning text
-```
-**Miscellaneous**
-```
-kelvinToCelcius(...)
-celciusToKelvin(...)
-meterPerSecondToKilometerPerHour(...)
+
 ```
 
 ## Contribute
