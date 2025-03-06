@@ -3,7 +3,7 @@ const assert = require('assert');
 
 const KELVIN = 273.15;
 
-describe("Temperature Unit Tests", function () {
+describe("Temperature Tests", function () {
     describe("Magnus formula", function () {
         it("it should equal", function () {
             //arrange
@@ -121,6 +121,26 @@ describe("Temperature Unit Tests", function () {
             const actual = temperature.humidexText(humidex);
             //assert
             assert.strictEqual(actual.lowerLimit, expected);
+        });
+    });
+
+    describe('Potential Temperature', function() {
+        it('should calculate potential temperature correctly', function() {
+            const kelvin = 293.15; // K
+            const pressure = 90000; // Pa
+            const expectedPotentialTemp = 302.11795811169407; // K
+            const result = temperature.potentialTemperature(kelvin, pressure);
+            assert.strictEqual(result, expectedPotentialTemp);
+        });
+    });
+
+    describe('Virtual Temperature', function() {
+        it('should calculate virtual temperature correctly', function() {
+            const kelvin = 293.15; // K
+            const mixingRatio = 14.84; // g/kg
+            const expectedVirtualTemp = 295.80371106; // K
+            const result = temperature.virtualTemperature(kelvin, mixingRatio);
+            assert.strictEqual(result, expectedVirtualTemp);
         });
     });
 });

@@ -60,6 +60,7 @@ function dewPointMagnusFormula(temperature, humidity, valuationSet = null) {
  * 
  * @param {number} temperature Temperature in K (Kelvin)
  * @param {number} humidity Humidity in RH (Relative Humidity)
+ * @param {object} valuationSet The valuation set to use in the calculation
  * @returns {number} Dew Point in Kelvin
  */
 function dewPointArdenBuckEquation(temperature, humidity, valuationSet = null) {
@@ -74,6 +75,27 @@ function dewPointArdenBuckEquation(temperature, humidity, valuationSet = null) {
     let Tdp = (constants.c * gamma_T_RH) / (constants.b - gamma_T_RH);
 
     return celciusToKelvin(Tdp);
+}
+
+/**
+ * Calculate Potential Temperature
+ * @param {number} temperature Temperature in K (Kelvin)
+ * @param {number} pressure Pressure in Pa (Pascal)
+ * @returns {number} Potential Temperature in K (Kelvin)
+ */
+function potentialTemperature(temperature, pressure) {
+    const standardPressure = 100000; // Standard pressure in Pa
+    return temperature * Math.pow(standardPressure / pressure, 0.286);
+}
+
+/**
+ * Calculate Virtual Temperature
+ * @param {number} temperature Temperature in K (Kelvin)
+ * @param {number} mixingRatio Mixing Ratio in g/kg (grams per kilogram)
+ * @returns {number} Virtual Temperature in K (Kelvin)
+ */
+function virtualTemperature(temperature, mixingRatio) {
+    return temperature * (1 + 0.61 * (mixingRatio / 1000));
 }
 
 /**
@@ -239,5 +261,7 @@ module.exports = {
     kelvinToCelcius,
     celciusToKelvin,
     meterPerSecondToKilometerPerHour,
+    potentialTemperature,
+    virtualTemperature,
     DEW_POINT_VALUATIONS
 }
