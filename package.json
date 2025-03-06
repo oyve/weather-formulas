@@ -1,6 +1,6 @@
 {
   "name": "weather-formulas",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Temperature calculations library",
   "main": "temperature.js",
   "directories": {
@@ -22,7 +22,16 @@
     "wind chill",
     "australian apparent temperature",
     "heat index",
-    "humidex"
+    "humidex",
+    "relative humidity",
+    "specific humidity",
+    "mixing ratio",
+    "vapor pressure",
+    "potential temperature",
+    "virtual temperature",
+    "pressure altitude",
+    "density altitude",
+    "saturation vapor pressure"
   ],
   "author": "github.com/oyve",
   "license": "ISC",
@@ -31,7 +40,9 @@
   },
   "homepage": "https://github.com/oyve/weather-formulas#readme",
   "devDependencies": {
-    "mocha": "^8.2.1"
+    "mocha": "^11.1.0"
   },
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" }
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
 }
