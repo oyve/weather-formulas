@@ -8,12 +8,27 @@ A library of weather calculations.
 * All algorithms are automatically tested
 * Use provided or custom valuation sets
 
-## Features / Currently supported
+## Features
+
+### Temperature
 - [Dew Point](https://en.wikipedia.org/wiki/Dew_point)
 - [Wind Chill](https://en.wikipedia.org/wiki/Wind_chill#North_American_and_United_Kingdom_wind_chill_index)
 - [(Australian) Apparent Temperature](https://en.wikipedia.org/wiki/Wind_chill#Australian_apparent_temperature)
 - [Heat Index](https://en.wikipedia.org/wiki/Heat_index)
 - [Humidex](https://en.wikipedia.org/wiki/Humidex)
+- [Potential Temperature](https://en.wikipedia.org/wiki/Potential_temperature)
+- [Virtual Temperature](https://en.wikipedia.org/wiki/Virtual_temperature)
+
+### Humidity
+- [Relative Humidity](https://en.wikipedia.org/wiki/Humidity)
+- [Specific Humidity](https://en.wikipedia.org/wiki/Humidity)
+- [Mixing Ratio](https://en.wikipedia.org/wiki/Humidity)
+- [Vapor Pressure](https://en.wikipedia.org/wiki/Vapor_pressure)
+- [Saturation Vapor Pressure](https://en.wikipedia.org/wiki/Vapour_pressure_of_water)
+
+### Pressure
+- [Pressure Altitude](https://en.wikipedia.org/wiki/Pressure_altitude)
+- [Density Altitude](https://en.wikipedia.org/wiki/Density_altitude)
 
 ## Install
 ```
