@@ -67,4 +67,4 @@ const actual = temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valu
 Please feel free to contribute by creating a Pull Request with test code.
 
 ## Disclaimer
-Always verify calculations before using in production.
+Always verify calculations before using in production as edge cases due to floating point errors may exists for large numbers, and that are not covered by tests today. Please report!
