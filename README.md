@@ -2,9 +2,8 @@
 # weather-formulas
 A library of atmospheric and weather related calculations.
 
-* All algorithms are automatically tested
-* Supports custom valuation sets where applied
-* All code tested
+* Test code for all code/algorithms
+* Supports custom valuation sets where needed
 
 ## Features
 
