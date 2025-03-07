@@ -1,12 +1,10 @@
 ![Node.js CI](https://github.com/oyve/weather-formulas/workflows/Node.js%20CI/badge.svg?branch=main)
 # weather-formulas
-A library of atmospheric calculations.
+A library of atmospheric and weather related calculations.
 
-* Agnostic to input source, hook it up in any project
-* I/O in SI units (International System of Units)
-* Formulas and algorithms off Wikipedia with 1:1 variable naming
 * All algorithms are automatically tested
-* Use provided or custom valuation sets
+* Supports custom valuation sets where applied
+* All code tested
 
 ## Features
 
@@ -68,3 +66,6 @@ const actual = temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valu
 
 ## Contribute
 Please feel free to contribute by creating a Pull Request with test code.
+
+## Disclaimer
+Always verify calculations before using in production.
