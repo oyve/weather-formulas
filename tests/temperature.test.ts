@@ -1,5 +1,4 @@
-const temperature = require('../temperature');
-const assert = require('assert');
+import temperature from '../src/temperature';
 
 const KELVIN = 273.15;
 
@@ -11,7 +10,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperature.dewPointMagnusFormula(26.85 + KELVIN, 40);
             //assert
-            assert.strictEqual(actual, expected);
+            expect(actual).toEqual(expected);
         });
 
         it("it should equal with defined valuation set", function () {
@@ -21,7 +20,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperature.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
             //assert
-            assert.strictEqual(actual, expected);
+            expect(actual).toEqual(expected);
         });
 
         it("it should equal with own custom defined valuation set", function () {
@@ -31,7 +30,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperature.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
             //assert
-            assert.strictEqual(actual, expected);
+            expect(actual).toEqual(expected);
         });
     });
 
@@ -42,7 +41,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperature.dewPointArdenBuckEquation(26.85 + KELVIN, 40);
             //assert
-            assert.strictEqual(actual, expected);
+            expect(actual).toEqual(expected);
         });
 
         it("it should equal", function () {
@@ -52,7 +51,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperature.dewPointArdenBuckEquation(26.85 + KELVIN, 40, valuationSet);
             //assert
-            assert.strictEqual(actual, expected);
+            expect(actual).toEqual(expected);
         });
     });
 
@@ -63,7 +62,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperature.windChillIndex(273.15, 12);
             //assert
-            assert.strictEqual(actual, expected);
+            expect(actual).toEqual(expected);
         });
     });
 
@@ -74,7 +73,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperature.australianAapparentTemperature(10 + KELVIN, 40, 10);
             //assert
-            assert.strictEqual(actual, expected);
+            expect(actual).toEqual(expected);
         });
     });
 
@@ -85,7 +84,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperature.heatIndex(31 + KELVIN, 60);
             //assert           
-            assert.strictEqual(actual, expected);
+            expect(actual).toEqual(expected);
         });
     });
 
@@ -97,7 +96,7 @@ describe("Temperature Tests", function () {
             const heatIndex = temperature.heatIndex(31 + KELVIN, 60);
             const actual = temperature.heatIndexText(heatIndex);
             //assert           
-            assert.strictEqual(actual.lowerLimit, expected);
+            expect(actual?.lowerLimit).toEqual(expected);
         });
     });
 
@@ -108,7 +107,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperature.humidex(31 + KELVIN, 60);
             //assert
-            assert.strictEqual(actual, expected);
+            expect(actual).toEqual(expected);
         });
     });
 
@@ -120,7 +119,7 @@ describe("Temperature Tests", function () {
             const humidex = temperature.humidex(31 + KELVIN, 60);
             const actual = temperature.humidexText(humidex);
             //assert
-            assert.strictEqual(actual.lowerLimit, expected);
+            expect(actual?.lowerLimit).toEqual(expected);
         });
     });
 
@@ -130,7 +129,7 @@ describe("Temperature Tests", function () {
             const pressure = 90000; // Pa
             const expectedPotentialTemp = 302.11795811169407; // K
             const result = temperature.potentialTemperature(kelvin, pressure);
-            assert.strictEqual(result, expectedPotentialTemp);
+            expect(result).toEqual(expectedPotentialTemp);
         });
     });
 
@@ -140,7 +139,7 @@ describe("Temperature Tests", function () {
             const mixingRatio = 14.84; // g/kg
             const expectedVirtualTemp = 295.80371106; // K
             const result = temperature.virtualTemperature(kelvin, mixingRatio);
-            assert.strictEqual(result, expectedVirtualTemp);
+            expect(result).toEqual(expectedVirtualTemp);
         });
     });
 });

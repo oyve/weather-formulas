@@ -2,12 +2,13 @@
   "name": "weather-formulas",
   "version": "1.0.3",
   "description": "A collection of atmospheric, meteorological weather calculations",
-  "main": "temperature.js",
+  "main": "index.ts",
   "directories": {
-    "test": "test"
+    "src": "src",
+    "test": "tests"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,9 @@
   },
   "homepage": "https://github.com/oyve/weather-formulas#readme",
   "devDependencies": {
-    "mocha": "^11.1.0"
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "typescript": "^5.8.2"
   }
 }
