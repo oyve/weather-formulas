@@ -108,10 +108,9 @@ function windChillIndex(temperature: number, windSpeed: number): number {
 }
 
 /**
- * 
  * @param {number} temperature Temperature in K (Kelvin)
  * @param {number} humidity Humidity in RH (Relative Humidity)
- * @param {number} windSpeed Windspeed in M/S (meter per second)
+ * @param {number} windspeed Windspeed in M/S (meter per second)
  * @returns {number} Apparent Temperature in Kelvin
  */
 function australianAapparentTemperature(temperature: number, humidity: number, windspeed: number): number {
