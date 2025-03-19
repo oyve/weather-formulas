@@ -1,4 +1,4 @@
-import humidity from '../src/humidity';
+import humidity from '../../src/formulas/humidity';
 
 describe("Humidity Tests", function () {
     describe('Relative Humidity', function() {

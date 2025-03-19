@@ -1,4 +1,4 @@
-import temperature from '../src/temperature';
+import temperature from '../../src/formulas/temperature';
 
 const KELVIN = 273.15;
 

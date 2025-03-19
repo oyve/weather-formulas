@@ -2,12 +2,22 @@
   "name": "weather-formulas",
   "version": "1.0.3",
   "description": "A collection of atmospheric, meteorological weather calculations",
-  "main": "index.ts",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
   "directories": {
     "src": "src",
     "test": "tests"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "src"
+  ],
   "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
     "test": "jest"
   },
   "repository": {
@@ -44,7 +54,6 @@
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "jest": "^29.7.0",
-    "ts-jest": "^29.2.6",
-    "typescript": "^5.8.2"
+    "ts-jest": "^29.2.6"
   }
 }

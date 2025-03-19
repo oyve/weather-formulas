@@ -34,19 +34,27 @@ $ npm install weather-formulas
 
 ## How to use
 ```
-const WF = require('weather-formulas');
+const wf = require('weather-formulas');
+//wf.temperature, wf.humidity, wf.pressure
+//or access directly:
+import { temperature, humidity, pressure } from 'weather-formulas'
 
 const TEMPERATURE = 300, HUMIDITY = 60, WINDSPEED = 10; //300 Kelvin, 60% Relative Humidity, 10 M/S
 
-let dewPointMF = WF.dewPointMagnusFormula(TEMPERATURE, HUMIDITY);
-let dewPointAF = WF.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY);
-let windChill = WF.windChillIndex(TEMPERATURE, WINDSPEED);
-let apparentTemperature = WF.australianAapparentTemperature(TEMPERATURE, HUMIDITY, WINDSPEED);
-let heatIndex = WF.heatIndex(TEMPERATURE, HUMIDITY);
-let heatIndexText = WF.heatIndexText(heatIndex); //output heat index threshold and warning text
+let dewPointMF = wf.temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY);
+let dewPointAF = wf.temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY);
 
-let humidex = WF.humidex(TEMPERATURE, HUMIDITY);
-let humidexText = WF.humidexText(humidex); //output humidex threshold and warning text
+//or use a custom valuation set:
+let dewPointMF = wf.temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, {a: 1, b:2, c:3, d:4});
+
+let windChill = wf.temperature.windChillIndex(TEMPERATURE, WINDSPEED);
+let apparentTemperature = wf.temperature.australianAapparentTemperature(TEMPERATURE, HUMIDITY, WINDSPEED);
+
+let heatIndex = wf.temperature.heatIndex(TEMPERATURE, HUMIDITY);
+let heatIndexText = wf.temperature.heatIndexText(heatIndex); //output heat index threshold and warning text
+
+let humidex = wf.temperature.humidex(TEMPERATURE, HUMIDITY);
+let humidexText = wf.temperature.humidexText(humidex); //output humidex threshold and warning text
 
 ```
 
@@ -54,13 +62,13 @@ let humidexText = WF.humidexText(humidex); //output humidex threshold and warnin
 
 Use a provided valuation set
 ```
-const valuationSet =  temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
-const actual = temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, valuationSet);
+const valuationSet =  wf.temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+const actual = wf.temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 Use a custom valuation set
 ```
 const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 }; //these values are made up for the sake of example
-const actual = temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
+const actual = wf.temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 
 ## Contribute

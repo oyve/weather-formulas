@@ -1,8 +1,8 @@
-import humidity from "./humidity";
-import temperature from "./temperature";
-import pressure from "./pressure";
+import humidity from "./formulas/humidity";
+import temperature from "./formulas/temperature";
+import pressure from "./formulas/pressure";
 
-export default {
+export {
     humidity,
     temperature,
     pressure

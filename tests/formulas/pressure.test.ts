@@ -1,4 +1,4 @@
-import pressure from "../src/pressure";
+import pressure from "../../src/formulas/pressure";
 
 
 describe('Pressure Tests', function() {

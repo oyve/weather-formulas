@@ -1,10 +1,10 @@
 const KELVIN = 273.15;
 
 export interface IValuationSet {
-    a: number,
-    b: number,
-    c: number,
-    d: number;
+    a: number, //millibar
+    b: number, //constant
+    c: number, //celcius degrees
+    d: number; //celcius degrees
 }
 
 const DEW_POINT_VALUATIONS = {
@@ -19,7 +19,7 @@ const DEW_POINT_VALUATIONS = {
 /**
  * Gets the Dew Point Valuation by temperature
  * @param {number} temperature Temperature in CELCIUS
- * @returns {Array<object>} Dew Point Valuation
+ * @returns {Array<IValuationSet>} Dew Point Valuation
  */
 function dewPointValuationsByTemperature(temperature: number): IValuationSet {
     if (temperature < 0) {
@@ -37,7 +37,7 @@ function dewPointValuationsByTemperature(temperature: number): IValuationSet {
  * 
  * @param {number} temperature Temperature in K (Kelvin)
  * @param {number} humidity Humidity in RH (Relative Humidity)
- * @param {object} valuationSet The valuation set to use in the calculation
+ * @param {IValuationSet} valuationSet The valuation set to use in the calculation
  * @returns {number} Dew Point in Kelvin
  */
 function dewPointMagnusFormula(temperature: number, humidity: number, valuationSet?: IValuationSet): number {
@@ -56,7 +56,7 @@ function dewPointMagnusFormula(temperature: number, humidity: number, valuationS
  * 
  * @param {number} temperature Temperature in K (Kelvin)
  * @param {number} humidity Humidity in RH (Relative Humidity)
- * @param {object} valuationSet The valuation set to use in the calculation
+ * @param {IValuationSet} valuationSet The valuation set to use in the calculation
  * @returns {number} Dew Point in Kelvin
  */
 function dewPointArdenBuckEquation(temperature: number, humidity: number, valuationSet?: IValuationSet): number {
