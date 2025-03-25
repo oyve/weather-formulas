@@ -2,8 +2,8 @@
 # weather-formulas
 A library of atmospheric and weather related calculations.
 
-* Test code for all code/algorithms
-* Supports custom valuation sets where needed
+* Test code for all formulas
+* Supports custom valuation sets where supported
 
 ## Features
 
@@ -34,27 +34,21 @@ $ npm install weather-formulas
 
 ## How to use
 ```
+//Option #1 - accessing all
 const wf = require('weather-formulas');
-//wf.temperature, wf.humidity, wf.pressure
-//or access directly:
+wf.temperature, wf.humidity, wf.pressure
+
+//Option #2 - accessing directly
 import { temperature, humidity, pressure } from 'weather-formulas'
+```
+```
+//With Option #1
+let RH = wf.humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
+...
 
-const TEMPERATURE = 300, HUMIDITY = 60, WINDSPEED = 10; //300 Kelvin, 60% Relative Humidity, 10 M/S
-
-let dewPointMF = wf.temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY);
-let dewPointAF = wf.temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY);
-
-//or use a custom valuation set:
-let dewPointMF = wf.temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, {a: 1, b:2, c:3, d:4});
-
-let windChill = wf.temperature.windChillIndex(TEMPERATURE, WINDSPEED);
-let apparentTemperature = wf.temperature.australianAapparentTemperature(TEMPERATURE, HUMIDITY, WINDSPEED);
-
-let heatIndex = wf.temperature.heatIndex(TEMPERATURE, HUMIDITY);
-let heatIndexText = wf.temperature.heatIndexText(heatIndex); //output heat index threshold and warning text
-
-let humidex = wf.temperature.humidex(TEMPERATURE, HUMIDITY);
-let humidexText = wf.temperature.humidexText(humidex); //output humidex threshold and warning text
+//With Option #2
+let RH = humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
+...
 
 ```
 
@@ -72,7 +66,7 @@ const actual = wf.temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, v
 ```
 
 ## Contribute
-Please feel free to contribute by creating a Pull Request with test code.
+Please feel free to contribute by creating a Pull Request including test code.
 
 ## Disclaimer
 Always verify calculations before using in production as edge cases due to floating point errors may exists for large numbers, and that are not covered by tests today. Please report!
