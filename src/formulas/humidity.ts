@@ -13,6 +13,40 @@ function relativeHumidity(temperature: number, dewPoint: number): number {
 }
 
 /**
+ * 
+ * @param mH20 Mass of water vapor
+ * @param Vnet Volume of air
+ * @returns 
+ */
+function absoluteHumidity(mH20: number, Vnet: number): number {
+    const AH = mH20 / Vnet;
+    return AH;
+}
+
+/**
+ * 
+ * @param RH Relative humidty
+ * @param T Temperature in celcius
+ * @returns Absolute Humidity
+ */
+function absoluteHumidityByRelativeHumidity(RH: number, T: number): number {
+    const P = 22.064 //MPa
+    const K = 647.096 //K Critical Temperature for water;
+
+    const AH = (RH * P)/(461.5/K * T * 100);
+    return AH;
+}
+
+/**
+ * Calculate Specific Humidity
+ * @param {number} mixingRatio Mixing Ratio in g/kg (grams per kilogram)
+ * @returns {number} Specific Humidity in kg/kg (kilograms per kilogram)
+ */
+function specificHumidity(mixingRatio: number): number {
+    return mixingRatio / (1 + mixingRatio);
+}
+
+/**
  * Calculate Mixing Ratio
  * @param {number} vaporPressure Vapor Pressure in Pa (Pascal)
  * @param {number} pressure Pressure in Pa (Pascal)
@@ -42,17 +76,9 @@ function saturationVaporPressure(temperature: number): number {
     return 611.2 * Math.exp((17.62 * T) / (243.12 + T));
 }
 
-/**
- * Calculate Specific Humidity
- * @param {number} mixingRatio Mixing Ratio in g/kg (grams per kilogram)
- * @returns {number} Specific Humidity in kg/kg (kilograms per kilogram)
- */
-function specificHumidity(mixingRatio: number): number {
-    return mixingRatio / (1 + mixingRatio);
-}
-
 export default {
     relativeHumidity,
+    absoluteHumidity,
     mixingRatio,
     vaporPressure,
     saturationVaporPressure,

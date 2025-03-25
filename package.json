@@ -5,15 +5,10 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
-  "directories": {
-    "src": "src",
-    "test": "tests"
-  },
   "files": [
     "dist",
     "README.md",
-    "LICENSE",
-    "src"
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc",
