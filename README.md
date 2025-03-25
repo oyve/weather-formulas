@@ -61,7 +61,7 @@ const actual = wf.temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, valua
 ```
 Use a custom valuation set
 ```
-const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 }; //these values are made up for the sake of example
+const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 };
 const actual = wf.temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 
