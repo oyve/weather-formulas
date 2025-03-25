@@ -14,12 +14,15 @@ function relativeHumidity(temperature: number, dewPoint: number): number {
 
 /**
  * 
- * @param mH20 Mass of water vapor
- * @param Vnet Volume of air
+ * @param mH20 Mass of water vapor g/m3
+ * @param Vnet Volume of air (m3)
  * @returns 
  */
-function absoluteHumidity(mH20: number, Vnet: number): number {
-    const AH = mH20 / Vnet;
+function absoluteHumidity(mH2O: number, Vnet: number): number {
+    if (Vnet <= 0) {
+        throw new Error("Vnet must be greater than 0 to avoid division by zero.");
+    }
+    const AH = mH2O / Vnet; // AH: absolute humidity (mass of water vapor per unit volume)
     return AH;
 }
 
@@ -30,11 +33,13 @@ function absoluteHumidity(mH20: number, Vnet: number): number {
  * @returns Absolute Humidity
  */
 function absoluteHumidityByRelativeHumidity(RH: number, T: number): number {
-    const P = 22.064 //MPa
-    const K = 647.096 //K Critical Temperature for water;
+    const P = 22.064; // MPa - Critical Pressure for water (check if this is relevant to your use case)
+    const R_specific = 461.5; // J/(kg·K) - Specific gas constant for water vapor
 
-    const AH = (RH * P)/(461.5/K * T * 100);
-    return AH;
+    const T_K = T + 273.15; // Convert temperature from Celsius to Kelvin
+    const AH = (RH * P * 1000) / (R_specific * T_K);
+
+    return AH; // Returns absolute humidity in appropriate units (likely g/m³ based on input)
 }
 
 /**
