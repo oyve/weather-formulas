@@ -26,6 +26,7 @@ A library of atmospheric and weather related calculations.
 ### Pressure
 - [Pressure Altitude](https://en.wikipedia.org/wiki/Pressure_altitude)
 - [Density Altitude](https://en.wikipedia.org/wiki/Density_altitude)
+- [Adjust Pressure To Sea Level](https://en.wikipedia.org/wiki/Atmospheric_pressure)
 
 ## Install
 ```
