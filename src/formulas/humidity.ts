@@ -28,17 +28,24 @@ function absoluteHumidity(mH2O: number, Vnet: number): number {
 
 /**
  * 
- * @param RH Relative humidty
+ * @param RH Relative humidity %
  * @param T Temperature in Kelvin
  * @returns Absolute Humidity
  */
 function absoluteHumidityByRelativeHumidity(RH: number, T: number): number {
-    const P = 22.064; // MPa - Critical Pressure for water
-    const R_specific = 461.5; // J/(kg·K) - Specific gas constant for water vapor
+    const M_w = 18.015; // g/mol - Molar mass of water vapor
+    const R = c.DEFAULT_ATMOSPHERIC_CONSTANTS.gasConstant; // J/(mol·K) - Universal gas constant
 
-    const AH = (RH * P * 1000) / (R_specific * T);
+    // Calculate saturation vapor pressure (Pa)
+    const P_sat = saturationVaporPressure(T);
 
-    return AH; // Returns absolute humidity in appropriate units (likely g/m³ based on input)
+    // Convert RH from percentage to fraction
+    const RH_fraction = RH / 100;
+
+    // Calculate absolute humidity (g/m³)
+    const AH = (RH_fraction * P_sat * M_w) / (R * T);
+
+    return AH;
 }
 
 /**

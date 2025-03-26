@@ -23,6 +23,17 @@ describe("Humidity Tests", function () {
         });
     });
 
+    describe('Absolute Humidity by Relative Humidity', function() {
+        it('should calculate absolute humidity by relative humidity correctly', function() {
+            const RH = 50; // Relative Humidity in %
+            const T = temperature.celciusToKelvin(25); // Temperature in Kelvin
+            const expectedAH = 11.48; // Example expected value (g/m³) based on the corrected formula
+            const result = humidity.absoluteHumidityByRelativeHumidity(RH, T);
+            const actual = Math.round(result * 100) / 100;
+            expect(actual).toEqual(expectedAH);
+        });
+    });
+
     describe('Mixing Ratio', function() {
         it('should calculate mixing ratio correctly', function() {
             const vaporPressure = 2339.21; // Pa
