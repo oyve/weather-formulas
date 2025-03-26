@@ -1,4 +1,4 @@
-import c from '../../src/constants'
+import c from '../../src/constants';
 
 /**
  * Calculate Relative Humidity
@@ -7,10 +7,8 @@ import c from '../../src/constants'
  * @returns {number} Relative Humidity in percentage (%)
  */
 function relativeHumidity(temperature: number, dewPoint: number): number {
-    const T = temperature - c.KELVIN; // Convert Kelvin to Celsius
-    const Td = dewPoint - c.KELVIN; // Convert Kelvin to Celsius
-
-    const RH = 100 * (Math.exp((17.625 * Td) / (243.04 + Td)) / Math.exp((17.625 * T) / (243.04 + T)));
+    const RH = 100 * (Math.exp((17.625 * (dewPoint - c.KELVIN)) / (243.04 + (dewPoint - c.KELVIN))) /
+                      Math.exp((17.625 * (temperature - c.KELVIN)) / (243.04 + (temperature - c.KELVIN))));
     return RH;
 }
 
@@ -35,10 +33,10 @@ function absoluteHumidity(mH2O: number, Vnet: number): number {
  * @returns Absolute Humidity
  */
 function absoluteHumidityByRelativeHumidity(RH: number, T: number): number {
-    const P = 22.064; // MPa - Critical Pressure for water (check if this is relevant to your use case)
+    const P = 22.064; // MPa - Critical Pressure for water
     const R_specific = 461.5; // J/(kg·K) - Specific gas constant for water vapor
 
-    const AH = (RH * P * 1000) / (R_specific * c.KELVIN);
+    const AH = (RH * P * 1000) / (R_specific * T);
 
     return AH; // Returns absolute humidity in appropriate units (likely g/m³ based on input)
 }
@@ -68,8 +66,8 @@ function mixingRatio(vaporPressure: number, pressure: number): number {
  * @returns {number} Vapor Pressure in Pa (Pascal)
  */
 function vaporPressure(temperature: number): number {
-    const T = temperature - 273.15; // Convert Kelvin to Celsius
-    return 611.2 * Math.exp((17.67 * T) / (T + 243.5));
+    const T = temperature; // Keep temperature in Kelvin
+    return 611.2 * Math.exp((17.67 * (T - c.KELVIN)) / ((T - c.KELVIN) + 243.5));
 }
 
 /**
@@ -78,8 +76,8 @@ function vaporPressure(temperature: number): number {
  * @returns {number} Saturation Vapor Pressure in Pa (Pascal)
  */
 function saturationVaporPressure(temperature: number): number {
-    const T = temperature - 273.15; // Convert Kelvin to Celsius
-    return 611.2 * Math.exp((17.62 * T) / (243.12 + T));
+    const T = temperature; // Keep temperature in Kelvin
+    return 611.2 * Math.exp((17.62 * (T - c.KELVIN)) / (243.12 + (T - c.KELVIN)));
 }
 
 export default {
