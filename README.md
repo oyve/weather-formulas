@@ -1,9 +1,9 @@
-![Node.js CI](https://github.com/oyve/weather-formulas/workflows/Node.js%20CI/badge.svg?branch=main)
+![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg) ![Node.js CI](https://github.com/oyve/weather-formulas/workflows/Node.js%20CI/badge.svg?branch=main)
 # weather-formulas
 A library of atmospheric and weather related calculations.
 
-* Test code for all code/algorithms
-* Supports custom valuation sets where needed
+* Test code for all formulas
+* Supports custom valuation sets where supported
 
 ## Features
 
@@ -26,6 +26,7 @@ A library of atmospheric and weather related calculations.
 ### Pressure
 - [Pressure Altitude](https://en.wikipedia.org/wiki/Pressure_altitude)
 - [Density Altitude](https://en.wikipedia.org/wiki/Density_altitude)
+- [Adjust Pressure To Sea Level](https://en.wikipedia.org/wiki/Atmospheric_pressure)
 
 ## Install
 ```
@@ -34,19 +35,21 @@ $ npm install weather-formulas
 
 ## How to use
 ```
-const WF = require('weather-formulas');
+//Option #1 - accessing all
+const wf = require('weather-formulas');
+wf.temperature, wf.humidity, wf.pressure
 
-const TEMPERATURE = 300, HUMIDITY = 60, WINDSPEED = 10; //300 Kelvin, 60% Relative Humidity, 10 M/S
+//Option #2 - accessing directly
+import { temperature, humidity, pressure } from 'weather-formulas'
+```
+```
+//With Option #1
+let RH = wf.humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
+...
 
-let dewPointMF = WF.dewPointMagnusFormula(TEMPERATURE, HUMIDITY);
-let dewPointAF = WF.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY);
-let windChill = WF.windChillIndex(TEMPERATURE, WINDSPEED);
-let apparentTemperature = WF.australianAapparentTemperature(TEMPERATURE, HUMIDITY, WINDSPEED);
-let heatIndex = WF.heatIndex(TEMPERATURE, HUMIDITY);
-let heatIndexText = WF.heatIndexText(heatIndex); //output heat index threshold and warning text
-
-let humidex = WF.humidex(TEMPERATURE, HUMIDITY);
-let humidexText = WF.humidexText(humidex); //output humidex threshold and warning text
+//With Option #2
+let RH = humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
+...
 
 ```
 
@@ -54,17 +57,17 @@ let humidexText = WF.humidexText(humidex); //output humidex threshold and warnin
 
 Use a provided valuation set
 ```
-const valuationSet =  temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
-const actual = temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, valuationSet);
+const valuationSet =  wf.temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+const actual = wf.temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 Use a custom valuation set
 ```
-const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 }; //these values are made up for the sake of example
-const actual = temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
+const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 };
+const actual = wf.temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 
 ## Contribute
-Please feel free to contribute by creating a Pull Request with test code.
+Please feel free to contribute by creating a Pull Request including test code.
 
 ## Disclaimer
 Always verify calculations before using in production as edge cases due to floating point errors may exists for large numbers, and that are not covered by tests today. Please report!

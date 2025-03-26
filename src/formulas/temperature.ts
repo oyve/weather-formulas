@@ -1,5 +1,11 @@
-'use strict'
-const KELVIN = 273.15;
+import c from '../constants'
+
+export interface IValuationSet {
+    a: number, //millibar
+    b: number, //constant
+    c: number, //celcius degrees
+    d: number; //celcius degrees
+}
 
 const DEW_POINT_VALUATIONS = {
     ARDENBUCK_DEFAULT: { a: 6.1121, b: 18.678, c: 257.14, d: 234.5 },
@@ -8,14 +14,14 @@ const DEW_POINT_VALUATIONS = {
     PAROSCIENTIFIC: { a: 6.105, b: 17.27, c: 237.7, d: 234.5 }, //for 0 °C ≤ T ≤ 60 °C (error ±0.4 °C).
     ARDENBUCK_PLUS: { a: 6.1121, b: 17.368, c: 238.88, d: 234.5 }, //for 0 °C ≤ T ≤ 50 °C (error ≤ 0.05%).
     ARDENBUCK_MINUS: { a: 6.1121, b: 17.966, c: 247.15, d: 234.5 } //for −40 °C ≤ T ≤ 0 °C (error ≤ 0.06%).
-};
+} as const;
 
 /**
  * Gets the Dew Point Valuation by temperature
  * @param {number} temperature Temperature in CELCIUS
- * @returns {Array<object>} Dew Point Valuation
+ * @returns {Array<IValuationSet>} Dew Point Valuation
  */
-function dewPointValuationsByTemperature(temperature) {
+function dewPointValuationsByTemperature(temperature: number): IValuationSet {
     if (temperature < 0) {
         return DEW_POINT_VALUATIONS.ARDENBUCK_MINUS;
     } else if (temperature >= 0 && temperature <= 50) {
@@ -27,31 +33,21 @@ function dewPointValuationsByTemperature(temperature) {
     }
 }
 
-function verifyValuationSet(valuationSet) {
-    if(valuationSet === null) throw "Not a valid Valuation Set";
-    if(!valuationSet.hasOwnProperty("a") && typeof(valuationSet.a !== 'number')) throw "'a' is not a constant or a number";
-    if(!valuationSet.hasOwnProperty("b") && typeof(valuationSet.b !== 'number')) throw "'b' is not a constant or a number";
-    if(!valuationSet.hasOwnProperty("c") && typeof(valuationSet.c !== 'number')) throw "'c' is not a constant or a number";
-    if(!valuationSet.hasOwnProperty("d") && typeof(valuationSet.d !== 'number')) throw "'d' is not a constant or a number";
-}
-
 /**
  * 
  * @param {number} temperature Temperature in K (Kelvin)
  * @param {number} humidity Humidity in RH (Relative Humidity)
- * @param {object} valuationSet The valuation set to use in the calculation
+ * @param {IValuationSet} valuationSet The valuation set to use in the calculation
  * @returns {number} Dew Point in Kelvin
  */
-function dewPointMagnusFormula(temperature, humidity, valuationSet = null) {
-    if(valuationSet !== null) verifyValuationSet(valuationSet);
+function dewPointMagnusFormula(temperature: number, humidity: number, valuationSet?: IValuationSet): number {
+    const T: number = kelvinToCelcius(temperature);
+    const RH: number = humidity;
 
-    let T = kelvinToCelcius(temperature);
-    let RH = humidity;
-
-    let constants = valuationSet === null ? dewPointValuationsByTemperature(T) : valuationSet;
-
-    let gammaT_RH = Math.log(RH / 100) + ((constants.b * T) / (constants.c + T));
-    let Tdp = (constants.c * gammaT_RH) / (constants.b - gammaT_RH);
+    if(valuationSet === null || valuationSet === undefined) valuationSet = dewPointValuationsByTemperature(T);
+    
+    const gammaT_RH = Math.log(RH / 100) + ((valuationSet.b * T) / (valuationSet.c + T));
+    const Tdp = (valuationSet.c * gammaT_RH) / (valuationSet.b - gammaT_RH);
 
     return celciusToKelvin(Tdp);
 }
@@ -60,19 +56,17 @@ function dewPointMagnusFormula(temperature, humidity, valuationSet = null) {
  * 
  * @param {number} temperature Temperature in K (Kelvin)
  * @param {number} humidity Humidity in RH (Relative Humidity)
- * @param {object} valuationSet The valuation set to use in the calculation
+ * @param {IValuationSet} valuationSet The valuation set to use in the calculation
  * @returns {number} Dew Point in Kelvin
  */
-function dewPointArdenBuckEquation(temperature, humidity, valuationSet = null) {
-    if(valuationSet !== null) verifyValuationSet(valuationSet);
+function dewPointArdenBuckEquation(temperature: number, humidity: number, valuationSet?: IValuationSet): number {
+    const T: number = kelvinToCelcius(temperature);
+    const RH: number = humidity;
 
-    let T = kelvinToCelcius(temperature);
-    let RH = humidity;
+    if(valuationSet === null || valuationSet === undefined) valuationSet = dewPointValuationsByTemperature(T);
 
-    let constants = valuationSet === null ? dewPointValuationsByTemperature(T) : valuationSet;
-
-    let gamma_T_RH = Math.log((RH / 100) * Math.exp((constants.b - (T / constants.d)) * (T / (constants.c + T))));
-    let Tdp = (constants.c * gamma_T_RH) / (constants.b - gamma_T_RH);
+    const gamma_T_RH = Math.log((RH / 100) * Math.exp((valuationSet.b - (T / valuationSet.d)) * (T / (valuationSet.c + T))));
+    const Tdp = (valuationSet.c * gamma_T_RH) / (valuationSet.b - gamma_T_RH);
 
     return celciusToKelvin(Tdp);
 }
@@ -83,7 +77,7 @@ function dewPointArdenBuckEquation(temperature, humidity, valuationSet = null) {
  * @param {number} pressure Pressure in Pa (Pascal)
  * @returns {number} Potential Temperature in K (Kelvin)
  */
-function potentialTemperature(temperature, pressure) {
+function potentialTemperature(temperature: number, pressure: number): number {
     const standardPressure = 100000; // Standard pressure in Pa
     return temperature * Math.pow(standardPressure / pressure, 0.286);
 }
@@ -94,7 +88,7 @@ function potentialTemperature(temperature, pressure) {
  * @param {number} mixingRatio Mixing Ratio in g/kg (grams per kilogram)
  * @returns {number} Virtual Temperature in K (Kelvin)
  */
-function virtualTemperature(temperature, mixingRatio) {
+function virtualTemperature(temperature: number, mixingRatio: number): number {
     return temperature * (1 + 0.61 * (mixingRatio / 1000));
 }
 
@@ -104,28 +98,27 @@ function virtualTemperature(temperature, mixingRatio) {
  * @param {number} windSpeed Windspeed in M/S (meter per second)
  * @returns {number} Wind Chill Index in Kelvin
  */
-function windChillIndex(temperature, windSpeed) {
-    let v = meterPerSecondToKilometerPerHour(windSpeed);
-    let Ta = kelvinToCelcius(temperature);
-    let v_exp = (v ** 0.16);
+function windChillIndex(temperature: number, windSpeed: number): number {
+    const v = meterPerSecondToKilometerPerHour(windSpeed);
+    const Ta = kelvinToCelcius(temperature);
+    const v_exp = (v ** 0.16);
 
-    let Twc = 13.12 + (0.6215 * Ta) - (11.37 * v_exp) + (0.3965 * Ta * v_exp);
+    const Twc = 13.12 + (0.6215 * Ta) - (11.37 * v_exp) + (0.3965 * Ta * v_exp);
     return celciusToKelvin(Twc);
 }
 
 /**
- * 
  * @param {number} temperature Temperature in K (Kelvin)
  * @param {number} humidity Humidity in RH (Relative Humidity)
- * @param {number} windSpeed Windspeed in M/S (meter per second)
+ * @param {number} windspeed Windspeed in M/S (meter per second)
  * @returns {number} Apparent Temperature in Kelvin
  */
-function australianAapparentTemperature(temperature, humidity, windspeed) {
-    let Ta = kelvinToCelcius(temperature);
-    let v = windspeed;
+function australianAapparentTemperature(temperature: number, humidity: number, windspeed: number): number {
+    const Ta = kelvinToCelcius(temperature);
+    const v = windspeed;
 
-    let e = (humidity / 100) * 6.015 * Math.exp((17.27 * Ta) / (237.7 + Ta));
-    let AT = Ta + (0.33 * e) - (0.7 * v) - 4.00;
+    const e = (humidity / 100) * 6.015 * Math.exp((17.27 * Ta) / (237.7 + Ta));
+    const AT = Ta + (0.33 * e) - (0.7 * v) - 4.00;
 
     return celciusToKelvin(AT);
 }
@@ -136,26 +129,26 @@ function australianAapparentTemperature(temperature, humidity, windspeed) {
  * @param {number} humidity Humidity in RH (Relative Humidity)
  * @returns {number} Heat Index in Kelvin
  */
-function heatIndex(temperature, humidity) {
-    if (humidity > 100 || humidity < 0) return null;
+function heatIndex(temperature: number, humidity: number): number {
+    if (humidity > 100 || humidity < 0) throw("Not a valid humidity");
 
-    let T = kelvinToCelcius(temperature);
-    let R = humidity;
+    const T = kelvinToCelcius(temperature);
+    const R = humidity;
 
-    let c1 = -8.78469475556;
-    let c2 = 1.61139411;
-    let c3 = 2.33854883889;
-    let c4 = -0.14611605;
-    let c5 = -0.012308094;
-    let c6 = -0.0164248277778;
-    let c7 = 0.002211732;
-    let c8 = 0.00072546;
-    let c9 = -0.000003582;
+    const c1 = -8.78469475556;
+    const c2 = 1.61139411;
+    const c3 = 2.33854883889;
+    const c4 = -0.14611605;
+    const c5 = -0.012308094;
+    const c6 = -0.0164248277778;
+    const c7 = 0.002211732;
+    const c8 = 0.00072546;
+    const c9 = -0.000003582;
 
-    let Te2 = (T ** 2);
-    let Re2 = (R ** 2);
+    const Te2 = (T ** 2);
+    const Re2 = (R ** 2);
 
-    let HI = (c1) + (c2 * T) + (c3 * R) + (c4 * T * R) + (c5 * Te2) + (c6 * Re2) + (c7 * Te2 * R) + (c8 * T * Re2) + (c9 * Te2 * Re2);
+    const HI = (c1) + (c2 * T) + (c3 * R) + (c4 * T * R) + (c5 * Te2) + (c6 * Re2) + (c7 * Te2 * R) + (c8 * T * Re2) + (c9 * Te2 * Re2);
 
     return celciusToKelvin(HI);
 }
@@ -165,7 +158,7 @@ function heatIndex(temperature, humidity) {
  * @param {number} heatIndexTemperature Temperature in K (Kelvin)
  * @returns {string} Heat Index Warning
  */
-function heatIndexText(heatIndexTemperature) {
+function heatIndexText(heatIndexTemperature: number): null | {lowerLimit: number, text: string, warning: string} {
     let thresholds = [
         { lowerLimit: 52, text: "Extreme danger", warning: "Heat stroke is imminent." },
         { lowerLimit: 40, text: "Danger", warning: "Heat cramps and heat exhaustion are likely; heat stroke is probable with continued activity." },
@@ -173,9 +166,9 @@ function heatIndexText(heatIndexTemperature) {
         { lowerLimit: 26, text: "Caution", warning: "Fatigue is possible with prolonged exposure and activity. Continuing activity could result in heat cramps." }
     ];
 
-    let result = thresholds.find((t) => heatIndexTemperature >= (t.lowerLimit + KELVIN));
+    let result = thresholds.find((t) => heatIndexTemperature >= (t.lowerLimit + c.KELVIN));
 
-    return result == null ? "No warning" : result;
+    return result === undefined ? null : result;
 }
 
 /**
@@ -184,13 +177,13 @@ function heatIndexText(heatIndexTemperature) {
  * @param {number} humidity Humidity in RH (Relative Humidity)
  * @returns {number} Humidex in Kelvin
  */
-function humidex(temperature, humidity) {
-    let Tair = kelvinToCelcius(temperature);
-    let Tdew = dewPointMagnusFormula(temperature, humidity);
+function humidex(temperature: number, humidity: number): number {
+    const Tair = kelvinToCelcius(temperature);
+    const Tdew = dewPointMagnusFormula(temperature, humidity);
 
-    let e = 6.11 * Math.exp(5417.7530 * ((1 / 273.16) - (1 / Tdew)));
-    let h = (0.5555) * (e - 10.0);
-    let humidex = Tair + h;
+    const e = 6.11 * Math.exp(5417.7530 * ((1 / 273.16) - (1 / Tdew)));
+    const h = (0.5555) * (e - 10.0);
+    const humidex = Tair + h;
 
     return celciusToKelvin(humidex);
 }
@@ -200,16 +193,16 @@ function humidex(temperature, humidity) {
  * @param {number} humidex Temperature in K (Kelvin)
  * @returns {string} Humidex Warning
  */
-function humidexText(humidex) {
-    let thresholds = [
+function humidexText(humidex: number): null | {lowerLimit: number, text: string} {
+    const thresholds = [
         { lowerLimit: 46, text: "Dangerous" },
         { lowerLimit: 40, text: "Great discomfort" },
         { lowerLimit: 30, text: "Some discomfort" }
     ];
 
-    let result = thresholds.find((t) => humidex >= (t.lowerLimit + KELVIN));
+    const result = thresholds.find((t) => humidex >= (t.lowerLimit + c.KELVIN));
 
-    return result == null ? "No warning" : result;
+    return result === undefined ? null : result;
 }
 
 /**
@@ -217,8 +210,8 @@ function humidexText(humidex) {
  * @param {number} temperature Temperature in K (Kelvin)
  * @returns {number} Celcius
  */
-function kelvinToCelcius(temperature) {
-    return temperature - KELVIN;
+function kelvinToCelcius(temperature: number): number {
+    return temperature - c.KELVIN;
 }
 
 /**
@@ -226,8 +219,44 @@ function kelvinToCelcius(temperature) {
  * @param {number} temperature Temperature in C (Celcius)
  * @returns {number} Kelvin
  */
-function celciusToKelvin(temperature) {
-    return roundToTwoDecimals(temperature + KELVIN);
+function celciusToKelvin(temperature: number): number {
+    return roundToTwoDecimals(temperature + c.KELVIN);
+}
+
+/**
+ * 
+ * @param celcius Celcius degrees
+ * @returns Fahrenheit degrees
+ */
+function celciusToFahrenheit(celcius: number): number {
+    return (celcius * 9/5) + 32;
+}
+
+/**
+ * 
+ * @param fahrenheit Fahrenheit degrees
+ * @returns Celcius degrees
+ */
+function fahrenheitToCelcius(fahrenheit: number): number {
+    return (fahrenheit - 32) * 5/9;
+}
+
+/**
+ * 
+ * @param kelvin Kelvin degrees
+ * @returns Fahrenheit degrees
+ */
+function kelvinToFahrenheit(kelvin: number): number {
+    return (kelvin - c.KELVIN) * 9/5 + 32;
+}
+
+/**
+ * 
+ * @param fahrenheit Fahrenheit degrees
+ * @returns Kelvin degrees
+ */
+function fahrenheitToKelvin(fahrenheit: number): number {
+    return (fahrenheit - 32) * 5/9 + c.KELVIN;
 }
 
 /**
@@ -235,7 +264,7 @@ function celciusToKelvin(temperature) {
  * @param {number} num Number
  * @returns {number} num rounded to two decimals
  */
-function roundToTwoDecimals(num) {
+function roundToTwoDecimals(num: number): number {
     return Math.round(num * 100) / 100;
 }
 
@@ -244,11 +273,11 @@ function roundToTwoDecimals(num) {
  * @param {number} mps Meter Per Second
  * @returns {number} KM/H
  */
-function meterPerSecondToKilometerPerHour(mps) {
+function meterPerSecondToKilometerPerHour(mps: number): number {
     return mps * 3.6;
 }
 
-module.exports = {
+export default {
     dewPointMagnusFormula,
     dewPointArdenBuckEquation,
     windChillIndex,
@@ -260,6 +289,10 @@ module.exports = {
     roundToTwoDecimals,
     kelvinToCelcius,
     celciusToKelvin,
+    celciusToFahrenheit,
+    fahrenheitToCelcius,
+    kelvinToFahrenheit,
+    fahrenheitToKelvin,
     meterPerSecondToKilometerPerHour,
     potentialTemperature,
     virtualTemperature,

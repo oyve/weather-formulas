@@ -1,13 +1,19 @@
 {
   "name": "weather-formulas",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A collection of atmospheric, meteorological weather calculations",
-  "main": "temperature.js",
-  "directories": {
-    "test": "test"
-  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "test": "mocha"
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -32,15 +38,18 @@
     "virtual temperature",
     "pressure altitude",
     "density altitude",
-    "saturation vapor pressure"
+    "saturation vapor pressure",
+    "adjust pressure to sea level"
   ],
-  "author": "github.com/oyve",
-  "license": "ISC",
+  "author": "Øyvind Hansen <oyve-github@outlook.com>",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/oyve/weather-formulas/issues"
   },
   "homepage": "https://github.com/oyve/weather-formulas#readme",
   "devDependencies": {
-    "mocha": "^11.1.0"
+    "@types/jest": "^29.5.14",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6"
   }
 }
