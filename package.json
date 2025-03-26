@@ -41,8 +41,8 @@
     "saturation vapor pressure",
     "adjust pressure to sea level"
   ],
-  "author": "github.com/oyve",
-  "license": "ISC",
+  "author": "Øyvind Hansen <oyve-github@outlook.com>",
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/oyve/weather-formulas/issues"
   },
