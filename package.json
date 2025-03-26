@@ -38,7 +38,8 @@
     "virtual temperature",
     "pressure altitude",
     "density altitude",
-    "saturation vapor pressure"
+    "saturation vapor pressure",
+    "adjust pressure to sea level"
   ],
   "author": "github.com/oyve",
   "license": "ISC",
