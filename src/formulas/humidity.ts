@@ -1,3 +1,5 @@
+import c from '../../src/constants'
+
 /**
  * Calculate Relative Humidity
  * @param {number} temperature Temperature in K (Kelvin)
@@ -5,8 +7,8 @@
  * @returns {number} Relative Humidity in percentage (%)
  */
 function relativeHumidity(temperature: number, dewPoint: number): number {
-    const T = temperature - 273.15; // Convert Kelvin to Celsius
-    const Td = dewPoint - 273.15; // Convert Kelvin to Celsius
+    const T = temperature - c.KELVIN; // Convert Kelvin to Celsius
+    const Td = dewPoint - c.KELVIN; // Convert Kelvin to Celsius
 
     const RH = 100 * (Math.exp((17.625 * Td) / (243.04 + Td)) / Math.exp((17.625 * T) / (243.04 + T)));
     return RH;
@@ -29,15 +31,14 @@ function absoluteHumidity(mH2O: number, Vnet: number): number {
 /**
  * 
  * @param RH Relative humidty
- * @param T Temperature in celcius
+ * @param T Temperature in Kelvin
  * @returns Absolute Humidity
  */
 function absoluteHumidityByRelativeHumidity(RH: number, T: number): number {
     const P = 22.064; // MPa - Critical Pressure for water (check if this is relevant to your use case)
     const R_specific = 461.5; // J/(kg·K) - Specific gas constant for water vapor
 
-    const T_K = T + 273.15; // Convert temperature from Celsius to Kelvin
-    const AH = (RH * P * 1000) / (R_specific * T_K);
+    const AH = (RH * P * 1000) / (R_specific * c.KELVIN);
 
     return AH; // Returns absolute humidity in appropriate units (likely g/m³ based on input)
 }
@@ -84,6 +85,7 @@ function saturationVaporPressure(temperature: number): number {
 export default {
     relativeHumidity,
     absoluteHumidity,
+    absoluteHumidityByRelativeHumidity,
     mixingRatio,
     vaporPressure,
     saturationVaporPressure,

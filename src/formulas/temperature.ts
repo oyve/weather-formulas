@@ -1,4 +1,4 @@
-const KELVIN = 273.15;
+import c from '../constants'
 
 export interface IValuationSet {
     a: number, //millibar
@@ -166,7 +166,7 @@ function heatIndexText(heatIndexTemperature: number): null | {lowerLimit: number
         { lowerLimit: 26, text: "Caution", warning: "Fatigue is possible with prolonged exposure and activity. Continuing activity could result in heat cramps." }
     ];
 
-    let result = thresholds.find((t) => heatIndexTemperature >= (t.lowerLimit + KELVIN));
+    let result = thresholds.find((t) => heatIndexTemperature >= (t.lowerLimit + c.KELVIN));
 
     return result === undefined ? null : result;
 }
@@ -200,7 +200,7 @@ function humidexText(humidex: number): null | {lowerLimit: number, text: string}
         { lowerLimit: 30, text: "Some discomfort" }
     ];
 
-    const result = thresholds.find((t) => humidex >= (t.lowerLimit + KELVIN));
+    const result = thresholds.find((t) => humidex >= (t.lowerLimit + c.KELVIN));
 
     return result === undefined ? null : result;
 }
@@ -211,7 +211,7 @@ function humidexText(humidex: number): null | {lowerLimit: number, text: string}
  * @returns {number} Celcius
  */
 function kelvinToCelcius(temperature: number): number {
-    return temperature - KELVIN;
+    return temperature - c.KELVIN;
 }
 
 /**
@@ -220,7 +220,43 @@ function kelvinToCelcius(temperature: number): number {
  * @returns {number} Kelvin
  */
 function celciusToKelvin(temperature: number): number {
-    return roundToTwoDecimals(temperature + KELVIN);
+    return roundToTwoDecimals(temperature + c.KELVIN);
+}
+
+/**
+ * 
+ * @param celcius Celcius degrees
+ * @returns Fahrenheit degrees
+ */
+function celciusToFahrenheit(celcius: number): number {
+    return (celcius * 9/5) + 32;
+}
+
+/**
+ * 
+ * @param fahrenheit Fahrenheit degrees
+ * @returns Celcius degrees
+ */
+function fahrenheitToCelcius(fahrenheit: number): number {
+    return (fahrenheit - 32) * 5/9;
+}
+
+/**
+ * 
+ * @param kelvin Kelvin degrees
+ * @returns Fahrenheit degrees
+ */
+function kelvinToFahrenheit(kelvin: number): number {
+    return (kelvin - c.KELVIN) * 9/5 + 32;
+}
+
+/**
+ * 
+ * @param fahrenheit Fahrenheit degrees
+ * @returns Kelvin degrees
+ */
+function fahrenheitToKelvin(fahrenheit: number): number {
+    return (fahrenheit - 32) * 5/9 + c.KELVIN;
 }
 
 /**
@@ -253,6 +289,10 @@ export default {
     roundToTwoDecimals,
     kelvinToCelcius,
     celciusToKelvin,
+    celciusToFahrenheit,
+    fahrenheitToCelcius,
+    kelvinToFahrenheit,
+    fahrenheitToKelvin,
     meterPerSecondToKilometerPerHour,
     potentialTemperature,
     virtualTemperature,

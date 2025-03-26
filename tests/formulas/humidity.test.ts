@@ -1,13 +1,24 @@
 import humidity from '../../src/formulas/humidity';
+import temperature from '../../src/formulas/temperature';
 
 describe("Humidity Tests", function () {
     describe('Relative Humidity', function() {
         it('should calculate relative humidity correctly', function() {
-            const temperature = 293.15; // K
+            const T = temperature.celciusToKelvin(20);
             const dewPoint = 283.15; // K
             const expectedRH = 52.54; // %
-            const result = humidity.relativeHumidity(temperature, dewPoint);
+            const result = humidity.relativeHumidity(T, dewPoint);
             const actual = Math.round(result * 100) / 100;
+            expect(actual).toEqual(expectedRH);
+        });
+    });
+
+    describe('Absolute Humidity', function() {
+        it('should calculate absolute humidity correctly', function() {
+            const T = temperature.celciusToKelvin(20);
+            const dewPoint = 283.15; // K
+            const expectedRH = 58.629999999999995; // %
+            const actual = humidity.absoluteHumidity(T, 5);
             expect(actual).toEqual(expectedRH);
         });
     });
@@ -24,9 +35,9 @@ describe("Humidity Tests", function () {
 
     describe('Vapor Pressure', function() {
         it('should calculate vapor pressure correctly', function() {
-            const temperature = 293.15; // K
+            const T = temperature.celciusToKelvin(20);
             const expectedVaporPressure = 2336.95; // Pa
-            const result = humidity.vaporPressure(temperature);
+            const result = humidity.vaporPressure(T);
             const actual = Math.round(result * 100) / 100;
             expect(actual).toEqual(expectedVaporPressure);
         });
@@ -34,9 +45,9 @@ describe("Humidity Tests", function () {
 
     describe('Saturation Vapor Pressure', function() {
         it('should calculate saturation vapor pressure correctly', function() {
-            const kelvin = 293.15; // K
+            const T = temperature.celciusToKelvin(20);
             const expectedVaporPressure = 2332.5960220978072; // Pa
-            const actual = humidity.saturationVaporPressure(kelvin);
+            const actual = humidity.saturationVaporPressure(T);
             expect(actual).toEqual(expectedVaporPressure);
         });
     });
