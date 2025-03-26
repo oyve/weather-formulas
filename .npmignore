@@ -1,0 +1,34 @@
+# Exclude node_modules (npm automatically excludes this)
+node_modules
+
+# Exclude TypeScript source files
+src
+
+# Exclude test files and directories
+tests
+*.test.ts
+
+# Exclude build and configuration files
+tsconfig.json
+jest.config.js
+
+# Exclude environment files
+.env
+.env.local
+
+# Exclude IDE and editor-specific files
+.vscode
+.idea
+
+# Exclude Git-related files
+.git
+.gitignore
+
+# Exclude logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# Exclude other unnecessary files
+.DS_Store
+Thumbs.db
