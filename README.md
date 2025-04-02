@@ -26,7 +26,12 @@ A library of atmospheric and weather related calculations.
 ### Pressure
 - [Pressure Altitude](https://en.wikipedia.org/wiki/Pressure_altitude)
 - [Density Altitude](https://en.wikipedia.org/wiki/Density_altitude)
+- [Lapse Rate](https://en.wikipedia.org/wiki/Lapse_rate)
+- [Dynamic lapse rate]
 - [Adjust Pressure To Sea Level](https://en.wikipedia.org/wiki/Atmospheric_pressure)
+-- By lapse rate
+-- By dynamic lapse rate
+-- By historical data
 
 ## Install
 ```
