@@ -99,10 +99,6 @@ function adjustPressureToSeaLevelAdvanced(
     return barometricPressure(0, pressureObserved, altitude, temperature, constants);
 }
 
-
-
-const standardLapseRate = 0.0065;
-
 /**
  * Adjust pressure to sea level by fixed lapse ratio.
  * @param {number} altitude altitude in meters.
@@ -110,7 +106,7 @@ const standardLapseRate = 0.0065;
  * @param {number} lapseRate Custom lapse rate. Defaults to standard lapse rate.
  * @returns Adjusted pressure
  */
-function adjustPressureToSeaLevelByLapseRate(altitude: number, temperature: number, lapseRate: number = standardLapseRate) {
+function adjustPressureToSeaLevelByLapseRate(altitude: number, temperature: number, lapseRate: number = c.STANDARD_LAPSE_RATE) {
     return temperature + lapseRate * altitude;
 }
 
