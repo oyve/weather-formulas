@@ -1,5 +1,4 @@
 import c, {AtmospericConstants} from '../constants'
-import TEMP from './temperature';
 
 /**
  * Calculate Pressure Altitude
