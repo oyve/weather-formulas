@@ -5,6 +5,7 @@ A library of atmospheric and weather-related calculations.
 
 - Includes test code for all formulas.
 - Supports custom valuation sets where applicable.
+- Published as an ES Module (ESM).
 
 ## Table of Contents
 - [Features](#features)
@@ -61,37 +62,41 @@ $ npm install weather-formulas
 
 ## How to Use
 
+### ES Module Only
+This package is published as an ES Module (ESM). It does not natively support CommonJS (require). To use this package:
+
+Ensure your project is configured to support ES Modules (e.g., "type": "module" in package.json). Use the import syntax to load the package. If you are using a CommonJS project, you can dynamically import the package using import() (see below).
+
 ### Basic Examples
 ```javascript
-//Option #1 - accessing all
-const wf = require('weather-formulas');
-wf.temperature, wf.humidity, wf.pressure
+import { temperature, humidity, pressure } from 'weather-formulas';
 
-//Option #2 - accessing directly
-import { temperature, humidity, pressure } from 'weather-formulas'
+// Example usage
+const RH = humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
 ```
+### CommonJS Workaround
+If you are using a CommonJS project, you can dynamically import the package:
+
 ```javascript
-//With Option #1
-let RH = wf.humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
-...
-
-//With Option #2
-let RH = humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
-...
-
+(async () => {
+  const weatherFormulas = await import('weather-formulas');
+  const { temperature } = weatherFormulas;
+  const RH = temperature.relativeHumidity(TEMPERATURE, DEW_POINT);
+  console.log(`Relative Humidity: ${RH}%`);
+})();
 ```
 
 ### Advanced Examples
 
 Use a provided valuation set:
 ```javascript
-const valuationSet =  wf.temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
-const actual = wf.temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, valuationSet);
+const valuationSet = temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+const actual = temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 Use a custom valuation set:
 ```javascript
 const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 };
-const actual = wf.temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
+const actual = temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 
 Inspect code/tests for all possibilities.
@@ -106,4 +111,6 @@ This project is licensed under the GPL v3 License.
 For support, please open an issue in the GitHub repository.
 
 ## Disclaimer
-Always verify calculations before using in production as edge cases due to floating point errors may exist for large numbers, and which may not be covered by tests today. Please report.
+This package is published as an ES Module (ESM). It does not natively support CommonJS (require). If you need CommonJS support, consider using a bundler like Webpack or Rollup to transpile the package into CommonJS, or dynamically import the package using import().
+
+Always verify calculations before using in production as edge cases due to floating point errors may exist for large numbers, and which may not be covered by tests today. Please report any issues.
