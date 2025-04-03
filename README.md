@@ -30,6 +30,9 @@ A library of atmospheric and weather-related calculations.
 - [Humidex](https://en.wikipedia.org/wiki/Humidex): Calculate the humidex, a Canadian measure of perceived temperature.
 - [Potential Temperature](https://en.wikipedia.org/wiki/Potential_temperature): Calculate the temperature an air parcel would have if brought to a standard pressure.
 - [Virtual Temperature](https://en.wikipedia.org/wiki/Virtual_temperature): Calculate the temperature accounting for water vapor in the air.
+- [Lapse Rate](https://en.wikipedia.org/wiki/Lapse_rate): Calculate the rate of temperature change with altitude.
+- Dynamic lapse rate: Calculate the lapse rate dynamically based on readings.
+- [Weighted Average Temperature](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean): Calculate the weighted average temperature based on altitude differences.
 
 ### Humidity
 - [Relative Humidity](https://en.wikipedia.org/wiki/Humidity): Calculate the ratio of the current absolute humidity to the maximum possible humidity.
@@ -41,8 +44,6 @@ A library of atmospheric and weather-related calculations.
 ### Pressure
 - [Pressure Altitude](https://en.wikipedia.org/wiki/Pressure_altitude): Calculate the altitude based on observed pressure.
 - [Density Altitude](https://en.wikipedia.org/wiki/Density_altitude): Calculate the altitude adjusted for temperature and air density.
-- [Lapse Rate](https://en.wikipedia.org/wiki/Lapse_rate): Calculate the rate of temperature change with altitude.
-- Dynamic lapse rate: Calculate the lapse rate dynamically based on readings.
 - [Barometric Formula](https://en.wikipedia.org/wiki/Barometric_formula): Calculate pressure at a given altitude using the barometric formula.
 - [Adjust Pressure To Sea Level](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation):
     - Simple formula: A quick approximation for standard conditions.
