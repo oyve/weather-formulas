@@ -1,48 +1,63 @@
-import c, {AtmospericConstants} from '../constants'
+import c, { AtmospericConstants } from '../constants';
 import temperature from './temperature';
 
 /**
- * Calculate Pressure Altitude
- * @param {number} pressure Pressure in Pa (Pascal)
- * @returns {number} Pressure Altitude in meters (m)
+ * Calculates the pressure altitude based on the observed pressure.
+ * Pressure altitude is the altitude in the International Standard Atmosphere (ISA) where the observed pressure would occur.
+ * 
+ * @param {number} pressure Observed pressure in Pascals (Pa).
+ * @returns {number} Pressure altitude in meters (m).
  */
 function pressureAltitude(pressure: number): number {
     return (1 - Math.pow(pressure / c.STANDARD_MEAN_PRESSURE_SEA_LEVEL, 0.190284)) * 145366.45 * 0.3048;
 }
-    
+
 /**
- * Calculate Density Altitude
- * @param {number} pressureAltitude Pressure Altitude in meters (m)
- * @param {number} temperature Temperature in K (Kelvin)
- * @returns {number} Density Altitude in meters (m)
+ * Calculates the density altitude, which is the altitude relative to the standard atmosphere conditions
+ * at which the air density would be equal to the current air density.
+ * 
+ * @param {number} pressureAltitude Pressure altitude in meters (m).
+ * @param {number} temperature Temperature in Kelvin (K).
+ * @returns {number} Density altitude in meters (m).
  */
 function densityAltitude(pressureAltitude: number, temperature: number): number {
     return pressureAltitude + (120 * (temperature - c.STANDARD_MEAN_TEMPERATURE_KELVIN));
 }
 
 /**
+ * Calculates the barometric pressure at a given altitude using the barometric formula.
+ * The calculation accounts for both zero and non-zero lapse rates.
  * 
- * @param altitude Target altitude in meters
- * @param referencePressure Pressure at reference altitude in Pascals
- * @param referenceAltitude Reference altitude in meters
- * @param referenceTemperature Temperature at reference altitude in Kelvin
- * @param constants Specific constants, use default or custom
- * @returns 
+ * @param {number} altitude Target altitude in meters (m).
+ * @param {number} referencePressure Pressure at the reference altitude in Pascals (Pa).
+ * @param {number} referenceAltitude Reference altitude in meters (m).
+ * @param {number} referenceTemperature Temperature at the reference altitude in Kelvin (K). Defaults to 288.15 K (15°C).
+ * @param {AtmospericConstants} constants Atmospheric constants (e.g., lapse rate, gravity, gas constant).
+ * @returns {number} Barometric pressure at the target altitude in Pascals (Pa).
  */
 function barometricPressure(
     altitude: number,
     referencePressure: number,
-    referenceAltitude: number, 
+    referenceAltitude: number,
     referenceTemperature: number = 288.15,
-    constants: AtmospericConstants = c.DEFAULT_ATMOSPHERIC_CONSTANTS_DRY_AIR): number|null {
-    
-    let result: number|null = 0;
-    if(constants.lapseRate === 0) {
+    constants: AtmospericConstants = c.DEFAULT_ATMOSPHERIC_CONSTANTS_DRY_AIR
+): number {
+    let result: number;
+
+    if (constants.lapseRate === 0) {
+        // Case: Zero lapse rate
         const scaleHeight = (constants.gasConstant * referenceTemperature) / constants.gravity;
         result = referencePressure * Math.exp(-(altitude - referenceAltitude) / scaleHeight);
     } else {
+        // Case: Non-zero lapse rate
         const tempRatio = 1 - (constants.lapseRate * (altitude - referenceAltitude)) / referenceTemperature;
-        const exponent = (constants.gravity / (constants.gasConstant * constants.lapseRate));
+
+        // Ensure tempRatio is positive to avoid invalid results
+        if (tempRatio <= 0) {
+            return 0; // Return 0 if the calculation is invalid
+        }
+
+        const exponent = constants.gravity / (constants.gasConstant * constants.lapseRate);
         result = referencePressure * Math.pow(tempRatio, exponent);
     }
 
@@ -50,34 +65,37 @@ function barometricPressure(
 }
 
 /**
+ * Reduces the observed pressure to sea level using a simplified barometric formula.
+ * This method assumes a standard sea level mean temperature of 15°C (288.15 K) and is less accurate for non-standard temperatures.
  * 
- * @description This function reduces observerd pressure to sea level using a faster, simpler calculation for standard sea level mean temperature (15C), but will be off with other temperatures.
- * @param pressureObserved Observed pressure
- * @param altitude Altitude of observered pressure
- * @param temperatureAtSeaLevel Temperature at sea level. Default standard mean temperature: 15 Celcius
- * @returns {number} Reduced pressure to sea level in Pascals with two decimal precision
+ * @param {number} pressureObserved Observed pressure in Pascals (Pa).
+ * @param {number} altitude Altitude of the observed pressure in meters (m).
+ * @param {number} temperatureAtSeaLevel Temperature at sea level in Kelvin (K). Defaults to 288.15 K (15°C).
+ * @returns {number} Pressure reduced to sea level in Pascals (Pa), rounded to two decimal places.
  */
 function adjustPressureToSeaLevelSimple(pressureObserved: number, altitude: number, temperatureAtSeaLevel: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN): number {
-	let pressureSeaLevel = pressureObserved * Math.pow(1 - ((0.0065 * altitude) / (temperatureAtSeaLevel + 0.0065 * altitude)), -5.257);
+    let pressureSeaLevel = pressureObserved * Math.pow(1 - ((0.0065 * altitude) / (temperatureAtSeaLevel + 0.0065 * altitude)), -5.257);
 
-	return Number(pressureSeaLevel.toFixed(2));
+    return Number(pressureSeaLevel.toFixed(2));
 }
 
 /**
+ * Reduces the observed pressure to sea level with higher accuracy by using the barometric formula.
+ * This method allows customization of atmospheric constants for non-standard conditions.
  * 
- * @description This function reduces observed pressure to sea level with more accuracy for different temperatures, and with option to replace Earth's standard constants.
- * @param pressureObserved Observed pressure
- * @param altitude Altitude of observered pressure
- * @param temperatureAtSeaLevel Temperature at sea level in Kelvin. Default standard mean temperature: 15 Celcius
- * @returns {number} Reduced pressure to sea level in Pascals with two decimal precision
+ * @param {number} pressureObserved Observed pressure in Pascals (Pa).
+ * @param {number} altitude Altitude of the observed pressure in meters (m).
+ * @param {number} temperature Temperature at sea level in Kelvin (K). Defaults to 288.15 K (15°C).
+ * @param {AtmospericConstants} constants Atmospheric constants (e.g., lapse rate, gravity, gas constant). Defaults to Earth's standard constants.
+ * @returns {number} Pressure reduced to sea level in Pascals (Pa), rounded to two decimal places.
  */
-function adjustPressureToSeaLevelAdvanced(pressureObserved: number, altitude: number, temperature: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN, constants: AtmospericConstants = c.DEFAULT_ATMOSPHERIC_CONSTANTS): number {
-    let pressureSeaLevel = pressureObserved * Math.pow(
-        (1 - (constants.lapseRate * altitude) / temperature),
-        (constants.gravity * constants.molarMass) / (constants.gasConstant * constants.lapseRate));
-
-    return Number(pressureSeaLevel.toFixed(2));
-    //return barometricPressure(0, pressureObserved, altitude, temperature, constants)
+function adjustPressureToSeaLevelAdvanced(
+    pressureObserved: number,
+    altitude: number,
+    temperature: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN,
+    constants: AtmospericConstants = c.DEFAULT_ATMOSPHERIC_CONSTANTS_DRY_AIR
+): number {
+    return barometricPressure(0, pressureObserved, altitude, temperature, constants);
 }
 
 export interface Reading {

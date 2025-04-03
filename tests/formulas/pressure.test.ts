@@ -144,7 +144,7 @@ describe('Pressure Tests', function() {
         it('should calculate pressure correctly', function() {
             //arrange
             const input = { pressure: 98000, altitude: 100 };
-            const expected = 96843.69;
+            const expected = 99167.5;
             //act
             const result = pressure.adjustPressureToSeaLevelAdvanced(input.pressure, input.altitude);
             //assert
@@ -153,7 +153,7 @@ describe('Pressure Tests', function() {
         it('should calculate pressure correctly with temperature', function() {
             //arrange
             const input = { pressure: 98000, altitude: 100, temperature: temperature.celciusToKelvin(30) };
-            const expected = 96900.65;
+            const expected = 99109.46;
             //act
             const result = pressure.adjustPressureToSeaLevelAdvanced(input.pressure, input.altitude, input.temperature);
             //assert
