@@ -9,6 +9,8 @@ A library of atmospheric and weather related calculations.
 
 ### Temperature
 - [Dew Point](https://en.wikipedia.org/wiki/Dew_point)
+    - Magnus formula
+    - Ardenbuck equation
 - [Wind Chill](https://en.wikipedia.org/wiki/Wind_chill#North_American_and_United_Kingdom_wind_chill_index)
 - [(Australian) Apparent Temperature](https://en.wikipedia.org/wiki/Wind_chill#Australian_apparent_temperature)
 - [Heat Index](https://en.wikipedia.org/wiki/Heat_index)
@@ -73,8 +75,10 @@ const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 };
 const actual = wf.temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
 ```
 
+Inspect code/tests for all possibilities.
+
 ## Contribute
-Please feel free to contribute by creating a Pull Request including test code.
+Please feel free to contribute by creating a Pull Request including test code, or by suggesting other formulas.
 
 ## Disclaimer
-Always verify calculations before using in production as edge cases due to floating point errors may exists for large numbers, and that are not covered by tests today. Please report!
+Always verify calculations before using in production as edge cases due to floating point errors may exists for large numbers, and which may not covered by tests today. Please report.
