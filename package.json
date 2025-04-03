@@ -1,6 +1,6 @@
 {
   "name": "weather-formulas",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A collection of atmospheric, meteorological weather calculations",
   "type": "module",
   "main": "dist/index.js",
