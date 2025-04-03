@@ -100,17 +100,6 @@ function adjustPressureToSeaLevelAdvanced(
 }
 
 /**
- * Adjust pressure to sea level by fixed lapse ratio.
- * @param {number} altitude altitude in meters.
- * @param {number} temperature temperature at altitude in Celcius|Kelvin|Fahrenheit.
- * @param {number} lapseRate Custom lapse rate. Defaults to standard lapse rate.
- * @returns Adjusted pressure
- */
-function adjustPressureToSeaLevelByLapseRate(altitude: number, temperature: number, lapseRate: number = c.STANDARD_LAPSE_RATE) {
-    return temperature + lapseRate * altitude;
-}
-
-/**
  * 
  * @param pressure Observed pressure
  * @param altitude Observed altitude
@@ -148,7 +137,6 @@ export default {
 
     adjustPressureToSeaLevelSimple,
     adjustPressureToSeaLevelAdvanced,
-    adjustPressureToSeaLevelByLapseRate,
     adjustPressureToSeaLevelByDynamicLapseRate,
     adjustPressureToSeaLevelByHistoricalData,
 };

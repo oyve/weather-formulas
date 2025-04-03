@@ -145,39 +145,6 @@ describe('Pressure Tests', function() {
         });
     });
 
-    describe('Adjust To Sea Level By Lapse Rate', function() {
-        it('should be the same', function() {
-            //arrange
-            const temperature = 20;
-            const altitude = 0;
-            const expected = 20;
-            //act
-            const actual = pressure.adjustPressureToSeaLevelByLapseRate(altitude, temperature);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-        it('should calculate lapse rate correctly', function() {
-            //arrange
-            const temperature = 20;
-            const altitude = 1000;
-            const expected = 26.5;
-            //act
-            const actual = pressure.adjustPressureToSeaLevelByLapseRate(altitude, temperature);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-        it('should calculate with a custom lapse rate', function() {
-            //assert
-            const temperature = 20;
-            const altitude = 1000;
-            const expected = 25;
-            //act
-            const actual = pressure.adjustPressureToSeaLevelByLapseRate(altitude, temperature, 0.005);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-    });
-
     describe('Adjust Pressure To Sea Level With Historical Data', function() {
         it('should calculate correctly', function() {
             //arrange

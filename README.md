@@ -33,6 +33,7 @@ A library of atmospheric and weather-related calculations.
 - [Lapse Rate](https://en.wikipedia.org/wiki/Lapse_rate): Calculate the rate of temperature change with altitude.
 - Dynamic lapse rate: Calculate the lapse rate dynamically based on readings.
 - [Weighted Average Temperature](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean): Calculate the weighted average temperature based on altitude differences.
+- Adjust Temperature by Lapse Rate: Adjust temperature based on a fixed lapse rate.
 
 ### Humidity
 - [Relative Humidity](https://en.wikipedia.org/wiki/Humidity): Calculate the ratio of the current absolute humidity to the maximum possible humidity.
@@ -48,7 +49,6 @@ A library of atmospheric and weather-related calculations.
 - [Adjust Pressure To Sea Level](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation):
     - Simple formula: A quick approximation for standard conditions.
     - Advanced formula: A more accurate calculation using the barometric formula.
-    - By lapse rate: Adjust pressure using a fixed lapse rate.
     - By dynamic lapse rate: Adjust pressure using a dynamically calculated lapse rate.
     - By historical data: Adjust pressure using historical readings.
 
