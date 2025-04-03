@@ -1,3 +1,4 @@
+import { Reading } from '../common';
 import c from '../constants'
 
 export interface IValuationSet {
@@ -206,6 +207,107 @@ function humidexText(humidex: number): null | {lowerLimit: number, text: string}
 }
 
 /**
+ * Calculate the lapse rate
+ * @param altitude1 Lower or higher altitude 1
+ * @param T1 Temperature at altitude 1
+ * @param altitude2 Lower or higher altitude 2
+ * @param T2 Temperature at altitude 2
+ * @returns Lapse rate
+ */
+function calculateLapseRate(altitude1: number, T1: number, altitude2: number, T2: number) {
+    return (T2 - T1) / (altitude2 - altitude1); // Kelvin/m
+}
+
+
+/**
+ * Calculate dynamic lapse rate based on a range of altitude and temperature data
+ * @param readings Readings data
+ * @param hours Number of hours to read
+ * @param filterByLastReading Filter by the datetime in the most recent reading
+ * @returns Dynamic lapse rate, or default.
+ */
+function calculateDynamicLapseRate(readings: Reading[], hours = 24, filterByLastReading = false) {
+    const filteredReadings = filterReadingsByTimeRange(readings, hours);
+
+    let totalLapseRate = 0;
+    let count = 0;
+
+    for (let i = 1; i < filteredReadings.length; i++) {
+        const T1 = filteredReadings[i - 1].temperature;
+        const altitude1 = filteredReadings[i - 1].altitude;
+        const T2 = filteredReadings[i].temperature;
+        const altitude2 = filteredReadings[i].altitude;
+
+        if (altitude2 !== altitude1) {
+            const lapseRate = calculateLapseRate(altitude1, T1, altitude2, T2);
+            totalLapseRate += lapseRate;
+            count++;
+        }
+    }
+
+    return count > 0 ? totalLapseRate / count : 0.0065; // Default to standard lapse rate if no data
+}
+
+
+/**
+ * 
+ * @param readings Readings data
+ * @param hours Hours to filter
+ * @returns Weighted average temperature
+ */
+function calculateWeightedAverageTemperature(readings: Reading[], hours = 24) {
+    const filteredReadings = filterReadingsByTimeRange(readings, hours);
+
+    let totalWeight = 0;
+    let weightedSum = 0;
+
+    for (let i = 1; i < filteredReadings.length; i++) {
+        const T1 = filteredReadings[i - 1].temperature;
+        const altitude1 = filteredReadings[i - 1].altitude;
+        const T2 = filteredReadings[i].temperature;
+        const altitude2 = filteredReadings[i].altitude;
+
+        const weight = Math.abs(altitude2 - altitude1); // Altitude difference as weight
+        const averageTemperature = (T1 + T2) / 2;
+
+        weightedSum += averageTemperature * weight;
+        totalWeight += weight;
+    }
+
+    return totalWeight > 0 ? weightedSum / totalWeight : readings[0]?.temperature || 288.15; // Default to 15°C in Kelvin if no data
+}
+
+/**
+ * 
+ * @param readings Readings data
+ * @param hours Filter by humber of hours to read
+ * @param filterByLastReading Filter by the datetime in the most recent reading
+ * @returns Readings within the given hours
+ */
+function filterReadingsByTimeRange(readings: Reading[], hours: number, filterByLastReading = false) {
+    readings.sort((a, b) => a.datetime.getTime() - b.datetime.getTime()); //oldest to newest
+    const cutoffTime = filterByLastReading ? readings[readings.length - 1].datetime.getTime() - hours * 60 * 60 * 1000 : Date.now() - hours * 60 * 60 * 1000; // Convert hours to milliseconds
+
+    const filteredReadings = readings.filter((reading) => reading.datetime.getTime() >= cutoffTime);
+
+    return filteredReadings;
+}
+
+/**
+ * 
+ * @param altitude1 Lower or higher altitude 1
+ * @param T1 Temperature at altitude 1
+ * @param altitude2 Lower og higher altitude 2
+ * @param T2 Temperature at altitude 2
+ * @returns True if inversion is detected
+ */
+function isTemperatureInversion(altitude1: number, T1: number, altitude2: number, T2: number) {
+    const lapseRate = calculateLapseRate(altitude1, T1, altitude2, T2);
+    return lapseRate > 0;
+}
+
+
+/**
  * Convert Kelvin to Celcius
  * @param {number} temperature Temperature in K (Kelvin)
  * @returns {number} Celcius
@@ -296,5 +398,9 @@ export default {
     meterPerSecondToKilometerPerHour,
     potentialTemperature,
     virtualTemperature,
-    DEW_POINT_VALUATIONS
+    DEW_POINT_VALUATIONS,
+    calculateLapseRate,
+    calculateDynamicLapseRate,
+    calculateWeightedAverageTemperature,
+    isTemperatureInversion
 }

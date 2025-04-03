@@ -1,5 +1,6 @@
+import { Reading } from "../../src/common";
 import constants from "../../src/constants";
-import pressure, { Reading } from "../../src/formulas/pressure";
+import pressure from "../../src/formulas/pressure";
 import temperature from "../../src/formulas/temperature"
 
 describe('Pressure Tests', function() {
@@ -113,32 +114,6 @@ describe('Pressure Tests', function() {
         });
     });
 
-    describe('isTemperatureInversion', function() {
-        it('should be no inversion', function() {
-            //arrange
-            const A1 = 1000;
-            const T1 = 290; //K
-            const A2 = 2000;
-            const T2 = 280; //K
-            const expected = false;
-            //act
-            const actual = pressure.isTemperatureInversion(A1, T1, A2, T2);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-        it('should be inversion', function() {
-            //arrange
-            const A1 = 2000;
-            const T1 = 290; //K
-            const A2 = 1000;
-            const T2 = 280; //K
-            const expected = true;
-            //act
-            const actual = pressure.isTemperatureInversion(A1, T1, A2, T2);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-    });
 
     describe('Adjust Pressure To Sea Level Advanced', function() {
         it('should calculate pressure correctly', function() {
@@ -198,87 +173,6 @@ describe('Pressure Tests', function() {
             const expected = 25;
             //act
             const actual = pressure.adjustPressureToSeaLevelByLapseRate(altitude, temperature, 0.005);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-    });
-
-    describe('Calculate Lapse Rate', function() {
-        it('should calculate lapse rate correctly', function() {
-            //arrange
-            const A1 = 1000;
-            const T1 = 290;
-            const A2 = 2000
-            const T2 = 280;
-            const expected = -0.01;
-            //act
-            const actual = pressure.calculateLapseRate(A1, T1, A2, T2);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-    });
-
-    describe('Calculate Dynamic Lapse Rate', function() {
-        it('should calculate dynamic lapse rate correctly', function() {
-            //arrange
-            const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 25 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 50, temperature: 22 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 100, temperature: 18 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 200, temperature: 15 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 300, temperature: 12 },
-            ]
-            const expected = -0.05;
-            //act
-            const actual = pressure.calculateDynamicLapseRate(readings, 12);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-        it('should equal standard lapse rate correctly', function() {
-            //arrange
-            const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15 },
-            ]
-            const expected = -0.0065;
-            //act
-            const actual = pressure.calculateDynamicLapseRate(readings, 12);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-        it('should equal cut off hours correctly', function() {
-            //arrange
-            const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 10 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 5, temperature: 20 }, //cut off these two
-                { datetime: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15 },
-            ]
-            const expected = -0.0065;
-            //act
-            const actual = pressure.calculateDynamicLapseRate(readings, 3);
-            //assert
-            expect(actual).toEqual(expected);
-        });
-    });
-
-    describe('Calculate Weighted Average Temperature', function() {
-        it('should calculate correctly', function() {
-            //arrange
-            const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15 },
-            ]
-            const expected = 275.15;
-            //act
-            const actual = pressure.calculateWeightedAverageTemperature(readings, 6);
             //assert
             expect(actual).toEqual(expected);
         });
