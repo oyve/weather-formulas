@@ -1,4 +1,5 @@
 import c, {AtmospericConstants} from '../constants'
+import temperature from './temperature';
 
 /**
  * Calculate Pressure Altitude
@@ -17,6 +18,35 @@ function pressureAltitude(pressure: number): number {
  */
 function densityAltitude(pressureAltitude: number, temperature: number): number {
     return pressureAltitude + (120 * (temperature - c.STANDARD_MEAN_TEMPERATURE_KELVIN));
+}
+
+/**
+ * 
+ * @param altitude Target altitude in meters
+ * @param referencePressure Pressure at reference altitude in Pascals
+ * @param referenceAltitude Reference altitude in meters
+ * @param referenceTemperature Temperature at reference altitude in Kelvin
+ * @param constants Specific constants, use default or custom
+ * @returns 
+ */
+function barometricPressure(
+    altitude: number,
+    referencePressure: number,
+    referenceAltitude: number, 
+    referenceTemperature: number = 288.15,
+    constants: AtmospericConstants = c.DEFAULT_ATMOSPHERIC_CONSTANTS_DRY_AIR): number|null {
+    
+    let result: number|null = 0;
+    if(constants.lapseRate === 0) {
+        const scaleHeight = (constants.gasConstant * referenceTemperature) / constants.gravity;
+        result = referencePressure * Math.exp(-(altitude - referenceAltitude) / scaleHeight);
+    } else {
+        const tempRatio = 1 - (constants.lapseRate * (altitude - referenceAltitude)) / referenceTemperature;
+        const exponent = (constants.gravity / (constants.gasConstant * constants.lapseRate));
+        result = referencePressure * Math.pow(tempRatio, exponent);
+    }
+
+    return Math.round(result * 100) / 100;
 }
 
 /**
@@ -41,12 +71,13 @@ function adjustPressureToSeaLevelSimple(pressureObserved: number, altitude: numb
  * @param temperatureAtSeaLevel Temperature at sea level in Kelvin. Default standard mean temperature: 15 Celcius
  * @returns {number} Reduced pressure to sea level in Pascals with two decimal precision
  */
-function adjustPressureToSeaLevelAdvanced(pressureObserved: number, altitude: number, temperatureAtSeaLevel: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN, constants: AtmospericConstants = c.DEFAULT_ATMOSPHERIC_CONSTANTS): number {
+function adjustPressureToSeaLevelAdvanced(pressureObserved: number, altitude: number, temperature: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN, constants: AtmospericConstants = c.DEFAULT_ATMOSPHERIC_CONSTANTS): number {
     let pressureSeaLevel = pressureObserved * Math.pow(
-        (1 - (constants.lapseRate * altitude) / temperatureAtSeaLevel),
+        (1 - (constants.lapseRate * altitude) / temperature),
         (constants.gravity * constants.molarMass) / (constants.gasConstant * constants.lapseRate));
 
     return Number(pressureSeaLevel.toFixed(2));
+    //return barometricPressure(0, pressureObserved, altitude, temperature, constants)
 }
 
 export interface Reading {
@@ -200,6 +231,7 @@ function calculateLapseRate(altitude1: number, T1: number, altitude2: number, T2
 export default {
     pressureAltitude,
     densityAltitude,
+    barometricPressure,
 
     adjustPressureToSeaLevelSimple,
     adjustPressureToSeaLevelAdvanced,

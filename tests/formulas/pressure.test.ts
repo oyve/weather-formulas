@@ -1,3 +1,4 @@
+import constants from "../../src/constants";
 import pressure, { Reading } from "../../src/formulas/pressure";
 import temperature from "../../src/formulas/temperature"
 
@@ -25,6 +26,67 @@ describe('Pressure Tests', function() {
             //assert
             expect(result).toEqual(expected);
         });
+    });
+
+    describe('Barometric Formula', function() {
+        it('should calculate Standard Sea Level Conditions', function() {
+            //arrange
+            const expected = 101325; // m
+            //act
+            const result = pressure.barometricPressure(0, 101325, 0, 288.15);
+            //assert
+            expect(result).toEqual(expected);
+        });
+        it('should calculate 1000 m altitude', function() {
+            //arrange
+            const expected = 89874.46; // m
+            //act
+            const result = pressure.barometricPressure(1000, 101325, 0, 288.15);
+            //assert
+            expect(result).toEqual(expected);
+        });
+        it('should calculate 5000 m altitude', function() {
+            //arrange
+            const expected = 54019.55; // m
+            //act
+            const result = pressure.barometricPressure(5000, 101325, 0, 288.15);
+            //assert
+            expect(result).toEqual(expected);
+        });
+        it('should calculate 10000 m altitude', function() {
+            //arrange
+            const expected = 26435.89; // m
+            //act
+            const result = pressure.barometricPressure(10000, 101325, 0, 288.15);
+            //assert
+            expect(result).toEqual(expected);
+        });
+        it('should calculate custom reference pressure (90000 at 1000m)', function() {
+            //arrange
+            const expected = 79722.31; // m
+            //act
+            const result = pressure.barometricPressure(2000, 90000, 1000, 285);
+            //assert
+            expect(result).toEqual(expected);
+        });
+        it('should calculate custom negative pressure (below sea level)', function() {
+            //arrange
+            const expected = 107477.57; // m
+            //act
+            const result = pressure.barometricPressure(-500, 101325, 0, 288.15);
+            //assert
+            expect(result).toEqual(expected);
+        });
+        // it('should calculate Isothermal Atmosphere (zero lapse rate)', function() {
+        //     //arrange
+        //     const c = { ...constants.DEFAULT_ATMOSPHERIC_CONSTANTS }; //make a copy do not alter existing
+        //     c.lapseRate = 0;
+        //     const expected = 107398.5; // m
+        //     //act
+        //     const result = pressure.barometricPressure(5000, 101325, 0, 288.15, c);
+        //     //assert
+        //     expect(result).toEqual(expected);
+        // });
     });
 
     describe('Adjust Pressure To Sea Level Simple', function() {
