@@ -78,6 +78,16 @@ function vaporPressure(temperature: number): number {
 }
 
 /**
+ * Calculates the actual vapor pressure of water vapor in the air.
+ * @param {number} saturationVaporPressure - Saturation vapor pressure in Pascals (Pa).
+ * @param {number} relativeHumidity - Relative Humidity in percentage (%).
+ * @returns {number} - Actual vapor pressure in Pascals (Pa).
+ */
+function actualVaporPressure(saturationVaporPressure: number, relativeHumidity: number): number {
+    return (relativeHumidity / 100) * saturationVaporPressure;
+}
+
+/**
  * Calculate Saturation Vapor Pressure using the Clausius-Clapeyron equation.
  * @param {number} temperature Temperature in K (Kelvin)
  * @returns {number} Saturation Vapor Pressure in Pa (Pascal)
@@ -87,12 +97,19 @@ function saturationVaporPressure(temperature: number): number {
     return 611.2 * Math.exp((17.62 * (T - c.KELVIN)) / (243.12 + (T - c.KELVIN)));
 }
 
+function specificGasConstantForMoistAir(mixingRatio: number): number {
+    const R_d = 287.05; // Specific gas constant for dry air (J/(kg·K))
+    return R_d / (1 + 0.61 * mixingRatio);
+}
+
 export default {
     relativeHumidity,
     absoluteHumidity,
     absoluteHumidityByRelativeHumidity,
     mixingRatio,
     vaporPressure,
+    actualVaporPressure,
     saturationVaporPressure,
-    specificHumidity
+    specificHumidity,
+    specificGasConstantForMoistAir
 };
