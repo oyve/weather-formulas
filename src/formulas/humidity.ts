@@ -1,4 +1,4 @@
-import c from '../../src/constants';
+import c from '../constants';
 
 /**
  * Calculate Relative Humidity
