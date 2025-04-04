@@ -332,7 +332,7 @@ function kelvinToCelcius(temperature: number): number {
  * @returns {number} Kelvin
  */
 function celciusToKelvin(temperature: number): number {
-    return roundToTwoDecimals(temperature + c.KELVIN);
+    return temperature + c.KELVIN;
 }
 
 /**
@@ -389,6 +389,25 @@ function meterPerSecondToKilometerPerHour(mps: number): number {
     return mps * 3.6;
 }
 
+/**
+ * Calculate Wet-Bulb Temperature using the Stull formula.
+ * @param {number} temperature Temperature in Kelvin (K)
+ * @param {number} humidity Relative Humidity in percentage (%)
+ * @returns {number} Wet-Bulb Temperature in Kelvin (K)
+ */
+function wetBulbTemperature(temperature: number, humidity: number): number {
+    const T = kelvinToCelcius(temperature);
+
+    const wetBulbCelsius =
+        T * Math.atan(0.151977 * Math.sqrt(humidity + 8.313659)) +
+        Math.atan(T + humidity) -
+        Math.atan(humidity - 1.676331) +
+        0.00391838 * Math.pow(humidity, 1.5) * Math.atan(0.023101 * humidity) -
+        4.686035;
+
+    return celciusToKelvin(wetBulbCelsius);
+}
+
 export default {
     dewPointMagnusFormula,
     dewPointArdenBuckEquation,
@@ -414,4 +433,5 @@ export default {
     calculateWeightedAverageTemperature,
     isTemperatureInversion,
     adjustTemperatureByLapseRate,
+    wetBulbTemperature
 }

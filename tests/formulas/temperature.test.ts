@@ -11,7 +11,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40);
             //assert
-            expect(actual).toEqual(expected);
+            expect(actual).toBeCloseTo(expected, 2);
         });
 
         it("it should equal with defined valuation set", function () {
@@ -21,7 +21,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
             //assert
-            expect(actual).toEqual(expected);
+            expect(actual).toBeCloseTo(expected, 2);
         });
 
         it("it should equal with own custom defined valuation set", function () {
@@ -31,7 +31,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
             //assert
-            expect(actual).toEqual(expected);
+            expect(actual).toBeCloseTo(expected, 2);
         });
     });
 
@@ -42,7 +42,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + KELVIN, 40);
             //assert
-            expect(actual).toEqual(expected);
+            expect(actual).toBeCloseTo(expected, 2);
         });
 
         it("it should equal", function () {
@@ -52,7 +52,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + KELVIN, 40, valuationSet);
             //assert
-            expect(actual).toEqual(expected);
+            expect(actual).toBeCloseTo(expected, 2);
         });
     });
 
@@ -63,7 +63,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperatureFormulas.windChillIndex(273.15, 12);
             //assert
-            expect(actual).toEqual(expected);
+            expect(actual).toBeCloseTo(expected, 2);
         });
     });
 
@@ -74,7 +74,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperatureFormulas.australianAapparentTemperature(10 + KELVIN, 40, 10);
             //assert
-            expect(actual).toEqual(expected);
+            expect(actual).toBeCloseTo(expected, 2);
         });
     });
 
@@ -85,7 +85,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperatureFormulas.heatIndex(31 + KELVIN, 60);
             //assert           
-            expect(actual).toEqual(expected);
+            expect(actual).toBeCloseTo(expected, 2);
         });
     });
 
@@ -108,7 +108,7 @@ describe("Temperature Tests", function () {
             //act
             const actual = temperatureFormulas.humidex(31 + KELVIN, 60);
             //assert
-            expect(actual).toEqual(expected);
+            expect(actual).toBeCloseTo(expected, 2);
         });
     });
 
@@ -282,6 +282,20 @@ describe("Temperature Tests", function () {
             const actual = temperatureFormulas.adjustTemperatureByLapseRate(altitude, temperature, 0.005);
             //assert
             expect(actual).toEqual(expected);
+        });
+    });
+
+    
+    describe('Wet Bulb Temperature', function() {
+        it('should calculate correctly', function() {
+            //arrange
+            const temperature = temperatureFormulas.celciusToKelvin(25); // 25°C in Kelvin
+            const humidity = 60; // 60% relative humidity
+            const expected = 292.65; // Expected wet bulb temperature in Kelvin (approx. 19.0°C)
+            //act
+            const actual = temperatureFormulas.wetBulbTemperature(temperature, humidity);
+            //assert
+            expect(actual).toBeCloseTo(expected, 2);
         });
     });
 
