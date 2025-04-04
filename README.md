@@ -5,7 +5,7 @@ A library of atmospheric and weather-related calculations.
 
 - Includes test code for all formulas.
 - Supports custom valuation sets where applicable.
-- Published as an ES Module (ESM).
+- Supports both ES Module (ESM) and CommonJS (CJS).
 
 ## Table of Contents
 - [Features](#features)
@@ -14,7 +14,8 @@ A library of atmospheric and weather-related calculations.
   - [Pressure](#pressure)
 - [Install](#install)
 - [How to Use](#how-to-use)
-  - [Basic Examples](#basic-examples)
+  - [ES Modules (ESM)](#es-modules-esm)
+  - [CommonJS (CJS)](#commonjs-cjs)
   - [Advanced Examples](#advanced-examples)
 - [Contribute](#contribute)
 - [License](#license)
@@ -62,27 +63,26 @@ $ npm install weather-formulas
 
 ## How to Use
 
-### ES Module Only
-This package is published as an ES Module (ESM). It does not natively support CommonJS (require). To use this package:
+### ES Modules (ESM)
+If your project is configured to use ES Modules (e.g., `"type": "module"` in `package.json`), you can use the `import` syntax to load the package:
 
-Ensure your project is configured to support ES Modules (e.g., "type": "module" in package.json). Use the import syntax to load the package. If you are using a CommonJS project, you can dynamically import the package using import() (see below).
-
-### Basic Examples
 ```javascript
 import { temperature, humidity, pressure } from 'weather-formulas';
 
 // Example usage
-const RH = humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
+const RH = humidity.relativeHumidity(298.15, 293.15); // 25°C and 20°C in Kelvin
+console.log(`Relative Humidity: ${RH}%`);
 ```
-### CommonJS Workaround
-If you are using a CommonJS project, you can dynamically import the package:
+
+### CommonJS (CJS)
+If your project uses CommonJS (e.g., no `"type": "module"` in `package.json`), you can use the `require` syntax to load the package:
 
 ```javascript
-(async () => {
-  const weatherFormulas = await import('weather-formulas');
-  const { humidity } = weatherFormulas;
-  const RH = humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
-})();
+const { temperature, humidity, pressure } = require('weather-formulas');
+
+// Example usage
+const RH = humidity.relativeHumidity(298.15, 293.15); // 25°C and 20°C in Kelvin
+console.log(`Relative Humidity: ${RH}%`);
 ```
 
 ### Advanced Examples
@@ -90,12 +90,15 @@ If you are using a CommonJS project, you can dynamically import the package:
 Use a provided valuation set:
 ```javascript
 const valuationSet = temperature.DEW_POINT_VALUATIONS.DAVID_BOLTON;
-const actual = temperature.dewPointMagnusFormula(TEMPERATURE, HUMIDITY, valuationSet);
+const actual = temperature.dewPointMagnusFormula(298.15, 60, valuationSet); // 25°C and 60% humidity
+console.log(`Dew Point: ${actual} K`);
 ```
+
 Use a custom valuation set:
 ```javascript
-const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 };
-const actual = temperature.dewPointArdenBuckEquation(TEMPERATURE, HUMIDITY, valuationSet);
+const valuationSet = { a: 6, b: 17, c: 250, d: 234.5 };
+const actual = temperature.dewPointArdenBuckEquation(298.15, 60, valuationSet); // 25°C and 60% humidity
+console.log(`Dew Point: ${actual} K`);
 ```
 
 Inspect code/tests for all possibilities.
@@ -110,6 +113,4 @@ This project is licensed under the GPL v3 License.
 For support, please open an issue in the GitHub repository.
 
 ## Disclaimer
-This package is published as an ES Module (ESM). It does not natively support CommonJS (require). If you need CommonJS support, consider using a bundler like Webpack or Rollup to transpile the package into CommonJS, or dynamically import the package using import().
-
 Always verify calculations before using in production as edge cases due to floating point errors may exist for large numbers, and which may not be covered by tests today. Please report any issues.
