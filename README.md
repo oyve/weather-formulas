@@ -80,9 +80,8 @@ If you are using a CommonJS project, you can dynamically import the package:
 ```javascript
 (async () => {
   const weatherFormulas = await import('weather-formulas');
-  const { temperature } = weatherFormulas;
-  const RH = temperature.relativeHumidity(TEMPERATURE, DEW_POINT);
-  console.log(`Relative Humidity: ${RH}%`);
+  const { humidity } = weatherFormulas;
+  const RH = humidity.relativeHumidity(TEMPERATURE, DEW_POINT);
 })();
 ```
 
