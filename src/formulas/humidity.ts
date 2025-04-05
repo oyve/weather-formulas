@@ -1,4 +1,4 @@
-import c from '../constants';
+import c, {SaturationVaporCoefficients} from '../constants';
 
 /**
  * Calculate Relative Humidity
@@ -7,8 +7,8 @@ import c from '../constants';
  * @returns {number} Relative Humidity in percentage (%)
  */
 function relativeHumidity(temperature: number, dewPoint: number): number {
-    const RH = 100 * (Math.exp((17.625 * (dewPoint - c.KELVIN)) / (243.04 + (dewPoint - c.KELVIN))) /
-                      Math.exp((17.625 * (temperature - c.KELVIN)) / (243.04 + (temperature - c.KELVIN))));
+    const RH = 100 * (Math.exp((17.625 * (dewPoint - c.CELSIUS_TO_KELVIN)) / (243.04 + (dewPoint - c.CELSIUS_TO_KELVIN))) /
+                      Math.exp((17.625 * (temperature - c.CELSIUS_TO_KELVIN)) / (243.04 + (temperature - c.CELSIUS_TO_KELVIN))));
     return RH;
 }
 
@@ -34,7 +34,7 @@ function absoluteHumidity(mH2O: number, Vnet: number): number {
  */
 function absoluteHumidityByRelativeHumidity(RH: number, T: number): number {
     const M_w = 18.015; // g/mol - Molar mass of water vapor
-    const R = c.DEFAULT_ATMOSPHERIC_CONSTANTS.gasConstant; // J/(mol·K) - Universal gas constant
+    const R = c.STANDARD_ATMOSPHERIC_CONSTANTS.gasConstant; // J/(mol·K) - Universal gas constant
 
     // Calculate saturation vapor pressure (Pa)
     const P_sat = saturationVaporPressure(T);
@@ -64,6 +64,9 @@ function specificHumidity(mixingRatio: number): number {
  * @returns {number} Mixing Ratio in g/kg (grams per kilogram)
  */
 function mixingRatio(vaporPressure: number, pressure: number): number {
+    if (pressure <= vaporPressure) {
+        throw new Error("Barometric pressure must be greater than vapor pressure.");
+    }
     return (0.622 * vaporPressure) / (pressure - vaporPressure) * 1000;
 }
 
@@ -74,7 +77,7 @@ function mixingRatio(vaporPressure: number, pressure: number): number {
  */
 function vaporPressure(temperature: number): number {
     const T = temperature; // Keep temperature in Kelvin
-    return 611.2 * Math.exp((17.67 * (T - c.KELVIN)) / ((T - c.KELVIN) + 243.5));
+    return 611.2 * Math.exp((17.67 * (T - c.CELSIUS_TO_KELVIN)) / ((T - c.CELSIUS_TO_KELVIN) + 243.5));
 }
 
 /**
@@ -92,14 +95,23 @@ function actualVaporPressure(saturationVaporPressure: number, relativeHumidity: 
  * @param {number} temperature Temperature in K (Kelvin)
  * @returns {number} Saturation Vapor Pressure in Pa (Pascal)
  */
-function saturationVaporPressure(temperature: number): number {
-    const T = temperature; // Keep temperature in Kelvin
-    return 611.2 * Math.exp((17.62 * (T - c.KELVIN)) / (243.12 + (T - c.KELVIN)));
+function saturationVaporPressure(temperature: number, constants: SaturationVaporCoefficients = c.SATURATION_VAPOR_PRESSURE_COEFFICIENTS): number {
+    return constants.REFERENCE_PRESSURE * Math.exp((constants.MAGNUS_CONSTANT_B * (temperature - c.CELSIUS_TO_KELVIN)) / (constants.MAGNUS_CONSTANT_C + (temperature - c.CELSIUS_TO_KELVIN)));
 }
 
 function specificGasConstantForMoistAir(mixingRatio: number): number {
-    const R_d = 287.05; // Specific gas constant for dry air (J/(kg·K))
+    const R_d = 287.058; // Specific gas constant for dry air (J/(kg·K))
     return R_d / (1 + 0.61 * mixingRatio);
+}
+
+/**
+ * Calculate the dew point depression.
+ * @param {number} airTemperature - The air temperature in Kelvin.
+ * @param {number} dewPointTemperature - The dew point temperature in Kelvin.
+ * @returns {number} The dew point depression in Kelvin.
+ */
+function dewPointDepression(airTemperature: number, dewPointTemperature: number): number {
+    return airTemperature - dewPointTemperature;
 }
 
 export default {
@@ -111,5 +123,6 @@ export default {
     actualVaporPressure,
     saturationVaporPressure,
     specificHumidity,
-    specificGasConstantForMoistAir
+    specificGasConstantForMoistAir,
+    dewPointDepression
 };

@@ -8,15 +8,6 @@ export interface IValuationSet {
     d: number; //celcius degrees
 }
 
-const DEW_POINT_VALUATIONS = {
-    ARDENBUCK_DEFAULT: { a: 6.1121, b: 18.678, c: 257.14, d: 234.5 },
-    DAVID_BOLTON: { a: 6.112, b: 17.67, c: 234.5, d: 234.5 }, //maximum error of 0.1%, for −30 °C ≤ T ≤ 35°C and 1% < RH < 100%
-    SONNTAG1990: { a: 6.112, b: 17.62, c: 243.12, d: 234.5 }, //for −45 °C ≤ T ≤ 60 °C (error ±0.35 °C).
-    PAROSCIENTIFIC: { a: 6.105, b: 17.27, c: 237.7, d: 234.5 }, //for 0 °C ≤ T ≤ 60 °C (error ±0.4 °C).
-    ARDENBUCK_PLUS: { a: 6.1121, b: 17.368, c: 238.88, d: 234.5 }, //for 0 °C ≤ T ≤ 50 °C (error ≤ 0.05%).
-    ARDENBUCK_MINUS: { a: 6.1121, b: 17.966, c: 247.15, d: 234.5 } //for −40 °C ≤ T ≤ 0 °C (error ≤ 0.06%).
-} as const;
-
 /**
  * Gets the Dew Point Valuation by temperature
  * @param {number} temperature Temperature in CELCIUS
@@ -24,13 +15,13 @@ const DEW_POINT_VALUATIONS = {
  */
 function dewPointValuationsByTemperature(temperature: number): IValuationSet {
     if (temperature < 0) {
-        return DEW_POINT_VALUATIONS.ARDENBUCK_MINUS;
+        return c.DEW_POINT_VALUATIONS.ARDENBUCK_MINUS;
     } else if (temperature >= 0 && temperature <= 50) {
-        return DEW_POINT_VALUATIONS.ARDENBUCK_PLUS;
+        return c.DEW_POINT_VALUATIONS.ARDENBUCK_PLUS;
     } else if (temperature > 50) {
-        return DEW_POINT_VALUATIONS.PAROSCIENTIFIC;
+        return c.DEW_POINT_VALUATIONS.PAROSCIENTIFIC;
     } else {
-        return DEW_POINT_VALUATIONS.ARDENBUCK_DEFAULT;
+        return c.DEW_POINT_VALUATIONS.ARDENBUCK_DEFAULT;
     }
 }
 
@@ -167,7 +158,7 @@ function heatIndexText(heatIndexTemperature: number): null | {lowerLimit: number
         { lowerLimit: 26, text: "Caution", warning: "Fatigue is possible with prolonged exposure and activity. Continuing activity could result in heat cramps." }
     ];
 
-    let result = thresholds.find((t) => heatIndexTemperature >= (t.lowerLimit + c.KELVIN));
+    let result = thresholds.find((t) => heatIndexTemperature >= (t.lowerLimit + c.CELSIUS_TO_KELVIN));
 
     return result === undefined ? null : result;
 }
@@ -201,7 +192,7 @@ function humidexText(humidex: number): null | {lowerLimit: number, text: string}
         { lowerLimit: 30, text: "Some discomfort" }
     ];
 
-    const result = thresholds.find((t) => humidex >= (t.lowerLimit + c.KELVIN));
+    const result = thresholds.find((t) => humidex >= (t.lowerLimit + c.CELSIUS_TO_KELVIN));
 
     return result === undefined ? null : result;
 }
@@ -323,7 +314,7 @@ function adjustTemperatureByLapseRate(altitude: number, temperature: number, lap
  * @returns {number} Celcius
  */
 function kelvinToCelcius(temperature: number): number {
-    return temperature - c.KELVIN;
+    return temperature - c.CELSIUS_TO_KELVIN;
 }
 
 /**
@@ -332,7 +323,7 @@ function kelvinToCelcius(temperature: number): number {
  * @returns {number} Kelvin
  */
 function celciusToKelvin(temperature: number): number {
-    return temperature + c.KELVIN;
+    return temperature + c.CELSIUS_TO_KELVIN;
 }
 
 /**
@@ -359,7 +350,7 @@ function fahrenheitToCelcius(fahrenheit: number): number {
  * @returns Fahrenheit degrees
  */
 function kelvinToFahrenheit(kelvin: number): number {
-    return (kelvin - c.KELVIN) * 9/5 + 32;
+    return (kelvin - c.CELSIUS_TO_KELVIN) * 9/5 + 32;
 }
 
 /**
@@ -368,7 +359,7 @@ function kelvinToFahrenheit(kelvin: number): number {
  * @returns Kelvin degrees
  */
 function fahrenheitToKelvin(fahrenheit: number): number {
-    return (fahrenheit - 32) * 5/9 + c.KELVIN;
+    return (fahrenheit - 32) * 5/9 + c.CELSIUS_TO_KELVIN;
 }
 
 /**
@@ -427,7 +418,6 @@ export default {
     meterPerSecondToKilometerPerHour,
     potentialTemperature,
     virtualTemperature,
-    DEW_POINT_VALUATIONS,
     calculateLapseRate,
     calculateDynamicLapseRate,
     calculateWeightedAverageTemperature,

@@ -1,5 +1,6 @@
 import { Reading } from '../../src/common';
 import temperatureFormulas from '../../src/formulas/temperature';
+import c from '../../src/constants';
 
 const KELVIN = 273.15;
 
@@ -17,7 +18,7 @@ describe("Temperature Tests", function () {
         it("it should equal with defined valuation set", function () {
             //arrange
             const expected = 285.72;
-            const valuationSet = temperatureFormulas.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+            const valuationSet = c.DEW_POINT_VALUATIONS.DAVID_BOLTON;
             //act
             const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
             //assert
@@ -48,7 +49,7 @@ describe("Temperature Tests", function () {
         it("it should equal", function () {
             //arrange
             const expected = 285.55;
-            const valuationSet = temperatureFormulas.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+            const valuationSet = c.DEW_POINT_VALUATIONS.DAVID_BOLTON;
             //act
             const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + KELVIN, 40, valuationSet);
             //assert

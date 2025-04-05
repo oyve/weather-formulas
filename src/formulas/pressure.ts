@@ -41,7 +41,7 @@ function barometricPressure(
     referencePressure: number,
     referenceAltitude: number,
     referenceTemperature: number = 288.15,
-    constants: AtmospericConstants = c.DEFAULT_ATMOSPHERIC_CONSTANTS_DRY_AIR
+    constants: AtmospericConstants = c.DRY_AIR_CONSTANTS
 ): number {
     let result: number;
 
@@ -94,7 +94,7 @@ function adjustPressureToSeaLevelAdvanced(
     pressureObserved: number,
     altitude: number,
     temperature: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN,
-    constants: AtmospericConstants = c.DEFAULT_ATMOSPHERIC_CONSTANTS_DRY_AIR
+    constants: AtmospericConstants = c.DRY_AIR_CONSTANTS
 ): number {
     return barometricPressure(0, pressureObserved, altitude, temperature, constants);
 }
