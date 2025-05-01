@@ -14,6 +14,7 @@ function generateExports(directory) {
     '.': {
       require: './dist/cjs/index.cjs',
       import: './dist/esm/index.js',
+      types: "./dist/types/index.d.ts"
     },
   };
 
@@ -23,6 +24,7 @@ function generateExports(directory) {
     exportsField[name] = {
       require: `./dist/cjs/${directory}/${file.replace('.js', '.cjs')}`,
       import: `./dist/esm/${directory}/${file}`,
+      types: `./dist/types/${directory}/${path.basename(file, '.js')}.d.ts`
     };
   });
 
