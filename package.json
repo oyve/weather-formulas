@@ -34,6 +34,14 @@
     "./wind": {
       "require": "./dist/cjs/formulas/wind.cjs",
       "import": "./dist/esm/formulas/wind.js"
+    },
+    "./beaufort": {
+      "require": "./dist/cjs/scales/beaufort.cjs",
+      "import": "./dist/esm/scales/beaufort.js"
+    },
+    "./saffirSimpson": {
+      "require": "./dist/cjs/scales/saffirSimpson.cjs",
+      "import": "./dist/esm/scales/saffirSimpson.js"
     }
   },
   "files": [
