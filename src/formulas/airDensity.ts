@@ -7,19 +7,19 @@ import * as humidityFormulas from './humidity';
  * @param {number} temperature - Temperature in Kelvin (K).
  * @param {number} humidity - Relative Humidity in percentage (%).
  * @param {boolean} [isDryAir=false] - Whether to calculate for dry air (ignores humidity).
+ * @param {number} [gasConstant=287.05] - Specific gas constant for dry air (J/(kg·K)).
  * @returns {number} - Air density in kilograms per cubic meter (kg/m³).
  */
 export function calculateAirDensity(
     pressure: number,
     temperature: number,
     humidity: number,
-    isDryAir: boolean = false
+    isDryAir: boolean = false,
+    gasConstant: number = 287.05 // Default to the specific gas constant for dry air
 ): number {
-    const R_d = 287.05; // Specific gas constant for dry air (J/(kg·K))
-
     if (isDryAir) {
         // Dry air calculation
-        return pressure / (R_d * temperature);
+        return pressure / (gasConstant * temperature);
     } else {
         // Moist air calculation
         const saturationVaporPressure = humidityFormulas.saturationVaporPressure(temperature);
