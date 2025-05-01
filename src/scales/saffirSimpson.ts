@@ -1,4 +1,4 @@
-import wind from "../formulas/wind";
+import * as wind from "../formulas/wind";
 
 export interface SaffirSimpsonScale  {
     min: number;
@@ -6,7 +6,7 @@ export interface SaffirSimpsonScale  {
     category: number;
 }
 
-function getSaffirSimpsonScaleByWindSpeed(windSpeed: number): SaffirSimpsonScale | null {
+export function getSaffirSimpsonScaleByWindSpeed(windSpeed: number): SaffirSimpsonScale | null {
   if(windSpeed < 0) throw new Error('Wind speed cannot be negative.');
   windSpeed = Math.round(windSpeed); //to nearest integer
     
@@ -19,8 +19,4 @@ function getSaffirSimpsonScaleByWindSpeed(windSpeed: number): SaffirSimpsonScale
   ];
 
   return categories.find(cat => windSpeed >= cat.min && windSpeed <= cat.max) || null;
-}
-
-export default {
-  getSaffirSimpsonScaleByWindSpeed
 }

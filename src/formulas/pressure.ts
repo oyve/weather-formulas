@@ -1,6 +1,6 @@
 import { Reading } from '../common';
 import c, { AtmospericConstants } from '../constants';
-import temperatureFormulas from './temperature';
+import * as temperatureFormulas from './temperature';
 
 /**
  * Calculates the pressure altitude based on the observed pressure.
@@ -9,7 +9,7 @@ import temperatureFormulas from './temperature';
  * @param {number} pressure Observed pressure in Pascals (Pa).
  * @returns {number} Pressure altitude in meters (m).
  */
-function pressureAltitude(pressure: number): number {
+export function pressureAltitude(pressure: number): number {
     return (1 - Math.pow(pressure / c.STANDARD_MEAN_PRESSURE_SEA_LEVEL, 0.190284)) * 145366.45 * 0.3048;
 }
 
@@ -21,7 +21,7 @@ function pressureAltitude(pressure: number): number {
  * @param {number} temperature Temperature in Kelvin (K).
  * @returns {number} Density altitude in meters (m).
  */
-function densityAltitude(pressureAltitude: number, temperature: number): number {
+export function densityAltitude(pressureAltitude: number, temperature: number): number {
     return pressureAltitude + (120 * (temperature - c.STANDARD_MEAN_TEMPERATURE_KELVIN));
 }
 
@@ -36,7 +36,7 @@ function densityAltitude(pressureAltitude: number, temperature: number): number 
  * @param {AtmospericConstants} constants Atmospheric constants (e.g., lapse rate, gravity, gas constant).
  * @returns {number} Barometric pressure at the target altitude in Pascals (Pa).
  */
-function barometricPressure(
+export function barometricPressure(
     altitude: number,
     referencePressure: number,
     referenceAltitude: number,
@@ -74,7 +74,7 @@ function barometricPressure(
  * @param {number} temperatureAtSeaLevel Temperature at sea level in Kelvin (K). Defaults to 288.15 K (15°C).
  * @returns {number} Pressure reduced to sea level in Pascals (Pa), rounded to two decimal places.
  */
-function adjustPressureToSeaLevelSimple(pressureObserved: number, altitude: number, temperatureAtSeaLevel: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN): number {
+export function adjustPressureToSeaLevelSimple(pressureObserved: number, altitude: number, temperatureAtSeaLevel: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN): number {
     let pressureSeaLevel = pressureObserved * Math.pow(1 - ((0.0065 * altitude) / (temperatureAtSeaLevel + 0.0065 * altitude)), -5.257);
 
     return Number(pressureSeaLevel.toFixed(2));
@@ -90,7 +90,7 @@ function adjustPressureToSeaLevelSimple(pressureObserved: number, altitude: numb
  * @param {AtmospericConstants} constants Atmospheric constants (e.g., lapse rate, gravity, gas constant). Defaults to Earth's standard constants.
  * @returns {number} Pressure reduced to sea level in Pascals (Pa), rounded to two decimal places.
  */
-function adjustPressureToSeaLevelAdvanced(
+export function adjustPressureToSeaLevelAdvanced(
     pressureObserved: number,
     altitude: number,
     temperature: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN,
@@ -107,7 +107,7 @@ function adjustPressureToSeaLevelAdvanced(
  * @param lapseRate Lapse rate
  * @returns Adjusted pressure
  */
-function adjustPressureToSeaLevelByDynamicLapseRate(pressure: number, altitude: number, temperature: number, lapseRate: number) {
+export function adjustPressureToSeaLevelByDynamicLapseRate(pressure: number, altitude: number, temperature: number, lapseRate: number) {
     const g = 9.80665; // Gravitational acceleration (m/s²)
     const R = 287.05; // Specific gas constant for dry air (J/(kg·K))
 
@@ -121,7 +121,7 @@ function adjustPressureToSeaLevelByDynamicLapseRate(pressure: number, altitude: 
     }
 }
 
-function adjustPressureToSeaLevelByHistoricalData(pressure: number, altitude: number, readings: Reading[], hours = 24) {
+export function adjustPressureToSeaLevelByHistoricalData(pressure: number, altitude: number, readings: Reading[], hours = 24) {
     const dynamicLapseRate = temperatureFormulas.calculateDynamicLapseRate(readings, hours);
     const weightedAverageTemperature = temperatureFormulas.calculateWeightedAverageTemperature(readings, hours);
 
@@ -129,14 +129,3 @@ function adjustPressureToSeaLevelByHistoricalData(pressure: number, altitude: nu
 
     return Math.round(adjusted);
 }
-
-export default {
-    pressureAltitude,
-    densityAltitude,
-    barometricPressure,
-
-    adjustPressureToSeaLevelSimple,
-    adjustPressureToSeaLevelAdvanced,
-    adjustPressureToSeaLevelByDynamicLapseRate,
-    adjustPressureToSeaLevelByHistoricalData,
-};

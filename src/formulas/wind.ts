@@ -12,7 +12,7 @@
  *   getWindDirectionByDegree(725)  -> 'N'
  *   getWindDirectionByDegree(-45)  -> 'NW'
  */
-function getWindDirectionByDegree(degree: number): string {
+export function getWindDirectionByDegree(degree: number): string {
     degree = ((degree % 360) + 360) % 360; // Normalize degrees to the range [0, 360]
 
     const directions = [
@@ -30,11 +30,6 @@ function getWindDirectionByDegree(degree: number): string {
  * @param {number} airDensity - Air density in kilograms per cubic meter (default is 1.225 kg/m³ at sea level).
  * @returns {number} - Wind power density in watts per square meter.
  */
-function calculateWindPowerDensity(windSpeed: number, airDensity: number = 1.225): number {
+export function calculateWindPowerDensity(windSpeed: number, airDensity: number = 1.225): number {
     return 0.5 * airDensity * Math.pow(windSpeed, 3);
 }
-
-export default {
-    getWindDirectionByDegree,
-    calculateWindPowerDensity,
-};

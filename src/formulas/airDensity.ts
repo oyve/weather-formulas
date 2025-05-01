@@ -1,4 +1,4 @@
-import humidityFormulas from './humidity';
+import * as humidityFormulas from './humidity';
 
 /**
  * Calculates air density using pressure, temperature, and humidity.
@@ -9,7 +9,7 @@ import humidityFormulas from './humidity';
  * @param {boolean} [isDryAir=false] - Whether to calculate for dry air (ignores humidity).
  * @returns {number} - Air density in kilograms per cubic meter (kg/m³).
  */
-function calculateAirDensity(
+export function calculateAirDensity(
     pressure: number,
     temperature: number,
     humidity: number,

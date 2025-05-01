@@ -10,7 +10,7 @@ export interface BeaufortScale {
  * @param {number} windSpeed - Wind speed in meters per second (m/s).
  * @returns {BeaufortScale | null} - Beaufort scale object or null if not found.
  */
-function getBeaufortScaleByWindSpeed(windSpeed: number): BeaufortScale | null {
+export function getBeaufortScaleByWindSpeed(windSpeed: number): BeaufortScale | null {
     if(windSpeed < 0) throw new Error('Wind speed cannot be negative.');
     windSpeed = Math.round(windSpeed * 10) / 10; //to 1 decimal place
     
@@ -45,7 +45,7 @@ function getBeaufortScaleByWindSpeed(windSpeed: number): BeaufortScale | null {
  * @param {number} airDensity - Air density in kilograms per cubic meter (default is 1.225 kg/m³ at sea level).
  * @returns {string} - Beaufort scale category (e.g., 'Calm', 'Light Breeze').
  */
-function getBeaufortScaleByPressure(pressureDifference: number, airDensity: number = 1.225): string {
+export function getBeaufortScaleByPressure(pressureDifference: number, airDensity: number = 1.225): string {
     const windSpeed = Math.sqrt((2 * pressureDifference) / airDensity); // Calculate wind speed using Bernoulli's principle
     const scale = getBeaufortScaleByWindSpeed(windSpeed);
     return scale ? scale.category : 'Unknown';
@@ -57,7 +57,7 @@ function getBeaufortScaleByPressure(pressureDifference: number, airDensity: numb
  * @param {number} airDensity - Air density in kilograms per cubic meter (default is 1.225 kg/m³ at sea level).
  * @returns {string} - Beaufort scale category (e.g., 'Calm', 'Light Breeze').
  */
-function getBeaufortScaleByPressureRatio(pressureRatio: number, airDensity: number = 1.225): string {
+export function getBeaufortScaleByPressureRatio(pressureRatio: number, airDensity: number = 1.225): string {
     if (pressureRatio <= 0) {
         throw new Error('Pressure ratio must be greater than 0.');
     }
@@ -69,9 +69,3 @@ function getBeaufortScaleByPressureRatio(pressureRatio: number, airDensity: numb
     const scale = getBeaufortScaleByWindSpeed(windSpeed);
     return scale ? scale.category : 'Unknown';
 }
-
-export default {
-    getBeaufortScaleByWindSpeed,
-    getBeaufortScaleByPressure,
-    getBeaufortScaleByPressureRatio,
-};

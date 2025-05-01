@@ -1,7 +1,7 @@
-import humidity from "./formulas/humidity";
-import temperature from "./formulas/temperature";
-import pressure from "./formulas/pressure";
-import wind from "./formulas/wind";
+import * as humidity from "./formulas/humidity";
+import * as temperature from "./formulas/temperature";
+import * as pressure from "./formulas/pressure";
+import * as wind from "./formulas/wind";
 import airDensity from "./formulas/airDensity";
 
 export {
