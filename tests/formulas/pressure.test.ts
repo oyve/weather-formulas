@@ -1,7 +1,7 @@
 import { Reading } from "../../src/common";
-import constants from "../../src/constants";
-import pressure from "../../src/formulas/pressure";
-import temperature from "../../src/formulas/temperature"
+import * as constants from "../../src/constants";
+import * as pressure from "../../src/formulas/pressure";
+import * as temperature from "../../src/formulas/temperature"
 
 describe('Pressure Tests', function() {
     describe('Pressure Altitude', function() {

@@ -1,6 +1,6 @@
 import { Reading } from '../../src/common';
-import temperatureFormulas from '../../src/formulas/temperature';
-import c from '../../src/constants';
+import * as temperatureFormulas from '../../src/formulas/temperature';
+import * as c from '../../src/constants';
 
 const KELVIN = 273.15;
 

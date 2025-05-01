@@ -1,4 +1,4 @@
-import airDensityFormulas from '../../src/formulas/airDensity';
+import * as airDensityFormulas from '../../src/formulas/airDensity';
 
 describe('Air Density Calculation', () => {
     it('should calculate air density at sea level with standard conditions', () => {

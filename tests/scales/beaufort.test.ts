@@ -1,4 +1,4 @@
-import beaufortFormulas from '../../src/scales/beaufort';
+import * as beaufortFormulas from '../../src/scales/beaufort';
 
 describe('getWindDirectionByDegree', () => {
     it('should be actual force', () => {
