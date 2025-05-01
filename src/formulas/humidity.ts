@@ -1,4 +1,4 @@
-import c, {SaturationVaporCoefficients} from '../constants';
+import * as c from '../constants';
 
 /**
  * Calculate Relative Humidity
@@ -95,7 +95,7 @@ export function actualVaporPressure(saturationVaporPressure: number, relativeHum
  * @param {number} temperature Temperature in K (Kelvin)
  * @returns {number} Saturation Vapor Pressure in Pa (Pascal)
  */
-export function saturationVaporPressure(temperature: number, constants: SaturationVaporCoefficients = c.SATURATION_VAPOR_PRESSURE_COEFFICIENTS): number {
+export function saturationVaporPressure(temperature: number, constants: c.SaturationVaporCoefficients = c.SATURATION_VAPOR_PRESSURE_COEFFICIENTS): number {
     return constants.REFERENCE_PRESSURE * Math.exp((constants.MAGNUS_CONSTANT_B * (temperature - c.CELSIUS_TO_KELVIN)) / (constants.MAGNUS_CONSTANT_C + (temperature - c.CELSIUS_TO_KELVIN)));
 }
 

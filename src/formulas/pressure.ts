@@ -1,6 +1,6 @@
 import { Reading } from '../common';
-import c, { AtmospericConstants } from '../constants';
-import * as temperatureFormulas from './temperature';
+import * as c from '../constants';
+import { calculateDynamicLapseRate, calculateWeightedAverageTemperature } from './temperature';
 
 /**
  * Calculates the pressure altitude based on the observed pressure.
@@ -41,7 +41,7 @@ export function barometricPressure(
     referencePressure: number,
     referenceAltitude: number,
     referenceTemperature: number = 288.15,
-    constants: AtmospericConstants = c.DRY_AIR_CONSTANTS
+    constants: c.AtmospericConstants = c.DRY_AIR_CONSTANTS
 ): number {
     let result: number;
 
@@ -94,7 +94,7 @@ export function adjustPressureToSeaLevelAdvanced(
     pressureObserved: number,
     altitude: number,
     temperature: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN,
-    constants: AtmospericConstants = c.DRY_AIR_CONSTANTS
+    constants: c.AtmospericConstants = c.DRY_AIR_CONSTANTS
 ): number {
     return barometricPressure(0, pressureObserved, altitude, temperature, constants);
 }
@@ -122,8 +122,8 @@ export function adjustPressureToSeaLevelByDynamicLapseRate(pressure: number, alt
 }
 
 export function adjustPressureToSeaLevelByHistoricalData(pressure: number, altitude: number, readings: Reading[], hours = 24) {
-    const dynamicLapseRate = temperatureFormulas.calculateDynamicLapseRate(readings, hours);
-    const weightedAverageTemperature = temperatureFormulas.calculateWeightedAverageTemperature(readings, hours);
+    const dynamicLapseRate = calculateDynamicLapseRate(readings, hours);
+    const weightedAverageTemperature = calculateWeightedAverageTemperature(readings, hours);
 
     const adjusted = adjustPressureToSeaLevelByDynamicLapseRate(pressure, altitude, weightedAverageTemperature, dynamicLapseRate);
 

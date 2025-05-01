@@ -1,5 +1,5 @@
 import { Reading } from '../common';
-import c from '../constants'
+import * as c from '../constants'
 
 export interface IValuationSet {
     a: number, //millibar

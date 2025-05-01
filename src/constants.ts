@@ -1,11 +1,11 @@
 
-const CELSIUS_TO_KELVIN = 273.15;
-const STANDARD_MEAN_PRESSURE_SEA_LEVEL = 101325
-const STANDARD_MEAN_TEMPERATURE_CELCIUS = 15;
-const STANDARD_MEAN_TEMPERATURE_KELVIN = 288.15;
-const STANDARD_LAPSE_RATE = 0.0065;
+export const CELSIUS_TO_KELVIN = 273.15;
+export const STANDARD_MEAN_PRESSURE_SEA_LEVEL = 101325
+export const STANDARD_MEAN_TEMPERATURE_CELCIUS = 15;
+export const STANDARD_MEAN_TEMPERATURE_KELVIN = 288.15;
+export const STANDARD_LAPSE_RATE = 0.0065;
 
-const DEW_POINT_VALUATIONS = {
+export const DEW_POINT_VALUATIONS = {
     ARDENBUCK_DEFAULT: { a: 6.1121, b: 18.678, c: 257.14, d: 234.5 },
     DAVID_BOLTON: { a: 6.112, b: 17.67, c: 234.5, d: 234.5 }, //maximum error of 0.1%, for −30 °C ≤ T ≤ 35°C and 1% < RH < 100%
     SONNTAG1990: { a: 6.112, b: 17.62, c: 243.12, d: 234.5 }, //for −45 °C ≤ T ≤ 60 °C (error ±0.35 °C).
@@ -21,14 +21,14 @@ export interface AtmospericConstants {
     gasConstant: number;
 }
 
-const STANDARD_ATMOSPHERIC_CONSTANTS: AtmospericConstants = {
+export const STANDARD_ATMOSPHERIC_CONSTANTS: AtmospericConstants = {
     lapseRate: 0.0065, // K/m Temperature lapse rate
     gravity: 9.80665, // m/s2 Gravitational acceleration
     molarMass: 0.0289644, //kg/mol (Molar mass of dry air)
     gasConstant: 8.31447 //J/(mol K) (Universal gas constant)
 } as const;
 
-const DRY_AIR_CONSTANTS: AtmospericConstants = {
+export const DRY_AIR_CONSTANTS: AtmospericConstants = {
     lapseRate: 0.0065, // K/m Temperature lapse rate
     gravity: 9.80665, // m/s2 Gravitational acceleration
     molarMass: 0.0289644, //kg/mol (Molar mass of dry air)
@@ -41,20 +41,8 @@ export interface SaturationVaporCoefficients {
     MAGNUS_CONSTANT_C: number;
 }
 
-const SATURATION_VAPOR_PRESSURE_COEFFICIENTS: SaturationVaporCoefficients = {
+export const SATURATION_VAPOR_PRESSURE_COEFFICIENTS: SaturationVaporCoefficients = {
     REFERENCE_PRESSURE: 611.2, // Reference pressure at 0°C in Pascals
     MAGNUS_CONSTANT_B: 17.62, // Empirical constant for water vapor
     MAGNUS_CONSTANT_C: 243.12, // Empirical constant for water vapor in Celsius
 } as const;
-
-export default {
-    CELSIUS_TO_KELVIN,
-    STANDARD_MEAN_PRESSURE_SEA_LEVEL,
-    STANDARD_MEAN_TEMPERATURE_CELCIUS,
-    STANDARD_MEAN_TEMPERATURE_KELVIN,
-    STANDARD_LAPSE_RATE,
-    DEW_POINT_VALUATIONS,
-    STANDARD_ATMOSPHERIC_CONSTANTS,
-    DRY_AIR_CONSTANTS,
-    SATURATION_VAPOR_PRESSURE_COEFFICIENTS
-}

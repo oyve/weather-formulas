@@ -1,12 +1,19 @@
-import * as humidity from "./formulas/humidity";
-import * as temperature from "./formulas/temperature";
-import * as pressure from "./formulas/pressure";
-import * as wind from "./formulas/wind";
-import airDensity from "./formulas/airDensity";
+import * as humidityFormulas from "./formulas/humidity";
+import * as temperatureFormulas from "./formulas/temperature";
+import * as pressureFormulas from "./formulas/pressure";
+import * as windFormulas from "./formulas/wind";
+import * as airDensityFormulas from "./formulas/airDensity";
+
+import * as beaufortScale from "./scales/beaufort";
+import * as saffirSimpsonScale from "./scales/saffirSimpson";
 
 export {
-    humidity,
-    temperature,
-    pressure,
-    wind
+    humidityFormulas,
+    temperatureFormulas,
+    pressureFormulas,
+    windFormulas,
+    airDensityFormulas,
+
+    beaufortScale,
+    saffirSimpsonScale,
 }
