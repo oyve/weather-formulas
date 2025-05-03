@@ -31,6 +31,15 @@ export function calculateAirDensity(
     }
 }
 
-export default {
-    calculateAirDensity,
-};
+/**
+ * Calculate air density at a given altitude.
+ * @param airDensityAtReference - Air density at the reference altitude in kg/m³.
+ * @param altitudeDifference - Difference in altitude from the reference altitude in meters.
+ * @returns {number} - Air density at the target altitude in kg/m³.
+ */
+export function calculateAirDensityAtAltitude(
+    airDensityAtReference: number,
+    altitudeDifference: number
+): number {
+    return airDensityAtReference * Math.exp(-0.00011856 * altitudeDifference);
+}
