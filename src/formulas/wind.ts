@@ -1,3 +1,5 @@
+import * as airDensityFormulas from "./airDensity";
+
 /**
  * Get the wind direction based on the degree.
  * Converts a degree value (0-360) into a compass direction (e.g., N, NE, E).
@@ -32,4 +34,36 @@ export function getWindDirectionByDegree(degree: number): string {
  */
 export function calculateWindPowerDensity(windSpeed: number, airDensity: number = 1.225): number {
     return 0.5 * airDensity * Math.pow(windSpeed, 3);
+}
+
+/**
+ * Adjust wind speed between two altitudes.
+ * @param windSpeed - Wind speed at the measurement altitude in meters per second.
+ * @param measurementAltitude - Altitude where the wind speed is measured, in meters.
+ * @param airDensityAtMeasurementAltitude - Air density at the measurement altitude in kg/m³ (default is 1.225 kg/m³ at sea level).
+ * @param referenceAltitude - Reference altitude in meters.
+ * @param targetAltitude - Target altitude in meters. 
+ * @returns {number} - Adjusted wind speed at the target altitude.
+ */
+export function adjustWindSpeedForAltitude(
+    windSpeed: number,
+    measurementAltitude: number,
+    airDensityAtMeasurementAltitude: number = 1.225, // Default to sea level air density
+    referenceAltitude: number,
+    targetAltitude: number,
+): number {
+    // Calculate air density at the reference altitude
+    const airDensityAtReference = airDensityFormulas.calculateAirDensityAtAltitude(
+        airDensityAtMeasurementAltitude,
+        referenceAltitude - measurementAltitude
+    );
+
+    // Calculate air density at the target altitude
+    const airDensityAtTarget = airDensityFormulas.calculateAirDensityAtAltitude(
+        airDensityAtMeasurementAltitude,
+        targetAltitude - measurementAltitude
+    );
+
+    // Adjust wind speed based on the ratio of air densities
+    return windSpeed * (airDensityAtReference / airDensityAtTarget) ** (1 / 3);
 }
