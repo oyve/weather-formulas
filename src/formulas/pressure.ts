@@ -36,7 +36,7 @@ export function densityAltitude(pressureAltitude: number, temperature: number): 
  * @param {AtmospericConstants} constants Atmospheric constants (e.g., lapse rate, gravity, gas constant).
  * @returns {number} Barometric pressure at the target altitude in Pascals (Pa).
  */
-export function barometricPressure(
+export function barometricFormula(
     altitude: number,
     referencePressure: number,
     referenceAltitude: number,
@@ -96,7 +96,7 @@ export function adjustPressureToSeaLevelAdvanced(
     temperature: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN,
     constants: c.AtmospericConstants = c.DRY_AIR_CONSTANTS
 ): number {
-    return barometricPressure(0, pressureObserved, altitude, temperature, constants);
+    return barometricFormula(0, pressureObserved, altitude, temperature, constants);
 }
 
 /**
