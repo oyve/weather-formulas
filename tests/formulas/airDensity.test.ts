@@ -8,7 +8,7 @@ describe('Air Density Calculation', () => {
         const humidity = 50; // 50% relative humidity
 
         // Act
-        const airDensity = airDensityFormulas.calculateAirDensity(pressure, temperature, humidity);
+        const airDensity = airDensityFormulas.calculateAirDensityDryAir(pressure, temperature, humidity);
 
         // Assert
         expect(airDensity).toBeCloseTo(1.2289, 3); // Standard air density at sea level
@@ -21,7 +21,7 @@ describe('Air Density Calculation', () => {
         const humidity = 30; // 30% relative humidity
 
         // Act
-        const airDensity = airDensityFormulas.calculateAirDensity(pressure, temperature, humidity);
+        const airDensity = airDensityFormulas.calculateAirDensityDryAir(pressure, temperature, humidity);
 
         // Assert
         expect(airDensity).toBeCloseTo(1.0139, 3); // Approximate air density at 2000m
@@ -34,7 +34,7 @@ describe('Air Density Calculation', () => {
         const humidity = 90; // 90% relative humidity
 
         // Act
-        const airDensity = airDensityFormulas.calculateAirDensity(pressure, temperature, humidity);
+        const airDensity = airDensityFormulas.calculateAirDensityDryAir(pressure, temperature, humidity);
 
         // Assert
         expect(airDensity).toBeCloseTo(1.1969, 3); // Approximate air density with high humidity
@@ -47,7 +47,7 @@ describe('Air Density Calculation', () => {
         const humidity = 40; // 40% relative humidity
 
         // Act
-        const airDensity = airDensityFormulas.calculateAirDensity(pressure, temperature, humidity);
+        const airDensity = airDensityFormulas.calculateAirDensityDryAir(pressure, temperature, humidity);
 
         // Assert
         expect(airDensity).toBeCloseTo(1.3946, 3); // Approximate air density at low temperature
@@ -60,9 +60,58 @@ describe('Air Density Calculation', () => {
         const humidity = 0; // 0% relative humidity
 
         // Act
-        const airDensity = airDensityFormulas.calculateAirDensity(pressure, temperature, humidity);
+        const airDensity = airDensityFormulas.calculateAirDensityDryAir(pressure, temperature, humidity);
 
         // Assert
         expect(airDensity).toBeCloseTo(1.225, 3); // Air density should match dry air conditions
+    });
+});
+
+describe('Air Density At Altitude Calculation', () => {
+    it('should calculate air density at 1000 m altitude from sea level', () => {
+        // Arrange
+        const referenceDensity = 1.225; // Standard air density at sea level in kg/m³
+        const altitudeDifference = 1000; // Altitude difference in meters (1 km)
+
+        // Act
+        const actual = airDensityFormulas.calculateAirDensityAtAltitude(referenceDensity, altitudeDifference);
+
+        // Assert
+        expect(actual).toBeCloseTo(1.379, 3);
+    });
+
+    it('should calculate air density at sea level from 1000 m altitude', () => {
+        // Arrange
+        const referenceDensity = 1.379; // Air density at 1000 m in kg/m³
+        const altitudeDifference = -1000; // Altitude difference in meters (-1 km)
+
+        // Act
+        const actual = airDensityFormulas.calculateAirDensityAtAltitude(referenceDensity, altitudeDifference);
+
+        // Assert
+        expect(actual).toBeCloseTo(1.225, 3);
+    });
+
+    it('should calculate air density with custom constant', () => {
+        // Arrange
+        
+        const referenceDensity = 1.379; // Air density at 1000 m in kg/m³
+        const altitudeDifference = -1000; // Altitude difference in meters (-1 km)
+        
+        const decayConstant = airDensityFormulas.calculateDecayConstant(284.74);
+
+        // Act
+        const actual = airDensityFormulas.calculateAirDensityAtAltitude(referenceDensity, altitudeDifference, decayConstant);
+
+        // Assert
+        expect(actual).toBeCloseTo(1.555, 3);
+    });
+});
+
+describe('Decay Constant calculations', () => {
+    it('should calculate decay constant at sea level', () => {
+        const actual = airDensityFormulas.calculateDecayConstant(288.15);
+
+        expect(actual).toBeCloseTo(0.00011856, 8);
     });
 });

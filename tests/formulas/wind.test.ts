@@ -1,4 +1,5 @@
 import * as windFormulas from '../../src/formulas/wind';
+import * as airDensityFormulas from '../../src/formulas/airDensity';
 
 describe('getWindDirectionByDegree', () => {
     it('should return "N" for 0 degrees', () => {
@@ -123,5 +124,48 @@ describe('calculateWindPowerDensity', () => {
         const airDensity = 0.5; // kg/m³
         const expectedDensity = 250; // 0.5 * 0.5 * 10^3
         expect(windFormulas.calculateWindPowerDensity(windSpeed, airDensity)).toBeCloseTo(expectedDensity, 5);
+    });
+});
+
+
+describe('calculate custom', () => {
+    it('should calculate', () => {
+        const expected = 1.5;
+
+        const windSpeed = 5; // m/s
+        const temperature = 15 + 288.15
+        const humidity = 60;
+        const pressure = 101300;
+        
+        let airDensity = airDensityFormulas.calculateAirDensityMoistAir(pressure, temperature, humidity);
+        let actual = windFormulas.calculateWindForce(windSpeed, airDensity);
+
+        expect(actual).toBeCloseTo(expected, 1);
+    });
+    it('should calculate 2', () => {
+        const expected = 13.2;
+
+        const windSpeed = 15; // m/s
+        const temperature = 25 + 288.15
+        const humidity = 80;
+        const pressure = 101300;
+        
+        let airDensity = airDensityFormulas.calculateAirDensityMoistAir(pressure, temperature, humidity);
+        let actual = windFormulas.calculateWindForce(windSpeed, airDensity);
+
+        expect(actual).toBeCloseTo(expected, 1);
+    });
+    it('should calculate 3', () => {
+        const expected = 13.7;
+
+        const windSpeed = 15; // m/s
+        const temperature = 10 + 288.15
+        const humidity = 80;
+        const pressure = 101300;
+        
+        let airDensity = airDensityFormulas.calculateAirDensityMoistAir(pressure, temperature, humidity);
+        let actual = windFormulas.calculateWindForce(windSpeed, airDensity);
+
+        expect(actual).toBeCloseTo(expected, 1);
     });
 });
