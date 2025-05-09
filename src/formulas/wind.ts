@@ -37,6 +37,18 @@ export function calculateWindPowerDensity(windSpeed: number, airDensity: number 
 }
 
 /**
+ * Calculate wind force in kilograms per square meter.
+ * @param {number} windSpeed - Wind speed in meters per second.
+ * @param {number} airDensity - Air density in kilograms per cubic meter (default is 1.225 kg/m³ at sea level).
+ * @returns {number} - Wind force in kilograms per square meter (kg/m²).
+ */
+export function calculateWindForce(windSpeed: number, airDensity: number = 1.225): number {
+    // Force = 0.5 * airDensity * windSpeed^2 (in N/m²)
+    // Convert to kg/m² by dividing by gravitational acceleration (9.81 m/s²)
+    return (0.5 * airDensity * Math.pow(windSpeed, 2)) / 9.81;
+}
+
+/**
  * Adjust wind speed between two altitudes.
  * @param windSpeed - Wind speed at the measurement altitude in meters per second.
  * @param measurementAltitude - Altitude where the wind speed is measured, in meters.
