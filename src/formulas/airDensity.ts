@@ -11,7 +11,7 @@ import * as c from '../constants';
  * @param {number} [gasConstant=287.05] - Specific gas constant for dry air (J/(kg·K)).
  * @returns {number} - Air density in kilograms per cubic meter (kg/m³).
  */
-export function calculateAirDensityDryAir(
+export function airDensityDryAir(
     pressure: number,
     temperature: number,
     gasConstant: number = 287.05 // Default to the specific gas constant for dry air
@@ -19,7 +19,7 @@ export function calculateAirDensityDryAir(
     return pressure / (gasConstant * temperature);
 }
 
-export function calculateAirDensityMoistAir(
+export function airDensityMoistAir(
     pressure: number,
     temperature: number,
     humidity: number
@@ -40,14 +40,14 @@ export function calculateAirDensityMoistAir(
  * @param decayConstant - Decay constant for air density with altitude (default is -0.00011856).
  * @returns {number} - Air density at the target altitude in kg/m³.
  */
-export function calculateAirDensityAtAltitude(
+export function airDensityAtAltitude(
     referenceDensity: number,
     altitudeDifference: number,
     decayConstant: number = -defaultDecayConstant()): number {
     return referenceDensity * Math.exp(-decayConstant * altitudeDifference);
 }
 
-const defaultDecayConstant = () => calculateDecayConstant(288.15);
+const defaultDecayConstant = () => decayConstant(288.15);
 
 /**
  * Calculate decay constant for given atmosperic constants and temperature
@@ -55,6 +55,6 @@ const defaultDecayConstant = () => calculateDecayConstant(288.15);
  * @param constants Athmosperic constants
  * @returns Decay constant
  */
-export function calculateDecayConstant(temperature: number, constants: c.AtmospericConstants = c.STANDARD_ATMOSPHERIC_CONSTANTS): number {
+export function decayConstant(temperature: number, constants: c.AtmospericConstants = c.STANDARD_ATMOSPHERIC_CONSTANTS): number {
     return (constants.gravity * constants.molarMass) / (constants.gasConstant * temperature);
 }
