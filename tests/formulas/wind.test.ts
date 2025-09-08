@@ -97,33 +97,33 @@ describe('calculateWindPowerDensity', () => {
     it('should calculate wind power density with default air density', () => {
         const windSpeed = 10; // m/s
         const expectedDensity = 612.5; // 0.5 * 1.225 * 10^3
-        expect(windFormulas.calculateWindPowerDensity(windSpeed)).toBeCloseTo(expectedDensity, 5);
+        expect(windFormulas.windPowerDensity(windSpeed)).toBeCloseTo(expectedDensity, 5);
     });
 
     it('should calculate wind power density with custom air density', () => {
         const windSpeed = 10; // m/s
         const airDensity = 1.2; // kg/m³
         const expectedDensity = 600; // 0.5 * 1.2 * 10^3
-        expect(windFormulas.calculateWindPowerDensity(windSpeed, airDensity)).toBeCloseTo(expectedDensity, 5);
+        expect(windFormulas.windPowerDensity(windSpeed, airDensity)).toBeCloseTo(expectedDensity, 5);
     });
 
     it('should return 0 for wind speed of 0', () => {
         const windSpeed = 0; // m/s
         const expectedDensity = 0; // No wind power
-        expect(windFormulas.calculateWindPowerDensity(windSpeed)).toBe(expectedDensity);
+        expect(windFormulas.windPowerDensity(windSpeed)).toBe(expectedDensity);
     });
 
     it('should handle very high wind speeds', () => {
         const windSpeed = 50; // m/s
         const expectedDensity = 76562.5; // 0.5 * 1.225 * 50^3
-        expect(windFormulas.calculateWindPowerDensity(windSpeed)).toBeCloseTo(expectedDensity, 5);
+        expect(windFormulas.windPowerDensity(windSpeed)).toBeCloseTo(expectedDensity, 5);
     });
 
     it('should handle very low air density', () => {
         const windSpeed = 10; // m/s
         const airDensity = 0.5; // kg/m³
         const expectedDensity = 250; // 0.5 * 0.5 * 10^3
-        expect(windFormulas.calculateWindPowerDensity(windSpeed, airDensity)).toBeCloseTo(expectedDensity, 5);
+        expect(windFormulas.windPowerDensity(windSpeed, airDensity)).toBeCloseTo(expectedDensity, 5);
     });
 });
 
@@ -137,8 +137,8 @@ describe('calculate custom', () => {
         const humidity = 60;
         const pressure = 101300;
         
-        let airDensity = airDensityFormulas.calculateAirDensityMoistAir(pressure, temperature, humidity);
-        let actual = windFormulas.calculateWindForce(windSpeed, airDensity);
+        let airDensity = airDensityFormulas.airDensityMoistAir(pressure, temperature, humidity);
+        let actual = windFormulas.windForce(windSpeed, airDensity);
 
         expect(actual).toBeCloseTo(expected, 1);
     });
@@ -150,8 +150,8 @@ describe('calculate custom', () => {
         const humidity = 80;
         const pressure = 101300;
         
-        let airDensity = airDensityFormulas.calculateAirDensityMoistAir(pressure, temperature, humidity);
-        let actual = windFormulas.calculateWindForce(windSpeed, airDensity);
+        let airDensity = airDensityFormulas.airDensityMoistAir(pressure, temperature, humidity);
+        let actual = windFormulas.windForce(windSpeed, airDensity);
 
         expect(actual).toBeCloseTo(expected, 1);
     });
@@ -163,8 +163,8 @@ describe('calculate custom', () => {
         const humidity = 80;
         const pressure = 101300;
         
-        let airDensity = airDensityFormulas.calculateAirDensityMoistAir(pressure, temperature, humidity);
-        let actual = windFormulas.calculateWindForce(windSpeed, airDensity);
+        let airDensity = airDensityFormulas.airDensityMoistAir(pressure, temperature, humidity);
+        let actual = windFormulas.windForce(windSpeed, airDensity);
 
         expect(actual).toBeCloseTo(expected, 1);
     });

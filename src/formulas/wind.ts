@@ -32,7 +32,7 @@ export function getWindDirectionByDegree(degree: number): string {
  * @param {number} airDensity - Air density in kilograms per cubic meter (default is 1.225 kg/m³ at sea level).
  * @returns {number} - Wind power density in watts per square meter.
  */
-export function calculateWindPowerDensity(windSpeed: number, airDensity: number = 1.225): number {
+export function windPowerDensity(windSpeed: number, airDensity: number = 1.225): number {
     return 0.5 * airDensity * Math.pow(windSpeed, 3);
 }
 
@@ -42,7 +42,7 @@ export function calculateWindPowerDensity(windSpeed: number, airDensity: number 
  * @param {number} airDensity - Air density in kilograms per cubic meter (default is 1.225 kg/m³ at sea level).
  * @returns {number} - Wind force in kilograms per square meter (kg/m²).
  */
-export function calculateWindForce(windSpeed: number, airDensity: number = 1.225): number {
+export function windForce(windSpeed: number, airDensity: number = 1.225): number {
     // Force = 0.5 * airDensity * windSpeed^2 (in N/m²)
     // Convert to kg/m² by dividing by gravitational acceleration (9.81 m/s²)
     return (0.5 * airDensity * Math.pow(windSpeed, 2)) / 9.81;
@@ -65,13 +65,13 @@ export function adjustWindSpeedForAltitude(
     targetAltitude: number,
 ): number {
     // Calculate air density at the reference altitude
-    const airDensityAtReference = airDensityFormulas.calculateAirDensityAtAltitude(
+    const airDensityAtReference = airDensityFormulas.airDensityAtAltitude(
         airDensityAtMeasurementAltitude,
         referenceAltitude - measurementAltitude
     );
 
     // Calculate air density at the target altitude
-    const airDensityAtTarget = airDensityFormulas.calculateAirDensityAtAltitude(
+    const airDensityAtTarget = airDensityFormulas.airDensityAtAltitude(
         airDensityAtMeasurementAltitude,
         targetAltitude - measurementAltitude
     );
