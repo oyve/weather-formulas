@@ -22,7 +22,7 @@ describe('Saffir-Simpson Hurricane Wind Scale', () => {
         testCases.forEach(({ windSpeed, expectedCategory }) => {
             const actual = saffirSimpsonFormulas.getSaffirSimpsonScaleByWindSpeed(windSpeed);
             if (actual === null) {
-                expect(actual).toBeNull();
+                expect(actual).toBe(expectedCategory);
             } else {
                 expect(actual.category).toBe(expectedCategory);
             }
