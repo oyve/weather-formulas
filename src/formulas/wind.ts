@@ -14,12 +14,26 @@ import * as airDensityFormulas from "./airDensity";
  *   getWindDirectionByDegree(725)  -> 'N'
  *   getWindDirectionByDegree(-45)  -> 'NW'
  */
-export function getWindDirectionByDegree(degree: number): string {
+export function getWindDirectionByDegree(degree: number): { abbr: string, full: string } {
     degree = ((degree % 360) + 360) % 360; // Normalize degrees to the range [0, 360]
 
     const directions = [
-        'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
-        'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'
+        { abbr: 'N',    full: 'north' },
+        { abbr: 'NNE',  full: 'north-northeast' },
+        { abbr: 'NE',   full: 'northeast' },
+        { abbr: 'ENE',  full: 'east-northeast' },
+        { abbr: 'E',    full: 'east' },
+        { abbr: 'ESE',  full: 'east-southeast' },
+        { abbr: 'SE',   full: 'southeast' },
+        { abbr: 'SSE',  full: 'south-southeast' },
+        { abbr: 'S',    full: 'south' },
+        { abbr: 'SSW',  full: 'south-southwest' },
+        { abbr: 'SW',   full: 'southwest' },
+        { abbr: 'WSW',  full: 'west-southwest' },
+        { abbr: 'W',    full: 'west' },
+        { abbr: 'WNW',  full: 'west-northwest' },
+        { abbr: 'NW',   full: 'northwest' },
+        { abbr: 'NNW',  full: 'north-northwest' }
     ];
 
     const index = Math.floor((degree + 11.25) / 22.5) % 16;
