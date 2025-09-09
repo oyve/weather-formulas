@@ -1,5 +1,4 @@
 import { Reading } from "../../src/common";
-import * as constants from "../../src/constants";
 import * as pressure from "../../src/formulas/pressure";
 import * as temperature from "../../src/formulas/temperature"
 
