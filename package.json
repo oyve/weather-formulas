@@ -70,6 +70,8 @@
   "keywords": [
     "weather",
     "atmospheric",
+    "meteorological",
+    "formulas",
     "calculations",
     "temperature",
     "dew point",
@@ -88,7 +90,11 @@
     "lapse rate",
     "dynamic lapse rate",
     "temperature inversion",
-    "weighted average temperature"
+    "weighted average temperature",
+    "air density",
+    "wind speed",
+    "wind direction",
+    "barometer"
   ],
   "author": "Øyvind Hansen <oyve-github@outlook.com>",
   "license": "GPL-3.0-or-later",
