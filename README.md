@@ -64,6 +64,7 @@ A library of atmospheric and weather-related calculations.
 - [Wind Power Density](https://en.wikipedia.org/wiki/Wind_power): Calculate wind power density in watts per square meter.
 - [Wind Force](https://en.wikipedia.org/wiki/Wind_force): Calculate wind force in kilograms per square meter.
 - [Adjust Wind Speed for Altitude](https://en.wikipedia.org/wiki/Wind_speed): Adjust wind speed between different altitudes based on air density.
+- [Apparent Wind](https://en.wikipedia.org/wiki/Apparent_wind): Calculate the wind speed and direction experienced by a moving observer (e.g., vessel or vehicle).  
 
 ### Air Density
 - [Dry Air Density](https://en.wikipedia.org/wiki/Density_of_air): Calculate air density for dry air.
