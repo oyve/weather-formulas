@@ -7,13 +7,16 @@ import * as airDensity from "./formulas/airDensity";
 import * as beaufort from "./scales/beaufort";
 import * as saffirSimpson from "./scales/saffirSimpson";
 
+const scales = {
+    beaufort,
+    saffirSimpson,
+};
+
 export {
     humidity,
     temperature,
     pressure,
     wind,
     airDensity,
-
-    beaufort,
-    saffirSimpson,
-}
+    scales
+};
