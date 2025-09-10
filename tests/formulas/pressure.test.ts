@@ -1,7 +1,6 @@
 import { Reading } from "../../src/common";
-import constants from "../../src/constants";
-import pressure from "../../src/formulas/pressure";
-import temperature from "../../src/formulas/temperature"
+import * as pressure from "../../src/formulas/pressure";
+import * as temperature from "../../src/formulas/temperature"
 
 describe('Pressure Tests', function() {
     describe('Pressure Altitude', function() {
@@ -34,7 +33,7 @@ describe('Pressure Tests', function() {
             //arrange
             const expected = 101325; // m
             //act
-            const result = pressure.barometricPressure(0, 101325, 0, 288.15);
+            const result = pressure.barometricFormula(0, 101325, 0, 288.15);
             //assert
             expect(result).toEqual(expected);
         });
@@ -42,7 +41,7 @@ describe('Pressure Tests', function() {
             //arrange
             const expected = 89874.46; // m
             //act
-            const result = pressure.barometricPressure(1000, 101325, 0, 288.15);
+            const result = pressure.barometricFormula(1000, 101325, 0, 288.15);
             //assert
             expect(result).toEqual(expected);
         });
@@ -50,7 +49,7 @@ describe('Pressure Tests', function() {
             //arrange
             const expected = 54019.55; // m
             //act
-            const result = pressure.barometricPressure(5000, 101325, 0, 288.15);
+            const result = pressure.barometricFormula(5000, 101325, 0, 288.15);
             //assert
             expect(result).toEqual(expected);
         });
@@ -58,7 +57,7 @@ describe('Pressure Tests', function() {
             //arrange
             const expected = 26435.89; // m
             //act
-            const result = pressure.barometricPressure(10000, 101325, 0, 288.15);
+            const result = pressure.barometricFormula(10000, 101325, 0, 288.15);
             //assert
             expect(result).toEqual(expected);
         });
@@ -66,7 +65,7 @@ describe('Pressure Tests', function() {
             //arrange
             const expected = 79722.31; // m
             //act
-            const result = pressure.barometricPressure(2000, 90000, 1000, 285);
+            const result = pressure.barometricFormula(2000, 90000, 1000, 285);
             //assert
             expect(result).toEqual(expected);
         });
@@ -74,7 +73,7 @@ describe('Pressure Tests', function() {
             //arrange
             const expected = 107477.57; // m
             //act
-            const result = pressure.barometricPressure(-500, 101325, 0, 288.15);
+            const result = pressure.barometricFormula(-500, 101325, 0, 288.15);
             //assert
             expect(result).toEqual(expected);
         });
@@ -84,7 +83,7 @@ describe('Pressure Tests', function() {
         //     c.lapseRate = 0;
         //     const expected = 107398.5; // m
         //     //act
-        //     const result = pressure.barometricPressure(5000, 101325, 0, 288.15, c);
+        //     const result = pressure.barometricFormula(5000, 101325, 0, 288.15, c);
         //     //assert
         //     expect(result).toEqual(expected);
         // });

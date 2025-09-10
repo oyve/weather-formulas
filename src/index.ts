@@ -1,9 +1,22 @@
-import humidity from "./formulas/humidity";
-import temperature from "./formulas/temperature";
-import pressure from "./formulas/pressure";
+import * as humidity from "./formulas/humidity";
+import * as temperature from "./formulas/temperature";
+import * as pressure from "./formulas/pressure";
+import * as wind from "./formulas/wind";
+import * as airDensity from "./formulas/airDensity";
+
+import * as beaufort from "./scales/beaufort";
+import * as saffirSimpson from "./scales/saffirSimpson";
+
+const scales = {
+    beaufort,
+    saffirSimpson,
+};
 
 export {
     humidity,
     temperature,
-    pressure
-}
+    pressure,
+    wind,
+    airDensity,
+    scales
+};

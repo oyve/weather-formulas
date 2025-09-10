@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const cjsDir = path.join(__dirname, "dist/cjs");
+const cjsDir = path.join(__dirname, "../dist/cjs");
 
 function renameJsToCjs(dir) {
     const files = fs.readdirSync(dir);
@@ -32,3 +32,5 @@ function renameJsToCjs(dir) {
 
 // Run the script on the cjs directory
 renameJsToCjs(cjsDir);
+
+console.log('Renamed .js files to .cjs in the dist/cjs directory and updated require statements.');
