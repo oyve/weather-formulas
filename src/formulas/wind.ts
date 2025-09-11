@@ -62,6 +62,8 @@ export function windForce(windSpeed: number, airDensity: number = 1.225): number
     return (0.5 * airDensity * Math.pow(windSpeed, 2)) / 9.81;
 }
 
+
+
 /**
  * Adjust wind speed between two altitudes.
  * @param windSpeed - Wind speed at the measurement altitude in meters per second.
@@ -150,4 +152,18 @@ export function apparentWind(
     direction = (direction + 180) % 360;
 
     return { speed, direction };
+}
+
+/**
+ * Estimate wind gust speed from mean wind speed using a typical gust factor.
+ * Gust factor varies by terrain and weather, but a common value is 1.5 for open terrain.
+ * @param {number} meanWindSpeed - Mean wind speed in meters per second.
+ * @param {number} gustFactor - Gust factor (default: 1.5).
+ * @returns {number} - Estimated wind gust speed in meters per second.
+ *
+ * Example:
+ *   windGustFactor(10) // => 15
+ */
+export function windGustFactor(meanWindSpeed: number, gustFactor: number = 1.5): number {
+    return meanWindSpeed * gustFactor;
 }
