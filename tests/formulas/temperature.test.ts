@@ -125,6 +125,25 @@ describe("Temperature Tests", function () {
         });
     });
 
+    describe('Equivalent Temperature', function() {
+        it('should calculate equivalent temperature correctly for typical values', function() {
+            // Arrange
+            const temperature = 293.15; // 20°C in Kelvin
+            const mixingRatio = 0.01;   // 0.01 kg/kg
+            // Act
+            const result = temperatureFormulas.equivalentTemperature(temperature, mixingRatio);
+            // Expected value calculated externally: ≈ 320.36 K
+            expect(result).toBeCloseTo(318.0503984, 2);
+        });
+
+        it('should return the same temperature for zero mixing ratio', function() {
+            const temperature = 293.15;
+            const mixingRatio = 0;
+            const result = temperatureFormulas.equivalentTemperature(temperature, mixingRatio);
+            expect(result).toBeCloseTo(293.15, 2);
+        });
+    });
+
     describe('Potential Temperature', function() {
         it('should calculate potential temperature correctly', function() {
             const kelvin = 293.15; // K

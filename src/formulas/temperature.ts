@@ -64,6 +64,17 @@ export function dewPointArdenBuckEquation(temperature: number, humidity: number,
 }
 
 /**
+ * Calculate Equivalent Temperature (Teq).
+ * Equivalent temperature is the temperature an air parcel would have if all water vapor were condensed and the latent heat released.
+ * @param {number} temperature Temperature in Kelvin (K)
+ * @param {number} mixingRatio Mixing ratio in kg/kg
+ * @returns {number} Equivalent temperature in Kelvin (K)
+ */
+export function equivalentTemperature(temperature: number, mixingRatio: number, constants: c.THERMODYNAMIC_CONSTANTS = c.DEFAULT_THERMODYNAMIC_CONSTANTS): number {
+    return temperature + (constants.Lv * mixingRatio) / constants.Cp;
+}
+
+/**
  * Calculate Potential Temperature
  * @param {number} temperature Temperature in K (Kelvin)
  * @param {number} pressure Pressure in Pa (Pascal)
@@ -197,6 +208,29 @@ export function humidexText(humidex: number): null | {lowerLimit: number, text: 
     return result === undefined ? null : result;
 }
 
+
+// #### Physiological Equivalent Temperature ?????????????
+///#### https://cds.climate.copernicus.eu/datasets/derived-utci-historical?tab=overview ??
+
+/**
+ * Returns the UTCI thermal stress category for a given temperature in Celsius.
+ * @param {number} temperature - UTCI temperature in Kelvin
+ * @returns {string} Thermal stress category
+ */
+export function UTCIAssessmentScale(temperature: number): string {
+    const temperatureC = kelvinToCelcius(temperature);
+    if (temperatureC >= 46) return "Extreme heat stress";
+    if (temperatureC >= 38) return "Very strong heat stress";
+    if (temperatureC >= 32) return "Strong heat stress";
+    if (temperatureC >= 26) return "Moderate heat stress";
+    if (temperatureC >= 9) return "No thermal stress";
+    if (temperatureC >= 0) return "Slight cold stress";
+    if (temperatureC >= -13) return "Moderate cold stress";
+    if (temperatureC >= -27) return "Strong cold stress";
+    if (temperatureC >= -40) return "Very strong cold stress";
+    return "Extreme cold stress";
+}
+
 /**
  * Calculate the lapse rate
  * @param altitude1 Lower or higher altitude 1
@@ -208,7 +242,6 @@ export function humidexText(humidex: number): null | {lowerLimit: number, text: 
 export function calculateLapseRate(altitude1: number, T1: number, altitude2: number, T2: number) {
     return (T2 - T1) / (altitude2 - altitude1); // Kelvin/m
 }
-
 
 /**
  * Calculate dynamic lapse rate based on a range of altitude and temperature data
