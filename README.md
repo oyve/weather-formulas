@@ -1,19 +1,21 @@
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg) ![Node.js CI](https://github.com/oyve/weather-formulas/workflows/Node.js%20CI/badge.svg?branch=main)
 
 # weather-formulas
-A library of atmospheric and weather-related calculations.
+A library of atmospheric and weather-related formulas.
 
-- Includes test code for all formulas.
-- Supports custom valuation sets where applicable.
-- Supports both ES Module (ESM) and CommonJS (CJS).
+- Test code for all formulas.
+- Supports provided and custom valuation sets, and parameters where applicable.
+- SI units (e.g., meters, kilograms, seconds, Kelvin) used for all inputs and outputs.
+- Dual-support for both ES Module (ESM) and CommonJS (CJS)
 
 ## Table of Contents
 - [Features](#features)
-  - [Temperature](#temperature)
+  - [Air Density](#air-density)
+  - [Altitude](#altitude)
   - [Humidity](#humidity)
   - [Pressure](#pressure)
+  - [Temperature](#temperature)
   - [Wind](#wind)
-  - [Air Density](#air-density)
   - [Scales](#scales)
 - [Install](#install)
 - [How to Use](#how-to-use)
@@ -29,18 +31,14 @@ A library of atmospheric and weather-related calculations.
 
 ## Features
 
-### Temperature
-- [Dew Point](https://en.wikipedia.org/wiki/Dew_point): Calculate the dew point using the Magnus formula or Arden Buck equation.
-- [Wind Chill](https://en.wikipedia.org/wiki/Wind_chill#North_American_and_United_Kingdom_wind_chill_index): Estimate the perceived temperature based on wind speed and air temperature.
-- [(Australian) Apparent Temperature](https://en.wikipedia.org/wiki/Wind_chill#Australian_apparent_temperature): Calculate the apparent temperature considering humidity and wind.
-- [Heat Index](https://en.wikipedia.org/wiki/Heat_index): Measure the perceived temperature based on air temperature and humidity.
-- [Humidex](https://en.wikipedia.org/wiki/Humidex): Calculate the humidex, a Canadian measure of perceived temperature.
-- [Potential Temperature](https://en.wikipedia.org/wiki/Potential_temperature): Calculate the temperature an air parcel would have if brought to a standard pressure.
-- [Virtual Temperature](https://en.wikipedia.org/wiki/Virtual_temperature): Calculate the temperature accounting for water vapor in the air.
-- [Lapse Rate](https://en.wikipedia.org/wiki/Lapse_rate): Calculate the rate of temperature change with altitude.
-- Dynamic lapse rate: Calculate the lapse rate dynamically based on readings.
-- [Weighted Average Temperature](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean): Calculate the weighted average temperature based on altitude differences.
-- Adjust Temperature by Lapse Rate: Adjust temperature based on a fixed lapse rate.
+### Air Density
+- [Dry Air Density](https://en.wikipedia.org/wiki/Density_of_air): Calculate air density for dry air.
+- [Moist Air Density](https://en.wikipedia.org/wiki/Density_of_air): Calculate air density for moist air, considering humidity.
+- [Air Density at Altitude](https://en.wikipedia.org/wiki/Density_of_air): Calculate air density at a given altitude.
+- [Decay Constant](https://en.wikipedia.org/wiki/Barometric_formula): Calculate decay constant for air density with altitude.
+
+### Altitude
+- [Freezing Level Altitude](https://en.wikipedia.org/wiki/Freezing_level): Estimate the altitude where temperature drops below freezing.
 
 ### Humidity
 - [Relative Humidity](https://en.wikipedia.org/wiki/Humidity): Calculate the ratio of the current absolute humidity to the maximum possible humidity.
@@ -59,18 +57,27 @@ A library of atmospheric and weather-related calculations.
     - By dynamic lapse rate: Adjust pressure using a dynamically calculated lapse rate.
     - By historical data: Adjust pressure using historical readings.
 
+### Temperature
+- [Dew Point](https://en.wikipedia.org/wiki/Dew_point): Calculate the dew point using the Magnus formula or Arden Buck equation.
+- [Wind Chill](https://en.wikipedia.org/wiki/Wind_chill#North_American_and_United_Kingdom_wind_chill_index): Estimate the perceived temperature based on wind speed and air temperature.
+- [(Australian) Apparent Temperature](https://en.wikipedia.org/wiki/Wind_chill#Australian_apparent_temperature): Calculate the apparent temperature considering humidity and wind.
+- [Heat Index](https://en.wikipedia.org/wiki/Heat_index): Measure the perceived temperature based on air temperature and humidity.
+- [Humidex](https://en.wikipedia.org/wiki/Humidex): Calculate the humidex, a Canadian measure of perceived temperature.
+- [Wet-bulb Temperature](https://en.wikipedia.org/wiki/Wet-bulb_temperature): Calculate the wet-bulb temperature
+- [Equivalent Temperature](https://en.wikipedia.org/wiki/Potential_temperature): Calculate the temperature an air parcel would have if all water vapor were condensed and the latent heat released.
+- [Potential Temperature](https://en.wikipedia.org/wiki/Potential_temperature): Calculate the temperature an air parcel would have if brought to a standard pressure.
+- [Virtual Temperature](https://en.wikipedia.org/wiki/Virtual_temperature): Calculate the temperature accounting for water vapor in the air.
+- [Lapse Rate](https://en.wikipedia.org/wiki/Lapse_rate): Calculate the rate of temperature change with altitude.
+- Dynamic lapse rate: Calculate the lapse rate dynamically based on readings.
+- [Weighted Average Temperature](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean): Calculate the weighted average temperature based on altitude differences.
+- Adjust Temperature by Lapse Rate: Adjust temperature based on a fixed lapse rate.
+
 ### Wind
 - [Wind Direction](https://en.wikipedia.org/wiki/Wind_direction): Convert wind direction in degrees to compass direction.
 - [Wind Power Density](https://en.wikipedia.org/wiki/Wind_power): Calculate wind power density in watts per square meter.
 - [Wind Force](https://en.wikipedia.org/wiki/Wind_force): Calculate wind force in kilograms per square meter.
 - [Adjust Wind Speed for Altitude](https://en.wikipedia.org/wiki/Wind_speed): Adjust wind speed between different altitudes based on air density.
 - [Apparent Wind](https://en.wikipedia.org/wiki/Apparent_wind): Calculate the wind speed and direction experienced by a moving observer (e.g., vessel or vehicle).  
-
-### Air Density
-- [Dry Air Density](https://en.wikipedia.org/wiki/Density_of_air): Calculate air density for dry air.
-- [Moist Air Density](https://en.wikipedia.org/wiki/Density_of_air): Calculate air density for moist air, considering humidity.
-- [Air Density at Altitude](https://en.wikipedia.org/wiki/Density_of_air): Calculate air density at a given altitude.
-- [Decay Constant](https://en.wikipedia.org/wiki/Barometric_formula): Calculate decay constant for air density with altitude.
 
 ### Scales
 - [Beaufort Scale](https://en.wikipedia.org/wiki/Beaufort_scale): Classify wind speed according to the Beaufort scale.
@@ -130,7 +137,7 @@ All formulas are covered by automated tests.
 Run tests with:
 
 ```bash
-npm test
+npm run test
 ```
 
 ## Compatibility
@@ -145,7 +152,7 @@ Please feel free to contribute by creating a Pull Request including test code, o
 This project is licensed under the GPL v3 License.
 
 ## Support
-For support, please open an issue in the GitHub repository.
+For support, please [open an issue](https://github.com/oyve/weather-formulas/issues/new) in the GitHub repository.
 
 ## Disclaimer
 Always verify calculations before using in production as edge cases due to floating point errors may exist for large numbers, and which may not be covered by tests today. Please report any issues.
