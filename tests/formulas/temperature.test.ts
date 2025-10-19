@@ -73,7 +73,7 @@ describe("Temperature Tests", function () {
             //arrange
             const expected = 273.7682885;
             //act   
-            const actual = temperatureFormulas.australianAapparentTemperature(10 + KELVIN, 40, 10);
+            const actual = temperatureFormulas.australianApparentTemperature(10 + KELVIN, 40, 10);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });

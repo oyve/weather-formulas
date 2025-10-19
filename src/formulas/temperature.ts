@@ -105,7 +105,7 @@ export function windChillIndex(temperature: number, windSpeed: number): number {
  * @param {number} windspeed Windspeed in M/S (meter per second)
  * @returns {number} Apparent Temperature in Kelvin
  */
-export function australianAapparentTemperature(temperature: number, humidity: number, windspeed: number): number {
+export function australianApparentTemperature(temperature: number, humidity: number, windspeed: number): number {
     const Ta = kelvinToCelcius(temperature);
     const v = windspeed;
 
