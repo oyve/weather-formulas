@@ -46,3 +46,17 @@ export const SATURATION_VAPOR_PRESSURE_COEFFICIENTS: SaturationVaporCoefficients
     MAGNUS_CONSTANT_B: 17.62, // Empirical constant for water vapor
     MAGNUS_CONSTANT_C: 243.12, // Empirical constant for water vapor in Celsius
 } as const;
+
+export interface THERMODYNAMIC_CONSTANTS {
+    Rd: number; // Gas constant for dry air (J/(kg·K))
+    Cp: number; // Specific heat at constant pressure (J/(kg·K))
+    Lv: number; // Latent heat of vaporization (J/kg)
+    p0: number; // Reference pressure (Pa, 1000 hPa)
+};
+
+export const DEFAULT_THERMODYNAMIC_CONSTANTS: THERMODYNAMIC_CONSTANTS = {
+    Rd: 287,        // Gas constant for dry air (J/(kg·K))
+    Cp: 1004,       // Specific heat at constant pressure (J/(kg·K))
+    Lv: 2.5e6,      // Latent heat of vaporization (J/kg)
+    p0: 100000      // Reference pressure (Pa, 1000 hPa)
+};
