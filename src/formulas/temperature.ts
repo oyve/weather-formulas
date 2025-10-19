@@ -109,7 +109,7 @@ export function australianAapparentTemperature(temperature: number, humidity: nu
     const Ta = kelvinToCelcius(temperature);
     const v = windspeed;
 
-    const e = (humidity / 100) * 6.015 * Math.exp((17.27 * Ta) / (237.7 + Ta));
+    const e = (humidity / 100) * 6.105 * Math.exp((17.27 * Ta) / (237.7 + Ta));
     const AT = Ta + (0.33 * e) - (0.7 * v) - 4.00;
 
     return celciusToKelvin(AT);
@@ -397,4 +397,38 @@ export function wetBulbTemperature(temperature: number, humidity: number): numbe
         4.686035;
 
     return celciusToKelvin(wetBulbCelsius);
+}
+
+
+/**
+ * Estimates dry bulb temperature in Kelvin from wet bulb temperature and relative humidity.
+ * Uses iterative search based on the Stull approximation.
+ * @param wetBulbTemperature - Wet bulb temperature in Kelvin
+ * @param relativeHumidity - Relative humidity in percentage (0–100)
+ * @returns Estimated dry bulb temperature in Kelvin
+ */
+export function estimateDryBulbTemperature(wetBulbTemperature: number, relativeHumidity: number): number {
+  const rh = Math.max(0, Math.min(100, relativeHumidity)); // Clamp RH
+  const wetBulbC = kelvinToCelcius(wetBulbTemperature);
+
+  // Search range: 0°C to 60°C
+  let bestMatch = 0;
+  let minError = Infinity;
+
+  for (let tC = 0; tC <= 60; tC += 0.01) {
+    const estimatedWetBulb =
+      tC * Math.atan(0.151977 * Math.sqrt(rh + 8.313659)) +
+      Math.atan(tC + rh) -
+      Math.atan(rh - 1.676331) +
+      0.00391838 * Math.pow(rh, 1.5) * Math.atan(0.023101 * rh) -
+      4.686035;
+
+    const error = Math.abs(estimatedWetBulb - wetBulbC);
+    if (error < minError) {
+      minError = error;
+      bestMatch = tC;
+    }
+  }
+
+  return celciusToKelvin(bestMatch);
 }

@@ -71,8 +71,8 @@ describe("Temperature Tests", function () {
     describe("Australian apparant temperature", function () {
         it("it should equal", function () {
             //arrange
-            const expected = 273.74;
-            //act
+            const expected = 273.7682885;
+            //act   
             const actual = temperatureFormulas.australianAapparentTemperature(10 + KELVIN, 40, 10);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
