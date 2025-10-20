@@ -1,6 +1,6 @@
 {
   "name": "weather-formulas",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A collection of atmospheric, meteorological weather calculations",
   "type": "module",
   "main": "dist/cjs/index.cjs",
@@ -16,6 +16,11 @@
       "require": "./dist/cjs/formulas/airDensity.cjs",
       "import": "./dist/esm/formulas/airDensity.js",
       "types": "./dist/types/formulas/airDensity.d.ts"
+    },
+    "./altitude": {
+      "require": "./dist/cjs/formulas/altitude.cjs",
+      "import": "./dist/esm/formulas/altitude.js",
+      "types": "./dist/types/formulas/altitude.d.ts"
     },
     "./diurnalRythm": {
       "require": "./dist/cjs/formulas/diurnalRythm.cjs",
@@ -51,6 +56,11 @@
       "require": "./dist/cjs/scales/saffirSimpson.cjs",
       "import": "./dist/esm/scales/saffirSimpson.js",
       "types": "./dist/types/scales/saffirSimpson.d.ts"
+    },
+    "./uvindex": {
+      "require": "./dist/cjs/scales/uvindex.cjs",
+      "import": "./dist/esm/scales/uvindex.js",
+      "types": "./dist/types/scales/uvindex.d.ts"
     }
   },
   "files": [
