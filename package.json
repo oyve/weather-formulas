@@ -52,6 +52,11 @@
       "import": "./dist/esm/scales/beaufort.js",
       "types": "./dist/types/scales/beaufort.d.ts"
     },
+    "./heatIndex": {
+      "require": "./dist/cjs/scales/heatIndex.cjs",
+      "import": "./dist/esm/scales/heatIndex.js",
+      "types": "./dist/types/scales/heatIndex.d.ts"
+    },
     "./saffirSimpson": {
       "require": "./dist/cjs/scales/saffirSimpson.cjs",
       "import": "./dist/esm/scales/saffirSimpson.js",
