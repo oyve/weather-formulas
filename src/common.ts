@@ -1,5 +1,7 @@
 export interface Reading {
     temperature: number, //kelvin
+    pressure: number, //meter
     altitude: number, //meter
-    datetime: Date
+    relativeHumidity: number, //relative humidity in %
+    timestamp: number
 }
