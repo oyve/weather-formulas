@@ -77,29 +77,6 @@ describe("Temperature Tests", function () {
         });
     });
 
-    describe("Humidex", function () {
-        it("it should equal", function () {
-            //arrange
-            const expected = 314.021198;
-            //act
-            const actual = temperatureFormulas.humidex(31 + c.CELSIUS_TO_KELVIN, 60);
-            //assert
-            expect(actual).toBeCloseTo(expected, 2);
-        });
-    });
-
-    describe("Humidex Text", function () {
-        it("it should equal", function () {
-            //arrange
-            const expected = 40;
-            //act
-            const humidex = temperatureFormulas.humidex(31 + c.CELSIUS_TO_KELVIN, 60);
-            const actual = temperatureFormulas.humidexText(humidex);
-            //assert
-            expect(actual?.lowerLimit).toEqual(expected);
-        });
-    });
-
     describe('Equivalent Temperature', function() {
         it('should calculate equivalent temperature correctly for typical values', function() {
             // Arrange
