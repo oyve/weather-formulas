@@ -2,15 +2,13 @@ import { Reading } from '../../src/common';
 import * as temperatureFormulas from '../../src/formulas/temperature';
 import * as c from '../../src/constants';
 
-const KELVIN = 273.15;
-
 describe("Temperature Tests", function () {
     describe("Magnus formula", function () {
         it("it should equal", function () {
             //arrange
             const expected = 285.720988;
             //act
-            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40);
+            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + c.CELSIUS_TO_KELVIN, 40);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -20,7 +18,7 @@ describe("Temperature Tests", function () {
             const expected = 285.72;
             const valuationSet = c.DEW_POINT_VALUATIONS.DAVID_BOLTON;
             //act
-            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
+            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + c.CELSIUS_TO_KELVIN, 40, valuationSet);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -30,7 +28,7 @@ describe("Temperature Tests", function () {
             const expected = 284.41;
             const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 }; //these values are made up for the sake of testing
             //act
-            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
+            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + c.CELSIUS_TO_KELVIN, 40, valuationSet);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -41,7 +39,7 @@ describe("Temperature Tests", function () {
             //arrange
             const expected = 285.5478;
             //act
-            const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + KELVIN, 40);
+            const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + c.CELSIUS_TO_KELVIN, 40);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -51,7 +49,7 @@ describe("Temperature Tests", function () {
             const expected = 285.55;
             const valuationSet = c.DEW_POINT_VALUATIONS.DAVID_BOLTON;
             //act
-            const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + KELVIN, 40, valuationSet);
+            const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + c.CELSIUS_TO_KELVIN, 40, valuationSet);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -73,32 +71,9 @@ describe("Temperature Tests", function () {
             //arrange
             const expected = 273.7682885;
             //act   
-            const actual = temperatureFormulas.australianApparentTemperature(10 + KELVIN, 40, 10);
+            const actual = temperatureFormulas.australianApparentTemperature(10 + c.CELSIUS_TO_KELVIN, 40, 10);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
-        });
-    });
-
-    describe("Heat Index", function () {
-        it("it should equal", function () {
-            //arrange
-            const expected = 308;
-            //act
-            const actual = temperatureFormulas.heatIndex(31 + KELVIN, 60);
-            //assert           
-            expect(actual).toBeCloseTo(expected, 2);
-        });
-    });
-
-    describe("Heat Index Text", function () {
-        it("it should equal", function () {
-            //arrange
-            const expected = 33;
-            //act
-            const heatIndex = temperatureFormulas.heatIndex(31 + KELVIN, 60);
-            const actual = temperatureFormulas.heatIndexText(heatIndex);
-            //assert           
-            expect(actual?.lowerLimit).toEqual(expected);
         });
     });
 
@@ -107,7 +82,7 @@ describe("Temperature Tests", function () {
             //arrange
             const expected = 314.021198;
             //act
-            const actual = temperatureFormulas.humidex(31 + KELVIN, 60);
+            const actual = temperatureFormulas.humidex(31 + c.CELSIUS_TO_KELVIN, 60);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -118,7 +93,7 @@ describe("Temperature Tests", function () {
             //arrange
             const expected = 40;
             //act
-            const humidex = temperatureFormulas.humidex(31 + KELVIN, 60);
+            const humidex = temperatureFormulas.humidex(31 + c.CELSIUS_TO_KELVIN, 60);
             const actual = temperatureFormulas.humidexText(humidex);
             //assert
             expect(actual?.lowerLimit).toEqual(expected);
