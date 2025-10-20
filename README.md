@@ -22,9 +22,8 @@ console.log(`Dew Point: ${dewPoint} K`);
 ```
 
 - Test code for all formulas.
-- Supports provided and custom valuation sets, and parameters where applicable.
-- SI units (e.g., meters, kilograms, seconds, Kelvin) used for all inputs and outputs.
-- Dual-support for both ES Module (ESM) and CommonJS (CJS)
+- Supports provided and custom valuation sets, and configurable parameters where applicable.
+- Supports both ES Module (ESM) and CommonJS (CJS).
 
 ## Table of Contents
 - [Features](#features)
@@ -93,8 +92,6 @@ console.log(`Dew Point: ${dewPoint} K`);
 | **Dew Point**               | Calculate the dew point using the Magnus formula or Arden Buck equation. [🔗](https://en.wikipedia.org/wiki/Dew_point) |
 | **Wind Chill**              | Estimate the perceived temperature based on wind speed and air temperature. [🔗](https://en.wikipedia.org/wiki/Wind_chill#North_American_and_United_Kingdom_wind_chill_index) |
 | **(Australian) Apparent Temperature** | Calculate the apparent temperature considering humidity and wind. [🔗](https://en.wikipedia.org/wiki/Wind_chill#Australian_apparent_temperature) |
-| **Heat Index**              | Measure the perceived temperature based on air temperature and humidity. [🔗](https://en.wikipedia.org/wiki/Heat_index) |
-| **Humidex**                 | Calculate the humidex, a Canadian measure of perceived temperature. [🔗](https://en.wikipedia.org/wiki/Humidex) |
 | **Wet-bulb Temperature**    | Calculate the wet-bulb temperature. [🔗](https://en.wikipedia.org/wiki/Wet-bulb_temperature) |
 | **Equivalent Temperature**  | Calculate the temperature an air parcel would have if all water vapor were condensed and the latent heat released. [🔗](https://en.wikipedia.org/wiki/Potential_temperature) |
 | **Potential Temperature**   | Calculate the temperature an air parcel would have if brought to a standard pressure. [🔗](https://en.wikipedia.org/wiki/Potential_temperature) |
@@ -119,6 +116,8 @@ console.log(`Dew Point: ${dewPoint} K`);
 | **Beaufort Scale**          | Classify wind speed according to the Beaufort scale. [🔗](https://en.wikipedia.org/wiki/Beaufort_scale) |
 | **Saffir-Simpson Scale**    | Classify hurricane wind speed according to the Saffir-Simpson scale. [🔗](https://en.wikipedia.org/wiki/Saffir%E2%80%93Simpson_scale) |
 | **UV Index**                | Classify ultraviolet index. [🔗](https://en.wikipedia.org/wiki/Ultraviolet_index) |
+| **Heat Index**              | Measure the perceived temperature based on air temperature and humidity. [🔗](https://en.wikipedia.org/wiki/Heat_index) |
+| **Humidex**                 | Calculate the humidex, a Canadian measure of perceived temperature. [🔗](https://en.wikipedia.org/wiki/Humidex) |
 
 ## Install
 Install the library using npm:
