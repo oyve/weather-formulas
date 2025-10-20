@@ -1,7 +1,7 @@
 import * as heatIndexScale from "../../src/scales/heatIndex"
 import * as c from '../../src/constants';
 
-describe('Pressure Tests', function() {
+describe('Heat Index Tests', function() {
     describe("Heat Index", function () {
         it("it should equal", function () {
             //arrange
