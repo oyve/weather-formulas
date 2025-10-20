@@ -51,60 +51,60 @@ console.log(`Dew Point: ${dewPoint} K`);
 ## Features
 
 ### Air Density
-- Dry Air Density: Calculate air density for dry air. [🔗](https://en.wikipedia.org/wiki/Density_of_air)
-- Moist Air Density: Calculate air density for moist air, considering humidity. [🔗](https://en.wikipedia.org/wiki/Density_of_air)
-- Air Density at Altitude: Calculate air density at a given altitude. [🔗](https://en.wikipedia.org/wiki/Density_of_air)
-- Decay Constant: Calculate decay constant for air density with altitude. [🔗](https://en.wikipedia.org/wiki/Barometric_formula)
+- **Dry Air Density**: Calculate air density for dry air. [🔗](https://en.wikipedia.org/wiki/Density_of_air)
+- **Moist Air Density**: Calculate air density for moist air, considering humidity. [🔗](https://en.wikipedia.org/wiki/Density_of_air)
+- **Air Density at Altitude**: Calculate air density at a given altitude. [🔗](https://en.wikipedia.org/wiki/Density_of_air)
+- **Decay Constant**: Calculate decay constant for air density with altitude. [🔗](https://en.wikipedia.org/wiki/Barometric_formula)
 
 ### Altitude
-- Freezing Level Altitude: Estimate the altitude where temperature drops below freezing. [🔗](https://en.wikipedia.org/wiki/Freezing_level)
+- **Freezing Level Altitude**: Estimate the altitude where temperature drops below freezing. [🔗](https://en.wikipedia.org/wiki/Freezing_level)
 
 ### Humidity
-- Relative Humidity: Calculate the ratio of the current absolute humidity to the maximum possible humidity. [🔗](https://en.wikipedia.org/wiki/Humidity)
-- Specific Humidity: Calculate the mass of water vapor per unit mass of air. [🔗](https://en.wikipedia.org/wiki/Humidity)
-- Mixing Ratio: Calculate the ratio of water vapor to dry air. [🔗](https://en.wikipedia.org/wiki/Humidity)
-- Vapor Pressure: Calculate the partial pressure of water vapor in the air. [🔗](https://en.wikipedia.org/wiki/Vapor_pressure)
-- Actual Vapor Pressure: Calculate the partial pressure of water vapor actually present in the air, based on saturation vapor pressure and relative humidity. [🔗](https://en.wikipedia.org/wiki/Vapor_pressure)
-- Saturation Vapor Pressure: Calculate the maximum vapor pressure at a given temperature. [🔗](https://en.wikipedia.org/wiki/Vapour_pressure_of_water)
-- Dew Point Depression: Calculate the difference between the air temperature and the dew point temperature, indicating how close the air is to saturation. [🔗](https://en.wikipedia.org/wiki/Dew_point#Dew_point_depression)
-- Lifting Condensation Level: Estimate the altitude at which an air parcel becomes saturated when lifted and condensation begins (cloud base height). [🔗](https://en.wikipedia.org/wiki/Lifting_condensation_level)
+- **Relative Humidity**: Calculate the ratio of the current absolute humidity to the maximum possible humidity. [🔗](https://en.wikipedia.org/wiki/Humidity)
+- **Specific Humidity**: Calculate the mass of water vapor per unit mass of air. [🔗](https://en.wikipedia.org/wiki/Humidity)
+- **Mixing Ratio**: Calculate the ratio of water vapor to dry air. [🔗](https://en.wikipedia.org/wiki/Humidity)
+- **Vapor Pressure**: Calculate the partial pressure of water vapor in the air. [🔗](https://en.wikipedia.org/wiki/Vapor_pressure)
+- **Actual Vapor Pressure**: Calculate the partial pressure of water vapor actually present in the air, based on saturation vapor pressure and relative humidity. [🔗](https://en.wikipedia.org/wiki/Vapor_pressure)
+- **Saturation Vapor Pressure**: Calculate the maximum vapor pressure at a given temperature. [🔗](https://en.wikipedia.org/wiki/Vapour_pressure_of_water)
+- **Dew Point Depression**: Calculate the difference between the air temperature and the dew point temperature, indicating how close the air is to saturation. [🔗](https://en.wikipedia.org/wiki/Dew_point#Dew_point_depression)
+- **Lifting Condensation Level**: Estimate the altitude at which an air parcel becomes saturated when lifted and condensation begins (cloud base height). [🔗](https://en.wikipedia.org/wiki/Lifting_condensation_level)
 
 ### Pressure
-- Pressure Altitude: Calculate the altitude based on observed pressure. [🔗](https://en.wikipedia.org/wiki/Pressure_altitude)
-- Density Altitude: Calculate the altitude adjusted for temperature and air density. [🔗](https://en.wikipedia.org/wiki/Density_altitude)
-- Barometric Formula: Calculate pressure at a given altitude using the barometric formula. [🔗](https://en.wikipedia.org/wiki/Barometric_formula)
-- Adjust Pressure To Sea Level:
-    - Simple formula: A quick approximation for standard conditions. [🔗](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation)
-    - Advanced formula: A more accurate calculation using the barometric formula. [🔗](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation)
-    - By dynamic lapse rate: Adjust pressure using a dynamically calculated lapse rate. [🔗](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation)
-    - By historical data: Adjust pressure using historical readings. [🔗](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation)
+- **Pressure Altitude**: Calculate the altitude based on observed pressure. [🔗](https://en.wikipedia.org/wiki/Pressure_altitude)
+- **Density Altitude**: Calculate the altitude adjusted for temperature and air density. [🔗](https://en.wikipedia.org/wiki/Density_altitude)
+- **Barometric Formula**: Calculate pressure at a given altitude using the barometric formula. [🔗](https://en.wikipedia.org/wiki/Barometric_formula)
+- **Adjust Pressure To Sea Level**:
+    - **Simple formula**: A quick approximation for standard conditions. [🔗](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation)
+    - **Advanced formula**: A more accurate calculation using the barometric formula. [🔗](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation)
+    - **By dynamic lapse rate**: Adjust pressure using a dynamically calculated lapse rate. [🔗](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation)
+    - **By historical data**: Adjust pressure using historical readings. [🔗](https://en.wikipedia.org/wiki/Atmospheric_pressure#Altitude_variation)
 
 ### Temperature
-- Dew Point: Calculate the dew point using the Magnus formula or Arden Buck equation. [🔗](https://en.wikipedia.org/wiki/Dew_point)
-- Wind Chill: Estimate the perceived temperature based on wind speed and air temperature. [🔗](https://en.wikipedia.org/wiki/Wind_chill#North_American_and_United_Kingdom_wind_chill_index)
-- (Australian) Apparent Temperature: Calculate the apparent temperature considering humidity and wind. [🔗](https://en.wikipedia.org/wiki/Wind_chill#Australian_apparent_temperature)
-- Heat Index: Measure the perceived temperature based on air temperature and humidity. [🔗](https://en.wikipedia.org/wiki/Heat_index)
-- Humidex: Calculate the humidex, a Canadian measure of perceived temperature. [🔗](https://en.wikipedia.org/wiki/Humidex)
-- Wet-bulb Temperature: Calculate the wet-bulb temperature. [🔗](https://en.wikipedia.org/wiki/Wet-bulb_temperature)
-- Equivalent Temperature: Calculate the temperature an air parcel would have if all water vapor were condensed and the latent heat released. [🔗](https://en.wikipedia.org/wiki/Potential_temperature)
-- Potential Temperature: Calculate the temperature an air parcel would have if brought to a standard pressure. [🔗](https://en.wikipedia.org/wiki/Potential_temperature)
-- Virtual Temperature: Calculate the temperature accounting for water vapor in the air. [🔗](https://en.wikipedia.org/wiki/Virtual_temperature)
-- Lapse Rate: Calculate the rate of temperature change with altitude. [🔗](https://en.wikipedia.org/wiki/Lapse_rate)
-- Dynamic lapse rate: Calculate the lapse rate dynamically based on readings. [🔗](https://en.wikipedia.org/wiki/Lapse_rate)
-- Weighted Average Temperature: Calculate the weighted average temperature based on altitude differences. [🔗](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean)
-- Adjust Temperature by Lapse Rate: Adjust temperature based on a fixed lapse rate. [🔗](https://en.wikipedia.org/wiki/Lapse_rate)
+- **Dew Point**: Calculate the dew point using the Magnus formula or Arden Buck equation. [🔗](https://en.wikipedia.org/wiki/Dew_point)
+- **Wind Chill**: Estimate the perceived temperature based on wind speed and air temperature. [🔗](https://en.wikipedia.org/wiki/Wind_chill#North_American_and_United_Kingdom_wind_chill_index)
+- **(Australian) Apparent Temperature**: Calculate the apparent temperature considering humidity and wind. [🔗](https://en.wikipedia.org/wiki/Wind_chill#Australian_apparent_temperature)
+- **Heat Index**: Measure the perceived temperature based on air temperature and humidity. [🔗](https://en.wikipedia.org/wiki/Heat_index)
+- **Humidex**: Calculate the humidex, a Canadian measure of perceived temperature. [🔗](https://en.wikipedia.org/wiki/Humidex)
+- **Wet-bulb Temperature**: Calculate the wet-bulb temperature. [🔗](https://en.wikipedia.org/wiki/Wet-bulb_temperature)
+- **Equivalent Temperature**: Calculate the temperature an air parcel would have if all water vapor were condensed and the latent heat released. [🔗](https://en.wikipedia.org/wiki/Potential_temperature)
+- **Potential Temperature**: Calculate the temperature an air parcel would have if brought to a standard pressure. [🔗](https://en.wikipedia.org/wiki/Potential_temperature)
+- **Virtual Temperature**: Calculate the temperature accounting for water vapor in the air. [🔗](https://en.wikipedia.org/wiki/Virtual_temperature)
+- **Lapse Rate**: Calculate the rate of temperature change with altitude. [🔗](https://en.wikipedia.org/wiki/Lapse_rate)
+- **Dynamic lapse rate**: Calculate the lapse rate dynamically based on readings. [🔗](https://en.wikipedia.org/wiki/Lapse_rate)
+- **Weighted Average Temperature**: Calculate the weighted average temperature based on altitude differences. [🔗](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean)
+- **Adjust Temperature by Lapse Rate**: Adjust temperature based on a fixed lapse rate. [🔗](https://en.wikipedia.org/wiki/Lapse_rate)
 
 ### Wind
-- Wind Direction: Convert wind direction in degrees to compass direction. [🔗](https://en.wikipedia.org/wiki/Wind_direction)
-- Wind Power Density: Calculate wind power density in watts per square meter. [🔗](https://en.wikipedia.org/wiki/Wind_power)
-- Wind Force: Calculate wind force in kilograms per square meter. [🔗](https://en.wikipedia.org/wiki/Wind_force)
-- Adjust Wind Speed for Altitude: Adjust wind speed between different altitudes based on air density. [🔗](https://en.wikipedia.org/wiki/Wind_speed)
-- Apparent Wind: Calculate the wind speed and direction experienced by a moving observer (e.g., vessel or vehicle). [🔗](https://en.wikipedia.org/wiki/Apparent_wind)
+- **Wind Direction**: Convert wind direction in degrees to compass direction. [🔗](https://en.wikipedia.org/wiki/Wind_direction)
+- **Wind Power Density**: Calculate wind power density in watts per square meter. [🔗](https://en.wikipedia.org/wiki/Wind_power)
+- **Wind Force**: Calculate wind force in kilograms per square meter. [🔗](https://en.wikipedia.org/wiki/Wind_force)
+- **Adjust Wind Speed for Altitude**: Adjust wind speed between different altitudes based on air density. [🔗](https://en.wikipedia.org/wiki/Wind_speed)
+- **Apparent Wind**: Calculate the wind speed and direction experienced by a moving observer (e.g., vessel or vehicle). [🔗](https://en.wikipedia.org/wiki/Apparent_wind)
 
 ### Scales
-- Beaufort Scale: Classify wind speed according to the Beaufort scale. [🔗](https://en.wikipedia.org/wiki/Beaufort_scale)
-- Saffir-Simpson Scale: Classify hurricane wind speed according to the Saffir-Simpson scale. [🔗](https://en.wikipedia.org/wiki/Saffir%E2%80%93Simpson_scale)
-- UV Index: Classify ultraviolet index. [🔗](https://en.wikipedia.org/wiki/Ultraviolet_index)
+- **Beaufort Scale**: Classify wind speed according to the Beaufort scale. [🔗](https://en.wikipedia.org/wiki/Beaufort_scale)
+- **Saffir-Simpson Scale**: Classify hurricane wind speed according to the Saffir-Simpson scale. [🔗](https://en.wikipedia.org/wiki/Saffir%E2%80%93Simpson_scale)
+- **UV Index**: Classify ultraviolet index. [🔗](https://en.wikipedia.org/wiki/Ultraviolet_index)
 
 ## Install
 Install the library using npm:
@@ -189,4 +189,4 @@ This project is licensed under the GPL v3 License.
 For support, please [open an issue](https://github.com/oyve/weather-formulas/issues/new) in the GitHub repository.
 
 ## Disclaimer
-This library is intended for educational and reference purposes only. While every effort has been made to ensure the accuracy of the formulas, results may be affected by floating point errors, edge cases, or incorrect usage. Do not use this library for safety-critical, life-critical, or mission-critical applications without independent verification. Always validate results against trusted sources and report any issues or inaccuracies.
+While the formulas are implemented with care, results may vary due to floating point errors, edge cases, or incorrect usage. Please verify results and report any issues or inaccuracies.
