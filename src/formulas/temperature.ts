@@ -1,12 +1,8 @@
 import { Reading } from '../common';
 import * as c from '../constants'
+import { IValuationSet } from '../constants';
 
-export interface IValuationSet {
-    a: number, //millibar
-    b: number, //constant
-    c: number, //celcius degrees
-    d: number; //celcius degrees
-}
+
 
 /**
  * Gets the Dew Point Valuation by temperature
@@ -14,13 +10,20 @@ export interface IValuationSet {
  * @returns {Array<IValuationSet>} Dew Point Valuation
  */
 export function dewPointValuationsByTemperature(temperature: number): IValuationSet {
-    if (temperature < 0) {
-        return c.DEW_POINT_VALUATIONS.ARDENBUCK_MINUS;
-    } else if (temperature >= 0 && temperature <= 50) {
-        return c.DEW_POINT_VALUATIONS.ARDENBUCK_PLUS;
-    } else if (temperature > 50) {
+    if (temperature < -30) {
+        // Use SONNTAG1990 for lowest error down to −45°C
+        return c.DEW_POINT_VALUATIONS.SONNTAG1990;
+    } else if (temperature >= -30 && temperature <= 35) {
+        // DAVID_BOLTON is most accurate for −30°C to 35°C
+        return c.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+    } else if (temperature > 35 && temperature <= 60) {
+        // SONNTAG1990 covers up to 60°C with low error
+        return c.DEW_POINT_VALUATIONS.SONNTAG1990;
+    } else if (temperature > 60) {
+        // Use PAROSCIENTIFIC for highest temperatures
         return c.DEW_POINT_VALUATIONS.PAROSCIENTIFIC;
     } else {
+        // Fallback
         return c.DEW_POINT_VALUATIONS.ARDENBUCK_DEFAULT;
     }
 }

@@ -8,7 +8,7 @@ describe("Temperature Tests", function () {
     describe("Magnus formula", function () {
         it("it should equal", function () {
             //arrange
-            const expected = 285.27;
+            const expected = 285.720988;
             //act
             const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40);
             //assert
@@ -39,7 +39,7 @@ describe("Temperature Tests", function () {
     describe("Ardenbuck formula", function () {
         it("it should equal", function () {
             //arrange
-            const expected = 285.09;
+            const expected = 285.5478;
             //act
             const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + KELVIN, 40);
             //assert
@@ -105,7 +105,7 @@ describe("Temperature Tests", function () {
     describe("Humidex", function () {
         it("it should equal", function () {
             //arrange
-            const expected = 313.77;
+            const expected = 314.021198;
             //act
             const actual = temperatureFormulas.humidex(31 + KELVIN, 60);
             //assert

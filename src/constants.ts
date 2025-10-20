@@ -5,7 +5,14 @@ export const STANDARD_MEAN_TEMPERATURE_CELCIUS = 15;
 export const STANDARD_MEAN_TEMPERATURE_KELVIN = 288.15;
 export const STANDARD_LAPSE_RATE = 0.0065;
 
-export const DEW_POINT_VALUATIONS = {
+export interface IValuationSet {
+    a: number, //millibar
+    b: number, //constant
+    c: number, //celcius degrees
+    d: number; //celcius degrees
+}
+
+export const DEW_POINT_VALUATIONS: Record<string, IValuationSet> = {
     ARDENBUCK_DEFAULT: { a: 6.1121, b: 18.678, c: 257.14, d: 234.5 },
     DAVID_BOLTON: { a: 6.112, b: 17.67, c: 234.5, d: 234.5 }, //maximum error of 0.1%, for −30 °C ≤ T ≤ 35°C and 1% < RH < 100%
     SONNTAG1990: { a: 6.112, b: 17.62, c: 243.12, d: 234.5 }, //for −45 °C ≤ T ≤ 60 °C (error ±0.35 °C).
