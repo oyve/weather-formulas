@@ -113,3 +113,14 @@ export function specificGasConstantForMoistAir(mixingRatio: number): number {
 export function dewPointDepression(airTemperature: number, dewPointTemperature: number): number {
     return airTemperature - dewPointTemperature;
 }
+
+/**
+ * Calculate the Lifting Condensation Level (LCL) in meters.
+ * If LCL is near the surface, fog is likely.
+ * @param {number} temperature - Air temperature in Kelvin
+ * @param {number} dewPoint - Dew point temperature in Kelvin
+ * @returns {number} LCL in meters
+ */
+export function liftingCondensationLevel(temperature: number, dewPoint: number): number {
+    return 125 * (temperature - dewPoint);
+}
