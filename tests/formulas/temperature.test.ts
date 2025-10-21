@@ -162,11 +162,11 @@ describe("Temperature Tests", function () {
         it('should calculate dynamic lapse rate correctly', function() {
             //arrange
             const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 25 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 50, temperature: 22 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 100, temperature: 18 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 200, temperature: 15 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 300, temperature: 12 },
+                { timestamp: getTimeFromMinutes(-60*5), altitude: 0, temperature: 25, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*4), altitude: 50, temperature: 22, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*3), altitude: 100, temperature: 18, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*2), altitude: 200, temperature: 15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*1), altitude: 300, temperature: 12, pressure: 101325, relativeHumidity: 50 },
             ]
             const expected = -0.05;
             //act
@@ -177,11 +177,11 @@ describe("Temperature Tests", function () {
         it('should equal standard lapse rate correctly', function() {
             //arrange
             const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15 },
+                { timestamp: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15, pressure: 101325, relativeHumidity: 50 },
             ]
             const expected = -0.0065;
             //act
@@ -192,11 +192,11 @@ describe("Temperature Tests", function () {
         it('should equal cut off hours correctly', function() {
             //arrange
             const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 10 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 5, temperature: 20 }, //cut off these two
-                { datetime: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15 },
+                { timestamp: getTimeFromMinutes(-60*5), altitude: 0, temperature: 10, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*4), altitude: 5, temperature: 20, pressure: 101325, relativeHumidity: 50 }, //cut off these two
+                { timestamp: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15, pressure: 101325, relativeHumidity: 50 },
             ]
             const expected = -0.0065;
             //act
@@ -210,11 +210,11 @@ describe("Temperature Tests", function () {
         it('should calculate correctly', function() {
             //arrange
             const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15 },
+                { timestamp: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15, pressure: 101325, relativeHumidity: 50 },
             ]
             const expected = 275.15;
             //act
@@ -276,5 +276,5 @@ describe("Temperature Tests", function () {
 function getTimeFromMinutes(minutes: number) {
     let now = new Date();
     now.setMinutes(now.getMinutes() + minutes);
-    return now;
+    return now.getTime();
 }

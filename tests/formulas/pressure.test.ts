@@ -148,11 +148,11 @@ describe('Pressure Tests', function() {
         it('should calculate correctly', function() {
             //arrange
             const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 200, temperature: 281.65 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 600, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 800, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 1000, temperature: 262.15 },
+                { timestamp: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*4), altitude: 200, temperature: 281.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*3), altitude: 600, temperature: 275.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*2), altitude: 800, temperature: 268.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*1), altitude: 1000, temperature: 262.15, pressure: 101325, relativeHumidity: 50 },
             ]
             const expected = 113898;
             //act
@@ -166,5 +166,5 @@ describe('Pressure Tests', function() {
 function getTimeFromMinutes(minutes: number) {
     let now = new Date();
     now.setMinutes(now.getMinutes() + minutes);
-    return now;
+    return now.getTime();
 }
