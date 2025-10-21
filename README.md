@@ -35,7 +35,7 @@ console.log(`Dew Point: ${dewPoint} K`);
   - [Wind](#wind)
   - [Scales](#scales)
 - [Install](#install)
-- [How to Use](#how-to-use)
+- [Usage](#usage)
   - [ES Modules (ESM)](#es-modules-esm)
   - [CommonJS (CJS)](#commonjs-cjs)
   - [TypeScript](#typescript)
@@ -110,6 +110,13 @@ console.log(`Dew Point: ${dewPoint} K`);
 | **Adjust Wind Speed for Altitude** | Adjust wind speed between different altitudes based on air density. [🔗](https://en.wikipedia.org/wiki/Wind_speed) |
 | **Apparent Wind**           | Calculate the wind speed and direction experienced by a moving observer (e.g., vessel or vehicle). [🔗](https://en.wikipedia.org/wiki/Apparent_wind) |
 
+### Phenomena
+| Formula                     | Description                                                               |
+|-----------------------------|---------------------------------------------------------------------------|
+| **Fog Visibility**          | Estimate visibility in fog using Koschmieder’s Law. [🔗](https://en.wikipedia.org/wiki/Fog#Visibility_and_Koschmieder's_law) |
+| **Fog Point Temperature**   | Calculate the fog point temperature (dew point at ground level). [🔗](https://en.wikipedia.org/wiki/Dew_point) |
+| **Fog Probability**         | Predict the probability of fog formation using meteorological factors.     |
+
 ### Scales
 | Scale                       | Description                                                               |
 |-----------------------------|---------------------------------------------------------------------------|
@@ -118,6 +125,7 @@ console.log(`Dew Point: ${dewPoint} K`);
 | **UV Index**                | Classify ultraviolet index. [🔗](https://en.wikipedia.org/wiki/Ultraviolet_index) |
 | **Heat Index**              | Measure the perceived temperature based on air temperature and humidity. [🔗](https://en.wikipedia.org/wiki/Heat_index) |
 | **Humidex**                 | Calculate the humidex, a Canadian measure of perceived temperature. [🔗](https://en.wikipedia.org/wiki/Humidex) |
+
 
 ## Install
 Install the library using npm:

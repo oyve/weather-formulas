@@ -47,15 +47,25 @@
       "import": "./dist/esm/formulas/wind.js",
       "types": "./dist/types/formulas/wind.d.ts"
     },
-    "./beaufort": {
-      "require": "./dist/cjs/scales/beaufort.cjs",
-      "import": "./dist/esm/scales/beaufort.js",
-      "types": "./dist/types/scales/beaufort.d.ts"
-    },
     "./heatIndex": {
       "require": "./dist/cjs/scales/heatIndex.cjs",
       "import": "./dist/esm/scales/heatIndex.js",
       "types": "./dist/types/scales/heatIndex.d.ts"
+    },
+    "./humidex": {
+      "require": "./dist/cjs/indices/humidex.cjs",
+      "import": "./dist/esm/indices/humidex.js",
+      "types": "./dist/types/indices/humidex.d.ts"
+    },
+    "./fog": {
+      "require": "./dist/cjs/phenomena/fog.cjs",
+      "import": "./dist/esm/phenomena/fog.js",
+      "types": "./dist/types/phenomena/fog.d.ts"
+    },
+    "./beaufort": {
+      "require": "./dist/cjs/scales/beaufort.cjs",
+      "import": "./dist/esm/scales/beaufort.js",
+      "types": "./dist/types/scales/beaufort.d.ts"
     },
     "./saffirSimpson": {
       "require": "./dist/cjs/scales/saffirSimpson.cjs",
