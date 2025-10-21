@@ -28,16 +28,31 @@ function generateExports(directory) {
     };
   });
 
-  // Read, update, and write the package.json file
-
   console.log(`Generated exports for directory /${directory}`);
   return exportsField;
 }
 
-let exportFormulas = generateExports('formulas');
-let scalesFormulas = generateExports('scales');
+function getSubdirectories(srcPath) {
+  return fs.readdirSync(srcPath)
+    .filter(name => fs.statSync(path.join(srcPath, name)).isDirectory());
+}
 
-const exportsField = {...exportFormulas, ...scalesFormulas };
+// Dynamically get all subdirectories under src
+const srcDir = path.resolve(__dirname, '../src');
+const subdirs = getSubdirectories(srcDir);
+
+let exportsField = {
+  '.': {
+    require: './dist/cjs/index.cjs',
+    import: './dist/esm/index.js',
+    types: "./dist/types/index.d.ts"
+  },
+};
+
+subdirs.forEach(dir => {
+  const dirExports = generateExports(dir);
+  Object.assign(exportsField, dirExports);
+});
 
 const pkgPath = path.resolve(__dirname, '../package.json');
 const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
