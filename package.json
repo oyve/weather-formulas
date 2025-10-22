@@ -23,9 +23,9 @@
       "types": "./dist/types/formulas/altitude.d.ts"
     },
     "./diurnalRythm": {
-      "require": "./dist/cjs/formulas/diurnalRythm.cjs",
-      "import": "./dist/esm/formulas/diurnalRythm.js",
-      "types": "./dist/types/formulas/diurnalRythm.d.ts"
+      "require": "./dist/cjs/phenomena/diurnalRythm.cjs",
+      "import": "./dist/esm/phenomena/diurnalRythm.js",
+      "types": "./dist/types/phenomena/diurnalRythm.d.ts"
     },
     "./humidity": {
       "require": "./dist/cjs/formulas/humidity.cjs",
@@ -129,9 +129,15 @@
   "homepage": "https://github.com/oyve/weather-formulas#readme",
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "@types/regression": "^2.0.6",
+    "@types/suncalc": "^1.9.2",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "regression": "^2.0.1",
+    "suncalc": "^1.9.0"
   }
 }
