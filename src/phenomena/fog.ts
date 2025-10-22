@@ -1,5 +1,7 @@
 import { dewPointMagnusFormula } from '../formulas/temperature';
 import { Reading } from '../common';
+import regression from 'regression';
+import SunCalc from 'suncalc';
 
 /**
  * Estimate visibility in fog using Koschmieder’s Law.
@@ -27,7 +29,7 @@ export function fogPointTemperature(temperature: number, relativeHumidity: numbe
  * @param {Reading[]} readings - Array of readings sorted by time (oldest to newest)
  * @returns {number} Probability of fog (0 to 1)
  */
-export function predictFog(readings: Reading[]): number {
+export function fogProbability(readings: Reading[]): number {
     if (readings.length < 2) return 0;
 
     let fogScore = 0;
@@ -60,4 +62,84 @@ export function predictFog(readings: Reading[]): number {
 
     // Normalize to [0,1]
     return Math.min(fogScore / total, 1);
+}
+
+/**
+ * Adjust fog probability for solar elevation (fog dissipates after sunrise).
+ * @param {number} predictedProb - Predicted fog probability (0–1)
+ * @param {Date} futureDate - Date/time for prediction
+ * @param {number} lat - Latitude
+ * @param {number} lon - Longitude
+ * @returns {number} Adjusted fog probability
+ */
+function adjustFogForSun(
+    predictedProb: number,
+    futureDate: Date,
+    lat: number,
+    lon: number
+): number {
+    const sun = SunCalc.getPosition(futureDate, lat, lon);
+    const elevation = sun.altitude * (180 / Math.PI); // degrees
+
+    if (elevation > 0) {
+        // Lower elevation = slower dissipation (e.g., in autumn/winter)
+        // Dissipation factor: 1 at sunrise, 0 at 20° elevation or higher
+        const dissipation = Math.max(0, 1 - elevation / 20);
+        return predictedProb * dissipation;
+    }
+    return predictedProb;
+}
+
+/**
+ * Predict fog probability trend for the next N hours using regression on recent fog probabilities,
+ * and adjust for solar elevation (fog dissipation after sunrise).
+ * @param {Reading[]} readings - Array of readings sorted by time (oldest to newest)
+ * @param {number} hoursAhead - Number of hours to predict ahead (default: 3)
+ * @param {number} interval - Interval in hours between predictions (default: 1)
+ * @param {number} lat - Latitude of location
+ * @param {number} lon - Longitude of location
+ * @returns {number[]} Array of predicted fog probabilities for each future hour
+ */
+export function fogTrendProbability(
+    readings: Reading[],
+    hoursAhead: number = 3,
+    interval: number = 1,
+    lat?: number,
+    lon?: number
+): number[] {
+    if (readings.length < 2) return Array(hoursAhead).fill(0);
+
+    // Calculate fog probabilities for each hour (pairwise)
+    const fogProbs: number[] = [];
+    for (let i = 1; i < readings.length; i++) {
+        fogProbs.push(fogProbability([readings[i - 1], readings[i]]));
+    }
+
+    // Prepare regression data: x = time index, y = fog probability
+    const times = fogProbs.map((_, i) => i);
+    const data: [number, number][] = times.map((t, i) => [t, fogProbs[i]]);
+    const result = regression.linear(data);
+
+    // Predict future fog probabilities
+    const predictions: number[] = [];
+    const lastIndex = fogProbs.length - 1;
+    const lastReadingTime = (readings as any)[readings.length - 1]?.timestamp
+        ? new Date((readings as any)[readings.length - 1].timestamp)
+        : new Date();
+
+    for (let h = 1; h <= hoursAhead; h += interval) {
+        const futureIndex = lastIndex + h;
+        let predicted = result.predict(futureIndex)[1];
+        predicted = Math.max(0, Math.min(1, predicted)); // Clamp to [0,1]
+
+        // Adjust for solar elevation if lat/lon and timestamp are provided
+        if (lat !== undefined && lon !== undefined && lastReadingTime) {
+            const futureDate = new Date(lastReadingTime.getTime() + h * 60 * 60 * 1000);
+            predicted = adjustFogForSun(predicted, futureDate, lat, lon);
+        }
+
+        predictions.push(predicted);
+    }
+
+    return predictions;
 }

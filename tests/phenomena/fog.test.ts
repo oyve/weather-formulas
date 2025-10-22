@@ -1,4 +1,4 @@
-import { fogVisibility, fogPointTemperature, predictFog } from '../../src/phenomena/fog';
+import { fogVisibility, fogPointTemperature, fogProbability, fogTrendProbability } from '../../src/phenomena/fog';
 
 describe('fogVisibility', () => {
     it('calculates visibility using Koschmieder’s Law', () => {
@@ -61,14 +61,14 @@ describe('fogPointTemperature', () => {
     });
 });
 
-describe('predictFog', () => {
+describe('fogProbability', () => {
     it('returns 0 for less than 2 readings', () => {
         // Given
         const readingsEmpty: any[] = [];
         const readingsOne = [{ temperature: 280, relativeHumidity: 95, pressure: 1010, altitude: 0, timestamp: Date.now() }];
         // When
-        const resultEmpty = predictFog(readingsEmpty);
-        const resultOne = predictFog(readingsOne);
+        const resultEmpty = fogProbability(readingsEmpty);
+        const resultOne = fogProbability(readingsOne);
         // Then
         expect(resultEmpty).toBe(0);
         expect(resultOne).toBe(0);
@@ -81,7 +81,7 @@ describe('predictFog', () => {
             { temperature: 279.7, relativeHumidity: 97, pressure: 1010, windSpeed: 1, altitude: 0, timestamp: Date.now() }
         ];
         // When
-        const result = predictFog(readings);
+        const result = fogProbability(readings);
         // Then
         expect(result).toBeGreaterThanOrEqual(0);
         expect(result).toBeLessThanOrEqual(1);
@@ -98,8 +98,8 @@ describe('predictFog', () => {
             { temperature: 289, relativeHumidity: 60, pressure: 1016, windSpeed: 4, altitude: 0, timestamp: Date.now() }
         ];
         // When
-        const high = predictFog(readingsHigh);
-        const low = predictFog(readingsLow);
+        const high = fogProbability(readingsHigh);
+        const low = fogProbability(readingsLow);
         // Then
         expect(high).toBeGreaterThan(low);
     });
@@ -111,7 +111,7 @@ describe('predictFog', () => {
             { temperature: 279.7, relativeHumidity: 97, pressure: 1010, altitude: 0, timestamp: Date.now() }
         ];
         // When
-        const result = predictFog(readings);
+        const result = fogProbability(readings);
         // Then
         expect(result).toBeGreaterThanOrEqual(0);
         expect(result).toBeLessThanOrEqual(1);
@@ -124,7 +124,7 @@ describe('predictFog', () => {
             { temperature: 284, relativeHumidity: 96, pressure: 1012, windSpeed: 1, altitude: 0, timestamp: Date.now() }
         ];
         // When
-        const result = predictFog(readings);
+        const result = fogProbability(readings);
         // Then
         expect(result).toBeGreaterThanOrEqual(0);
         expect(result).toBeLessThanOrEqual(1);
@@ -137,7 +137,7 @@ describe('predictFog', () => {
             { temperature: 294, relativeHumidity: 32, pressure: 1016, windSpeed: 7, altitude: 0, timestamp: Date.now() }
         ];
         // When
-        const result = predictFog(readings);
+        const result = fogProbability(readings);
         // Then
         expect(result).toBeCloseTo(0, 2);
     });
@@ -149,7 +149,7 @@ describe('predictFog', () => {
             { temperature: 278, relativeHumidity: 100, pressure: 1012, windSpeed: 0, altitude: 0, timestamp: Date.now() }
         ];
         // When
-        const result = predictFog(readings);
+        const result = fogProbability(readings);
         // Then
         expect(result).toBeCloseTo(1, 2);
     });
@@ -161,9 +161,80 @@ describe('predictFog', () => {
             { temperature: 282.5, relativeHumidity: 94, pressure: 1012, windSpeed: 2, altitude: 0, timestamp: Date.now() }
         ];
         // When
-        const result = predictFog(readings);
+        const result = fogProbability(readings);
         // Then
         expect(result).toBeGreaterThanOrEqual(0.45);
         expect(result).toBeLessThanOrEqual(0.55);
+    });
+});
+
+describe('fogTrendProbability', () => {
+    it('returns an array of length hoursAhead', () => {
+        const readings = [
+            { temperature: 280, relativeHumidity: 95, pressure: 1012, windSpeed: 1, altitude: 0, timestamp: Date.now() },
+            { temperature: 279.7, relativeHumidity: 97, pressure: 1010, windSpeed: 1, altitude: 0, timestamp: Date.now() }
+        ];
+        const result = fogTrendProbability(readings, 4, 1);
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toBe(4);
+    });
+
+    it('returns all probabilities between 0 and 1', () => {
+        const readings = [
+            { temperature: 280, relativeHumidity: 95, pressure: 1012, windSpeed: 1, altitude: 0, timestamp: Date.now() },
+            { temperature: 279.7, relativeHumidity: 97, pressure: 1010, windSpeed: 1, altitude: 0, timestamp: Date.now() }
+        ];
+        const result = fogTrendProbability(readings, 3, 1);
+        for (const prob of result) {
+            expect(prob).toBeGreaterThanOrEqual(0);
+            expect(prob).toBeLessThanOrEqual(1);
+        }
+    });
+
+    it('returns zeros if not enough readings', () => {
+        const readings: any[] = [];
+        const result = fogTrendProbability(readings, 2, 1);
+        expect(result).toEqual([0, 0]);
+    });
+
+    it('returns higher probabilities for foggy trends', () => {
+        const readings = [
+            { temperature: 278, relativeHumidity: 100, pressure: 1012, windSpeed: 0, altitude: 0, timestamp: Date.now() },
+            { temperature: 278, relativeHumidity: 100, pressure: 1012, windSpeed: 0, altitude: 0, timestamp: Date.now() }
+        ];
+        const result = fogTrendProbability(readings, 2, 1);
+        expect(result[0]).toBeGreaterThanOrEqual(0.9);
+        expect(result[1]).toBeGreaterThanOrEqual(0.9);
+    });
+
+    it('works with missing windSpeed', () => {
+        const readings = [
+            { temperature: 280, relativeHumidity: 95, pressure: 1012, altitude: 0, timestamp: Date.now() },
+            { temperature: 279.7, relativeHumidity: 97, pressure: 1010, altitude: 0, timestamp: Date.now() }
+        ];
+        const result = fogTrendProbability(readings, 2, 1);
+        expect(result.length).toBe(2);
+        for (const prob of result) {
+            expect(prob).toBeGreaterThanOrEqual(0);
+            expect(prob).toBeLessThanOrEqual(1);
+        }
+    });
+
+    it('adjusts for solar elevation if lat/lon provided (probability decreases after sunrise)', () => {
+        // Use a fixed timestamp before sunrise at a known location
+        const midnight = new Date(Date.UTC(2023, 0, 1, 0, 0, 0)).getTime();
+        const readings = [
+            { temperature: 278, relativeHumidity: 100, pressure: 1012, windSpeed: 0, altitude: 0, timestamp: midnight },
+            { temperature: 278, relativeHumidity: 100, pressure: 1012, windSpeed: 0, altitude: 0, timestamp: midnight }
+        ];
+        // Location: London
+        const lat = 51.5, lon = 0;
+        // Predict for 10 hours to ensure we cross sunrise
+        const result = fogTrendProbability(readings, 10, 1, lat, lon);
+        // Find the first index where probability drops below 1 (after sunrise)
+        const firstDropIdx = result.findIndex(p => p < 1);
+        // There should be a drop after sunrise
+        expect(firstDropIdx).toBeGreaterThan(0);
+        expect(result[firstDropIdx]).toBeLessThan(result[0]);
     });
 });
