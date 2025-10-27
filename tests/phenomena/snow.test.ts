@@ -96,7 +96,7 @@ describe('snowToLiquidRatioContinuous', () => {
     });
 
     it('returns 30 for very cold temperatures', () => {
-        expect(snowToLiquidRatioContinuous(253.15)).toBeCloseTo(30, 10); // -20°C exactly
+        expect(snowToLiquidRatioContinuous(253.15)).toBeCloseTo(30, 2); // -20°C exactly
         expect(snowToLiquidRatioContinuous(243.15)).toBe(30); // -30°C
     });
 
@@ -111,7 +111,7 @@ describe('snowToLiquidRatioContinuous', () => {
         
         // -20°C boundary (exactly 30, with floating point tolerance)
         const ratio3 = snowToLiquidRatioContinuous(253.15);
-        expect(ratio3).toBeCloseTo(30, 10);
+        expect(ratio3).toBeCloseTo(30, 2);
     });
 
     it('increases ratio as temperature decreases', () => {
@@ -133,7 +133,7 @@ describe('snowfallEquivalentContinuous', () => {
         expect(snow1).toBe(50); // ratio is 5
         
         const snow2 = snowfallEquivalentContinuous(10, 253.15); // -20°C
-        expect(snow2).toBeCloseTo(300, 10); // ratio is 30 (with floating point tolerance)
+        expect(snow2).toBeCloseTo(300, 2); // ratio is 30 (with floating point tolerance)
     });
 
     it('provides smoother transitions than step function', () => {

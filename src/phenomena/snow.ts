@@ -65,6 +65,7 @@ export function snowToLiquidRatioContinuous(temperature: number): number {
         return 5;
     } else if (tempC > -20) {
         // Linear interpolation for -20°C to 0°C
+        // Slope = (30 - 5) / (-20 - 0) = 25 / -20 = -1.25
         // ratio = 5 - 1.25 * tempC
         return 5 - 1.25 * tempC;
     } else {
