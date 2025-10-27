@@ -79,7 +79,7 @@ describe('cloudBaseHeight', () => {
         expect(() => cloudBaseHeight(288.15, 293.15)).toThrow("Dew point cannot be greater than temperature.");
     });
 
-    it('should match Wikipedia formula example', () => {
+    it('should match 3rd party calculator result', () => {
         // Temperature: 283.15 K (10°C), Dew Point: 281.15 K (8°C), Altitude: 1000m
         // Spread: 2 K, Height above surface: 2 / 8 * 1000 = 250 m
         // Total: 1000 + 250 = 1250 m
