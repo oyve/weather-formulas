@@ -1,4 +1,4 @@
-import * as windFormulas from '../../src/formulas/wind';
+import * as windFormulas from '../../src/phenomena/wind';
 import * as airDensityFormulas from '../../src/formulas/airDensity';
 
 describe('getWindDirectionByDegree', () => {

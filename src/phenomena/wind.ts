@@ -1,4 +1,4 @@
-import * as airDensityFormulas from "./airDensity";
+import * as airDensityFormulas from "../formulas/airDensity";
 
 /**
  * Get the wind direction based on the degree.
