@@ -154,11 +154,43 @@ describe('formulaName', () => {
 ## Common Patterns
 
 ### Temperature Conversions
-While the library uses Kelvin internally, you may need to reference conversions in documentation:
+**IMPORTANT**: Temperature conversion functions are available in `src/formulas/temperature.ts`. Always use these functions instead of manual conversions:
+
 ```typescript
-// Celsius to Kelvin: K = °C + 273.15
-// Fahrenheit to Kelvin: K = (°F - 32) × 5/9 + 273.15
+import { 
+  kelvinToCelcius, 
+  celciusToKelvin, 
+  kelvinToFahrenheit, 
+  fahrenheitToKelvin,
+  celciusToFahrenheit,
+  fahrenheitToCelcius
+} from './temperature';
+
+// Convert from Kelvin to Celsius
+const tempC = kelvinToCelcius(298.15); // 25°C
+
+// Convert from Celsius to Kelvin
+const tempK = celciusToKelvin(25); // 298.15 K
+
+// Convert from Kelvin to Fahrenheit
+const tempF = kelvinToFahrenheit(298.15); // 77°F
+
+// Convert from Fahrenheit to Kelvin
+const tempK2 = fahrenheitToKelvin(77); // 298.15 K
+
+// Convert from Celsius to Fahrenheit
+const tempF2 = celciusToFahrenheit(25); // 77°F
+
+// Convert from Fahrenheit to Celsius
+const tempC2 = fahrenheitToCelcius(77); // 25°C
 ```
+
+While the library uses Kelvin internally for all calculations, you may need to perform conversions when:
+- Working with user input in Celsius or Fahrenheit
+- Displaying results to users in their preferred temperature scale
+- Interfacing with external APIs that use different temperature units
+
+**Always use the conversion functions from `temperature.ts` rather than manual formulas to ensure consistency and avoid errors.**
 
 ### Humidity Calculations
 Relative humidity formulas often use saturation vapor pressure:
