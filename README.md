@@ -36,6 +36,8 @@ console.log(`Dew Point: ${dewPoint} K`);
   - [Pressure](#pressure)
   - [Temperature](#temperature)
   - [Wind](#wind)
+  - [Phenomena](#phenomena)
+  - [Indices](#indices)
   - [Scales](#scales)
 - [Install](#install)
 - [Usage](#usage)
@@ -64,12 +66,12 @@ console.log(`Dew Point: ${dewPoint} K`);
 | Formula                     | Description                                                               |
 |-----------------------------|---------------------------------------------------------------------------|
 | **Freezing Level Altitude**  | Estimate the altitude where temperature drops below freezing. [🔗](https://en.wikipedia.org/wiki/Freezing_level) |
-| **Cloud Base Height**       | Estimate the altitude of the cloud base from temperature and dew point. [🔗](https://en.wikipedia.org/wiki/Cloud_base) |
 
 ### Humidity
 | Formula                     | Description                                                               |
 |-----------------------------|---------------------------------------------------------------------------|
 | **Relative Humidity**       | Calculate the ratio of the current absolute humidity to the maximum possible humidity. [🔗](https://en.wikipedia.org/wiki/Humidity) |
+| **Absolute Humidity**       | Calculate the mass of water vapor per unit volume of air. [🔗](https://en.wikipedia.org/wiki/Humidity) |
 | **Specific Humidity**       | Calculate the mass of water vapor per unit mass of air. [🔗](https://en.wikipedia.org/wiki/Humidity) |
 | **Mixing Ratio**            | Calculate the ratio of water vapor to dry air. [🔗](https://en.wikipedia.org/wiki/Humidity) |
 | **Vapor Pressure**          | Calculate the partial pressure of water vapor in the air. [🔗](https://en.wikipedia.org/wiki/Vapor_pressure) |
@@ -97,13 +99,16 @@ console.log(`Dew Point: ${dewPoint} K`);
 | **Wind Chill**              | Estimate the perceived temperature based on wind speed and air temperature. [🔗](https://en.wikipedia.org/wiki/Wind_chill#North_American_and_United_Kingdom_wind_chill_index) |
 | **(Australian) Apparent Temperature** | Calculate the apparent temperature considering humidity and wind. [🔗](https://en.wikipedia.org/wiki/Wind_chill#Australian_apparent_temperature) |
 | **Wet-bulb Temperature**    | Calculate the wet-bulb temperature. [🔗](https://en.wikipedia.org/wiki/Wet-bulb_temperature) |
+| **Dry Bulb Temperature**    | Estimate dry bulb temperature from wet bulb temperature and relative humidity. [🔗](https://en.wikipedia.org/wiki/Dry-bulb_temperature) |
 | **Equivalent Temperature**  | Calculate the temperature an air parcel would have if all water vapor were condensed and the latent heat released. [🔗](https://en.wikipedia.org/wiki/Potential_temperature) |
 | **Potential Temperature**   | Calculate the temperature an air parcel would have if brought to a standard pressure. [🔗](https://en.wikipedia.org/wiki/Potential_temperature) |
 | **Virtual Temperature**     | Calculate the temperature accounting for water vapor in the air. [🔗](https://en.wikipedia.org/wiki/Virtual_temperature) |
 | **Lapse Rate**              | Calculate the rate of temperature change with altitude. [🔗](https://en.wikipedia.org/wiki/Lapse_rate) |
 | **Dynamic lapse rate**      | Calculate the lapse rate dynamically based on readings. [🔗](https://en.wikipedia.org/wiki/Lapse_rate) |
+| **Temperature Inversion**   | Detect temperature inversion based on altitude and temperature readings. [🔗](https://en.wikipedia.org/wiki/Inversion_(meteorology)) |
 | **Weighted Average Temperature** | Calculate the weighted average temperature based on altitude differences. [🔗](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean) |
 | **Adjust Temperature by Lapse Rate** | Adjust temperature based on a fixed lapse rate. [🔗](https://en.wikipedia.org/wiki/Lapse_rate) |
+| **Temperature Conversions** | Convert between Kelvin, Celsius, and Fahrenheit temperature scales. [🔗](https://en.wikipedia.org/wiki/Conversion_of_scales_of_temperature) |
 
 ### Wind
 | Formula                     | Description                                                               |
@@ -111,24 +116,36 @@ console.log(`Dew Point: ${dewPoint} K`);
 | **Wind Direction**          | Convert wind direction in degrees to compass direction. [🔗](https://en.wikipedia.org/wiki/Wind_direction) |
 | **Wind Power Density**      | Calculate wind power density in watts per square meter. [🔗](https://en.wikipedia.org/wiki/Wind_power) |
 | **Wind Force**              | Calculate wind force in kilograms per square meter. [🔗](https://en.wikipedia.org/wiki/Wind_force) |
+| **Wind Gust Factor**        | Estimate wind gust speed from mean wind speed using a gust factor. [🔗](https://en.wikipedia.org/wiki/Wind_gust) |
 | **Adjust Wind Speed for Altitude** | Adjust wind speed between different altitudes based on air density. [🔗](https://en.wikipedia.org/wiki/Wind_speed) |
 | **Apparent Wind**           | Calculate the wind speed and direction experienced by a moving observer (e.g., vessel or vehicle). [🔗](https://en.wikipedia.org/wiki/Apparent_wind) |
 
 ### Phenomena
 | Formula                     | Description                                                               |
 |-----------------------------|---------------------------------------------------------------------------|
-| **Fog Visibility**          | Estimate visibility in fog using Koschmieder’s Law. [🔗](https://en.wikipedia.org/wiki/Fog#Visibility_and_Koschmieder's_law) |
+| **Cloud Base Height**       | Estimate the altitude of the cloud base from temperature and dew point. [🔗](https://en.wikipedia.org/wiki/Cloud_base) |
+| **Cloud Temperature**       | Calculate the temperature at the cloud base using the dry adiabatic lapse rate. [🔗](https://en.wikipedia.org/wiki/Cloud_base) |
+| **Fog Visibility**          | Estimate visibility in fog using Koschmieder's Law. [🔗](https://en.wikipedia.org/wiki/Fog#Visibility_and_Koschmieder's_law) |
 | **Fog Point Temperature**   | Calculate the fog point temperature (dew point at ground level). [🔗](https://en.wikipedia.org/wiki/Dew_point) |
-| **Fog Probability**         | Predict the probability of fog formation using meteorological factors.     |
+| **Fog Probability**         | Predict the probability of fog formation using meteorological factors. [🔗](https://en.wikipedia.org/wiki/Fog) |
+| **Fog Trend Probability**   | Predict fog probability trend for the next N hours using regression on recent data. [🔗](https://en.wikipedia.org/wiki/Fog) |
+
+### Indices
+| Index                       | Description                                                               |
+|-----------------------------|---------------------------------------------------------------------------|
+| **Heat Index**              | Measure the perceived temperature based on air temperature and humidity. [🔗](https://en.wikipedia.org/wiki/Heat_index) |
+| **Humidex**                 | Calculate the humidex, a Canadian measure of perceived temperature. [🔗](https://en.wikipedia.org/wiki/Humidex) |
+| **UTCI Assessment Scale**   | Universal Thermal Climate Index for assessing thermal stress. [🔗](https://en.wikipedia.org/wiki/UTCI) |
 
 ### Scales
 | Scale                       | Description                                                               |
 |-----------------------------|---------------------------------------------------------------------------|
 | **Beaufort Scale**          | Classify wind speed according to the Beaufort scale. [🔗](https://en.wikipedia.org/wiki/Beaufort_scale) |
+| &nbsp;&nbsp;**By Wind Speed**      | Classify wind speed using measured wind speed in m/s. [🔗](https://en.wikipedia.org/wiki/Beaufort_scale) |
+| &nbsp;&nbsp;**By Pressure**        | Classify wind using pressure difference. [🔗](https://en.wikipedia.org/wiki/Beaufort_scale) |
+| &nbsp;&nbsp;**By Pressure Ratio**  | Classify wind using pressure ratio. [🔗](https://en.wikipedia.org/wiki/Beaufort_scale) |
 | **Saffir-Simpson Scale**    | Classify hurricane wind speed according to the Saffir-Simpson scale. [🔗](https://en.wikipedia.org/wiki/Saffir%E2%80%93Simpson_scale) |
 | **UV Index**                | Classify ultraviolet index. [🔗](https://en.wikipedia.org/wiki/Ultraviolet_index) |
-| **Heat Index**              | Measure the perceived temperature based on air temperature and humidity. [🔗](https://en.wikipedia.org/wiki/Heat_index) |
-| **Humidex**                 | Calculate the humidex, a Canadian measure of perceived temperature. [🔗](https://en.wikipedia.org/wiki/Humidex) |
 
 
 ## Install
