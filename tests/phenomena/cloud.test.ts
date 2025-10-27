@@ -149,4 +149,16 @@ describe('cloudTemperature', () => {
         const result = cloudTemperature(308.15, 298.15);
         expect(result).toBeCloseTo(300.04, 2);
     });
+
+    it('should match 7.545°C for 10°C temperature, 8°C dew point at 1000m elevation', () => {
+        // Temperature: 283.15 K (10°C), Dew Point: 281.15 K (8°C)
+        // Elevation: 1000m (note: elevation doesn't affect cloud temperature calculation)
+        // Spread: 2 K, Cloud base height above surface: 2 * 124.7 = 249.4 m
+        // Using dry adiabatic lapse rate: 0.0098 K/m
+        // Temperature decrease: 0.0098 K/m * 249.4 m = 2.444 K
+        // Cloud temperature: 283.15 - 2.444 = 280.706 K (7.556°C)
+        // Expected: 7.545°C = 280.695 K
+        const result = cloudTemperature(283.15, 281.15, 0.0098);
+        expect(result).toBeCloseTo(280.695, 1);
+    });
 });
