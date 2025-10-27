@@ -78,7 +78,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node scripts/add-js-extensions.cjs",
     "watch": "tsc --watch",
     "test": "jest"
   },

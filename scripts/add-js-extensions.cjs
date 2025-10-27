@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const esmDir = path.join(__dirname, "../dist/esm");
+const esmDir = path.join(__dirname, "../dist");
 
 function addJsExtensions(dir) {
     const files = fs.readdirSync(dir);
@@ -33,4 +33,4 @@ function addJsExtensions(dir) {
 // Run the script on the esm directory
 addJsExtensions(esmDir);
 
-console.log('Adde JS extensions to EMS files in the dist/esm directory.');
+console.log('Added JS extensions to ESM files in the dist directory.');
