@@ -72,4 +72,10 @@ describe('cloudBaseHeight', () => {
         const result = cloudBaseHeight(298.15, 291.15, 100);
         expect(result).toBeCloseTo(975, 2);
     });
+
+    it('should throw error when dew point is greater than temperature', () => {
+        // Dew Point: 293.15 K (20°C), Temperature: 288.15 K (15°C)
+        // This is physically impossible
+        expect(() => cloudBaseHeight(288.15, 293.15)).toThrow("Dew point cannot be greater than temperature.");
+    });
 });

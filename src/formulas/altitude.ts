@@ -27,12 +27,16 @@ export function freezingLevelAltitude(
  * @param {number} dewPoint - Dew point temperature in Kelvin.
  * @param {number} surfaceAltitude - Surface altitude in meters (default: 0).
  * @returns {number} Cloud base altitude in meters above mean sea level.
+ * @throws {Error} If dew point is greater than temperature (physically impossible).
  */
 export function cloudBaseHeight(
     temperature: number,
     dewPoint: number,
     surfaceAltitude: number = 0
 ): number {
+    if (dewPoint > temperature) {
+        throw new Error("Dew point cannot be greater than temperature.");
+    }
     // The temperature difference is the same in Kelvin and Celsius
     const tempDewPointSpread = temperature - dewPoint;
     // Cloud base height above surface using the 125m per degree approximation
