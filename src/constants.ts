@@ -4,6 +4,7 @@ export const STANDARD_MEAN_PRESSURE_SEA_LEVEL = 101325
 export const STANDARD_MEAN_TEMPERATURE_CELCIUS = 15;
 export const STANDARD_MEAN_TEMPERATURE_KELVIN = 288.15;
 export const STANDARD_LAPSE_RATE = 0.0065;
+export const DRY_ADIABATIC_LAPSE_RATE = 0.0098; // K/m - Rate at which unsaturated air cools as it rises
 
 export interface IValuationSet {
     a: number, //millibar
