@@ -30,7 +30,8 @@ What does this formula calculate? What is its purpose in meteorology/atmospheric
 ### Formula/Equation
 Provide the mathematical formula (use LaTeX notation if possible):
 ```
-Example: T_d = (b * α(T,RH)) / (a - α(T,RH))
+Example: T_d = \frac{b \cdot \alpha(T,RH)}{a - \alpha(T,RH)}
+Or simple: T_d = (b * α(T,RH)) / (a - α(T,RH))
 ```
 
 ### Input Parameters

@@ -13,7 +13,7 @@
 - [ ] Test improvements
 
 ## Related Issue
-<!-- Link to the issue this PR addresses -->
+<!-- Link to the issue this PR addresses. Remove this section if not applicable -->
 Fixes #(issue number)
 
 ## Changes Made

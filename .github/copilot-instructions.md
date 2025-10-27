@@ -31,6 +31,11 @@ weather-formulas is a TypeScript library that provides atmospheric and meteorolo
 - Internal calculations: Kelvin
 - Document any temperature conversions explicitly
 
+**Common temperature conversion mistakes to avoid:**
+- Forgetting to convert from Celsius: K = °C + 273.15
+- Forgetting to convert from Fahrenheit: K = (°F - 32) × 5/9 + 273.15
+- Never use Celsius or Fahrenheit directly in calculations
+
 Other units (follow SI standards):
 - Pressure: Pascals (Pa) or hectopascals (hPa)
 - Distance: meters (m) or kilometers (km)

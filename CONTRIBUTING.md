@@ -68,7 +68,7 @@ This project follows a standard code of conduct. Please be respectful and constr
 ### Adding New Formulas
 When adding new weather formulas:
 
-1. **Research**: Ensure the formula is scientifically valid and cite authoritative sources
+1. **Research**: Ensure the formula is scientifically valid and cite authoritative sources.
 2. **Implementation**: 
    - Add the formula to the appropriate module in `src/formulas/`, `src/indices/`, `src/phenomena/`, or `src/scales/`
    - Use TypeScript with proper type definitions
