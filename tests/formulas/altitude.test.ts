@@ -31,31 +31,31 @@ describe('freezingLevelHeight', () => {
 describe('cloudBaseHeight', () => {
     it('should calculate cloud base height at sea level', () => {
         // Temperature: 293.15 K (20°C), Dew Point: 283.15 K (10°C)
-        // Spread: 10 K, Expected: 125 * 10 = 1250 m
+        // Spread: 10 K, Expected: 124.7 * 10 = 1247 m
         const result = cloudBaseHeight(293.15, 283.15);
-        expect(result).toBeCloseTo(1250, 2);
+        expect(result).toBeCloseTo(1247, 2);
     });
 
     it('should calculate cloud base height above a given altitude', () => {
         // Temperature: 293.15 K (20°C), Dew Point: 283.15 K (10°C), Surface: 500 m
-        // Spread: 10 K, Height above surface: 125 * 10 = 1250 m
-        // Total: 500 + 1250 = 1750 m
+        // Spread: 10 K, Height above surface: 124.7 * 10 = 1247 m
+        // Total: 500 + 1247 = 1747 m
         const result = cloudBaseHeight(293.15, 283.15, 500);
-        expect(result).toBeCloseTo(1750, 2);
+        expect(result).toBeCloseTo(1747, 2);
     });
 
     it('should handle small temperature-dewpoint spread', () => {
         // Temperature: 288.15 K (15°C), Dew Point: 286.15 K (13°C)
-        // Spread: 2 K, Expected: 125 * 2 = 250 m
+        // Spread: 2 K, Expected: 124.7 * 2 = 249.4 m
         const result = cloudBaseHeight(288.15, 286.15);
-        expect(result).toBeCloseTo(250, 2);
+        expect(result).toBeCloseTo(249.4, 2);
     });
 
     it('should handle large temperature-dewpoint spread', () => {
         // Temperature: 303.15 K (30°C), Dew Point: 283.15 K (10°C)
-        // Spread: 20 K, Expected: 125 * 20 = 2500 m
+        // Spread: 20 K, Expected: 124.7 * 20 = 2494 m
         const result = cloudBaseHeight(303.15, 283.15);
-        expect(result).toBeCloseTo(2500, 2);
+        expect(result).toBeCloseTo(2494, 2);
     });
 
     it('should handle zero spread (saturated air)', () => {
@@ -67,15 +67,23 @@ describe('cloudBaseHeight', () => {
 
     it('should work with typical aviation scenario', () => {
         // Temperature: 298.15 K (25°C), Dew Point: 291.15 K (18°C), Airport at 100m
-        // Spread: 7 K, Height above surface: 125 * 7 = 875 m
-        // Total: 100 + 875 = 975 m
+        // Spread: 7 K, Height above surface: 124.7 * 7 = 872.9 m
+        // Total: 100 + 872.9 = 972.9 m
         const result = cloudBaseHeight(298.15, 291.15, 100);
-        expect(result).toBeCloseTo(975, 2);
+        expect(result).toBeCloseTo(972.9, 2);
     });
 
     it('should throw error when dew point is greater than temperature', () => {
         // Dew Point: 293.15 K (20°C), Temperature: 288.15 K (15°C)
         // This is physically impossible
         expect(() => cloudBaseHeight(288.15, 293.15)).toThrow("Dew point cannot be greater than temperature.");
+    });
+
+    it('should match expected result for user example', () => {
+        // Temperature: 283.15 K (10°C), Dew Point: 281.15 K (8°C), Altitude: 1000m
+        // Spread: 2 K, Height above surface: 124.7 * 2 = 249.4 m
+        // Total: 1000 + 249.4 = 1249.4 m
+        const result = cloudBaseHeight(283.15, 281.15, 1000);
+        expect(result).toBeCloseTo(1249.4, 2);
     });
 });
