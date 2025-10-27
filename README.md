@@ -61,6 +61,7 @@ console.log(`Dew Point: ${dewPoint} K`);
 | Formula                     | Description                                                               |
 |-----------------------------|---------------------------------------------------------------------------|
 | **Freezing Level Altitude**  | Estimate the altitude where temperature drops below freezing. [🔗](https://en.wikipedia.org/wiki/Freezing_level) |
+| **Cloud Base Height**       | Estimate the altitude of the cloud base from temperature and dew point. [🔗](https://en.wikipedia.org/wiki/Cloud_base) |
 
 ### Humidity
 | Formula                     | Description                                                               |
