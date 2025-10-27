@@ -19,10 +19,10 @@ export function freezingLevelAltitude(
 
 /**
  * Estimate the altitude of the cloud base (in meters) from temperature and dew point.
- * This uses an empirical approximation based on the difference between temperature and dew point.
- * The formula assumes standard atmospheric conditions and uses the approximation that
- * cloud base height is approximately 124.7 meters for every degree (Celsius/Kelvin) of
- * temperature-dewpoint spread. This is a more accurate coefficient than the commonly cited 125 m/K.
+ * This uses the empirical approximation from meteorological practice:
+ * divide the temperature-dewpoint spread (in °C) by 8 and multiply by 1000.
+ * This is equivalent to 125 meters for every degree (Celsius/Kelvin) of spread.
+ * Formula: cloud_base_height = (T - Td) / 8 * 1000 = (T - Td) * 125 meters
  * @param {number} temperature - Air temperature in Kelvin.
  * @param {number} dewPoint - Dew point temperature in Kelvin.
  * @param {number} altitude - Surface altitude in meters (default: 0).
@@ -39,7 +39,7 @@ export function cloudBaseHeight(
     }
     // The temperature difference is the same in Kelvin and Celsius
     const tempDewPointSpread = temperature - dewPoint;
-    // Cloud base height above surface using the 124.7m per degree approximation
-    const heightAboveSurface = 124.7 * tempDewPointSpread;
+    // Cloud base height above surface: divide by 8 and multiply by 1000
+    const heightAboveSurface = (tempDewPointSpread / 8) * 1000;
     return altitude + heightAboveSurface;
 }
