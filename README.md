@@ -5,6 +5,9 @@
   <a href="https://github.com/oyve/weather-formulas/actions?query=workflow%3A%22Node.js+CI%22">
     <img alt="Node.js CI" src="https://github.com/oyve/weather-formulas/workflows/Node.js%20CI/badge.svg?branch=main">
   </a>
+  <a href="https://codecov.io/gh/oyve/weather-formulas">
+    <img alt="codecov" src="https://codecov.io/gh/oyve/weather-formulas/branch/main/graph/badge.svg">
+  </a>
   <a href="https://www.npmjs.com/package/weather-formulas">
     <img alt="npm" src="https://img.shields.io/npm/v/weather-formulas">
   </a>
