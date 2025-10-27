@@ -148,4 +148,55 @@ describe("Humidity Tests", function () {
             expect(actual).toBeCloseTo(expectedSpecificGasConstant, 2);
         });
     });
+
+    describe('Lifting Condensation Level', function () {
+        it('should calculate lifting condensation level correctly', function () {
+            // Arrange
+            const temperature = 293.15; // K (20°C)
+            const dewPoint = 283.15; // K (10°C)
+            const expectedLCL = 1247; // meters (10 K * 124.7)
+
+            // Act
+            const actual = humidity.liftingCondensationLevel(temperature, dewPoint);
+
+            // Assert
+            expect(actual).toBeCloseTo(expectedLCL, 2);
+        });
+
+        it('should handle small temperature-dewpoint spread', function () {
+            // Arrange
+            const temperature = 288.15; // K (15°C)
+            const dewPoint = 286.15; // K (13°C)
+            const expectedLCL = 249.4; // meters (2 K * 124.7)
+
+            // Act
+            const actual = humidity.liftingCondensationLevel(temperature, dewPoint);
+
+            // Assert
+            expect(actual).toBeCloseTo(expectedLCL, 2);
+        });
+
+        it('should handle zero spread (saturated air)', function () {
+            // Arrange
+            const temperature = 293.15; // K (20°C)
+            const dewPoint = 293.15; // K (20°C)
+            const expectedLCL = 0; // meters (0 K * 124.7)
+
+            // Act
+            const actual = humidity.liftingCondensationLevel(temperature, dewPoint);
+
+            // Assert
+            expect(actual).toBeCloseTo(expectedLCL, 2);
+        });
+
+        it('should throw error when dew point is greater than temperature', function () {
+            // Arrange
+            const temperature = 288.15; // K (15°C)
+            const dewPoint = 293.15; // K (20°C)
+
+            // Act & Assert
+            expect(() => humidity.liftingCondensationLevel(temperature, dewPoint))
+                .toThrow("Dew point cannot be greater than temperature.");
+        });
+    });
 });

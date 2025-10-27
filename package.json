@@ -62,6 +62,11 @@
       "import": "./dist/esm/indices/humidex.js",
       "types": "./dist/types/indices/humidex.d.ts"
     },
+    "./cloud": {
+      "require": "./dist/cjs/phenomena/cloud.cjs",
+      "import": "./dist/esm/phenomena/cloud.js",
+      "types": "./dist/types/phenomena/cloud.d.ts"
+    },
     "./diurnalRythm": {
       "require": "./dist/cjs/phenomena/diurnalRythm.cjs",
       "import": "./dist/esm/phenomena/diurnalRythm.js",
