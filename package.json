@@ -22,11 +22,6 @@
       "import": "./dist/esm/formulas/altitude.js",
       "types": "./dist/types/formulas/altitude.d.ts"
     },
-    "./diurnalRythm": {
-      "require": "./dist/cjs/phenomena/diurnalRythm.cjs",
-      "import": "./dist/esm/phenomena/diurnalRythm.js",
-      "types": "./dist/types/phenomena/diurnalRythm.d.ts"
-    },
     "./humidity": {
       "require": "./dist/cjs/formulas/humidity.cjs",
       "import": "./dist/esm/formulas/humidity.js",
@@ -47,20 +42,40 @@
       "import": "./dist/esm/formulas/wind.js",
       "types": "./dist/types/formulas/wind.d.ts"
     },
+    "./PET": {
+      "require": "./dist/cjs/indices/PET.cjs",
+      "import": "./dist/esm/indices/PET.js",
+      "types": "./dist/types/indices/PET.d.ts"
+    },
+    "./UTCI": {
+      "require": "./dist/cjs/indices/UTCI.cjs",
+      "import": "./dist/esm/indices/UTCI.js",
+      "types": "./dist/types/indices/UTCI.d.ts"
+    },
     "./heatIndex": {
-      "require": "./dist/cjs/scales/heatIndex.cjs",
-      "import": "./dist/esm/scales/heatIndex.js",
-      "types": "./dist/types/scales/heatIndex.d.ts"
+      "require": "./dist/cjs/indices/heatIndex.cjs",
+      "import": "./dist/esm/indices/heatIndex.js",
+      "types": "./dist/types/indices/heatIndex.d.ts"
     },
     "./humidex": {
       "require": "./dist/cjs/indices/humidex.cjs",
       "import": "./dist/esm/indices/humidex.js",
       "types": "./dist/types/indices/humidex.d.ts"
     },
+    "./diurnalRythm": {
+      "require": "./dist/cjs/phenomena/diurnalRythm.cjs",
+      "import": "./dist/esm/phenomena/diurnalRythm.js",
+      "types": "./dist/types/phenomena/diurnalRythm.d.ts"
+    },
     "./fog": {
       "require": "./dist/cjs/phenomena/fog.cjs",
       "import": "./dist/esm/phenomena/fog.js",
       "types": "./dist/types/phenomena/fog.d.ts"
+    },
+    "./snow": {
+      "require": "./dist/cjs/phenomena/snow.cjs",
+      "import": "./dist/esm/phenomena/snow.js",
+      "types": "./dist/types/phenomena/snow.d.ts"
     },
     "./beaufort": {
       "require": "./dist/cjs/scales/beaufort.cjs",
