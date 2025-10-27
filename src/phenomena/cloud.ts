@@ -31,13 +31,12 @@ export function cloudBaseHeight(
  * 
  * @param {number} temperature - Surface air temperature in Kelvin.
  * @param {number} dewPoint - Dew point temperature in Kelvin.
- * @param {number} altitude - Surface altitude in meters (default: 0).
  * @param {number} lapseRate - Environmental lapse rate in K/m (default: 0.0065 K/m, standard atmosphere).
  * @returns {number} Temperature at cloud base in Kelvin.
  * @throws {Error} If dew point is greater than temperature (physically impossible).
  * 
  * @example
- * const cloudTemp = cloudTemperature(293.15, 283.15, 0);
+ * const cloudTemp = cloudTemperature(293.15, 283.15);
  * console.log(cloudTemp); // ~285.05 K (approximately 12°C)
  * 
  * @see https://en.wikipedia.org/wiki/Lapse_rate
@@ -46,7 +45,6 @@ export function cloudBaseHeight(
 export function cloudTemperature(
     temperature: number,
     dewPoint: number,
-    altitude: number = 0,
     lapseRate: number = STANDARD_LAPSE_RATE
 ): number {
     // Calculate the height above the surface where clouds form

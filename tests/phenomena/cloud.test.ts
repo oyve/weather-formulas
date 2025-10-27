@@ -76,7 +76,7 @@ describe('cloudTemperature', () => {
         // Custom lapse rate: 0.008 K/m
         // Temperature decrease: 0.008 K/m * 1247 m = 9.976 K
         // Cloud temperature: 293.15 - 9.976 = 283.174 K
-        const result = cloudTemperature(293.15, 283.15, 0, 0.008);
+        const result = cloudTemperature(293.15, 283.15, 0.008);
         expect(result).toBeCloseTo(283.17, 2);
     });
 
@@ -108,21 +108,22 @@ describe('cloudTemperature', () => {
     });
 
     it('should work with typical aviation scenario', () => {
-        // Temperature: 298.15 K (25°C), Dew Point: 291.15 K (18°C), Airport at 100m
+        // Temperature: 298.15 K (25°C), Dew Point: 291.15 K (18°C)
         // Spread: 7 K, Height above surface: 7 * 124.7 = 872.9 m
         // Temperature decrease: 0.0065 K/m * 872.9 m = 5.674 K
         // Cloud temperature: 298.15 - 5.674 = 292.476 K
-        const result = cloudTemperature(298.15, 291.15, 100);
+        const result = cloudTemperature(298.15, 291.15);
         expect(result).toBeCloseTo(292.48, 2);
     });
 
-    it('should calculate correctly at elevated surface altitude', () => {
-        // Temperature: 283.15 K (10°C), Dew Point: 281.15 K (8°C), Altitude: 1000m
+    it('should calculate correctly with dry adiabatic lapse rate', () => {
+        // Temperature: 283.15 K (10°C), Dew Point: 281.15 K (8°C)
         // Spread: 2 K, Height above surface: 2 * 124.7 = 249.4 m
-        // Temperature decrease: 0.0065 K/m * 249.4 m = 1.6211 K
-        // Cloud temperature: 283.15 - 1.6211 = 281.5289 K
-        const result = cloudTemperature(283.15, 281.15, 1000);
-        expect(result).toBeCloseTo(281.53, 2);
+        // Using dry adiabatic lapse rate: 0.0098 K/m
+        // Temperature decrease: 0.0098 K/m * 249.4 m = 2.444 K
+        // Cloud temperature: 283.15 - 2.444 = 280.706 K
+        const result = cloudTemperature(283.15, 281.15, 0.0098);
+        expect(result).toBeCloseTo(280.71, 2);
     });
 
     it('should throw error when dew point is greater than temperature', () => {
