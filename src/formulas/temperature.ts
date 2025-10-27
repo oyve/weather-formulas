@@ -1,12 +1,8 @@
 import { Reading } from '../common';
 import * as c from '../constants'
+import { IValuationSet } from '../constants';
 
-export interface IValuationSet {
-    a: number, //millibar
-    b: number, //constant
-    c: number, //celcius degrees
-    d: number; //celcius degrees
-}
+
 
 /**
  * Gets the Dew Point Valuation by temperature
@@ -14,13 +10,20 @@ export interface IValuationSet {
  * @returns {Array<IValuationSet>} Dew Point Valuation
  */
 export function dewPointValuationsByTemperature(temperature: number): IValuationSet {
-    if (temperature < 0) {
-        return c.DEW_POINT_VALUATIONS.ARDENBUCK_MINUS;
-    } else if (temperature >= 0 && temperature <= 50) {
-        return c.DEW_POINT_VALUATIONS.ARDENBUCK_PLUS;
-    } else if (temperature > 50) {
+    if (temperature < -30) {
+        // Use SONNTAG1990 for lowest error down to −45°C
+        return c.DEW_POINT_VALUATIONS.SONNTAG1990;
+    } else if (temperature >= -30 && temperature <= 35) {
+        // DAVID_BOLTON is most accurate for −30°C to 35°C
+        return c.DEW_POINT_VALUATIONS.DAVID_BOLTON;
+    } else if (temperature > 35 && temperature <= 60) {
+        // SONNTAG1990 covers up to 60°C with low error
+        return c.DEW_POINT_VALUATIONS.SONNTAG1990;
+    } else if (temperature > 60) {
+        // Use PAROSCIENTIFIC for highest temperatures
         return c.DEW_POINT_VALUATIONS.PAROSCIENTIFIC;
     } else {
+        // Fallback
         return c.DEW_POINT_VALUATIONS.ARDENBUCK_DEFAULT;
     }
 }
@@ -61,6 +64,17 @@ export function dewPointArdenBuckEquation(temperature: number, humidity: number,
     const Tdp = (valuationSet.c * gamma_T_RH) / (valuationSet.b - gamma_T_RH);
 
     return celciusToKelvin(Tdp);
+}
+
+/**
+ * Calculate Equivalent Temperature (Teq).
+ * Equivalent temperature is the temperature an air parcel would have if all water vapor were condensed and the latent heat released.
+ * @param {number} temperature Temperature in Kelvin (K)
+ * @param {number} mixingRatio Mixing ratio in kg/kg
+ * @returns {number} Equivalent temperature in Kelvin (K)
+ */
+export function equivalentTemperature(temperature: number, mixingRatio: number, constants: c.THERMODYNAMIC_CONSTANTS = c.DEFAULT_THERMODYNAMIC_CONSTANTS): number {
+    return temperature + (constants.Lv * mixingRatio) / constants.Cp;
 }
 
 /**
@@ -105,96 +119,37 @@ export function windChillIndex(temperature: number, windSpeed: number): number {
  * @param {number} windspeed Windspeed in M/S (meter per second)
  * @returns {number} Apparent Temperature in Kelvin
  */
-export function australianAapparentTemperature(temperature: number, humidity: number, windspeed: number): number {
+export function australianApparentTemperature(temperature: number, humidity: number, windspeed: number): number {
     const Ta = kelvinToCelcius(temperature);
     const v = windspeed;
 
-    const e = (humidity / 100) * 6.015 * Math.exp((17.27 * Ta) / (237.7 + Ta));
+    const e = (humidity / 100) * 6.105 * Math.exp((17.27 * Ta) / (237.7 + Ta));
     const AT = Ta + (0.33 * e) - (0.7 * v) - 4.00;
 
     return celciusToKelvin(AT);
 }
 
-/**
- * 
- * @param {number} temperature Temperature in K (Kelvin)
- * @param {number} humidity Humidity in RH (Relative Humidity)
- * @returns {number} Heat Index in Kelvin
- */
-export function heatIndex(temperature: number, humidity: number): number {
-    if (humidity > 100 || humidity < 0) throw("Not a valid humidity");
 
-    const T = kelvinToCelcius(temperature);
-    const R = humidity;
-
-    const c1 = -8.78469475556;
-    const c2 = 1.61139411;
-    const c3 = 2.33854883889;
-    const c4 = -0.14611605;
-    const c5 = -0.012308094;
-    const c6 = -0.0164248277778;
-    const c7 = 0.002211732;
-    const c8 = 0.00072546;
-    const c9 = -0.000003582;
-
-    const Te2 = (T ** 2);
-    const Re2 = (R ** 2);
-
-    const HI = (c1) + (c2 * T) + (c3 * R) + (c4 * T * R) + (c5 * Te2) + (c6 * Re2) + (c7 * Te2 * R) + (c8 * T * Re2) + (c9 * Te2 * Re2);
-
-    return celciusToKelvin(HI);
-}
+// #### Physiological Equivalent Temperature ?????????????
+///#### https://cds.climate.copernicus.eu/datasets/derived-utci-historical?tab=overview ??
 
 /**
- * 
- * @param {number} heatIndexTemperature Temperature in K (Kelvin)
- * @returns {string} Heat Index Warning
+ * Returns the UTCI thermal stress category for a given temperature in Celsius.
+ * @param {number} temperature - UTCI temperature in Kelvin
+ * @returns {string} Thermal stress category
  */
-export function heatIndexText(heatIndexTemperature: number): null | {lowerLimit: number, text: string, warning: string} {
-    let thresholds = [
-        { lowerLimit: 52, text: "Extreme danger", warning: "Heat stroke is imminent." },
-        { lowerLimit: 40, text: "Danger", warning: "Heat cramps and heat exhaustion are likely; heat stroke is probable with continued activity." },
-        { lowerLimit: 33, text: "Extreme caution", warning: "Heat cramps and heat exhaustion are possible. Continuing activity could result in heat stroke." },
-        { lowerLimit: 26, text: "Caution", warning: "Fatigue is possible with prolonged exposure and activity. Continuing activity could result in heat cramps." }
-    ];
-
-    let result = thresholds.find((t) => heatIndexTemperature >= (t.lowerLimit + c.CELSIUS_TO_KELVIN));
-
-    return result === undefined ? null : result;
-}
-
-/**
- * Gets the Humidex temperature
- * @param {number} temperature Temperature in K (Kelvin)
- * @param {number} humidity Humidity in RH (Relative Humidity)
- * @returns {number} Humidex in Kelvin
- */
-export function humidex(temperature: number, humidity: number): number {
-    const Tair = kelvinToCelcius(temperature);
-    const Tdew = dewPointMagnusFormula(temperature, humidity);
-
-    const e = 6.11 * Math.exp(5417.7530 * ((1 / 273.16) - (1 / Tdew)));
-    const h = (0.5555) * (e - 10.0);
-    const humidex = Tair + h;
-
-    return celciusToKelvin(humidex);
-}
-
-/**
- * Gets the Humidex test warning
- * @param {number} humidex Temperature in K (Kelvin)
- * @returns {string} Humidex Warning
- */
-export function humidexText(humidex: number): null | {lowerLimit: number, text: string} {
-    const thresholds = [
-        { lowerLimit: 46, text: "Dangerous" },
-        { lowerLimit: 40, text: "Great discomfort" },
-        { lowerLimit: 30, text: "Some discomfort" }
-    ];
-
-    const result = thresholds.find((t) => humidex >= (t.lowerLimit + c.CELSIUS_TO_KELVIN));
-
-    return result === undefined ? null : result;
+export function UTCIAssessmentScale(temperature: number): string {
+    const temperatureC = kelvinToCelcius(temperature);
+    if (temperatureC >= 46) return "Extreme heat stress";
+    if (temperatureC >= 38) return "Very strong heat stress";
+    if (temperatureC >= 32) return "Strong heat stress";
+    if (temperatureC >= 26) return "Moderate heat stress";
+    if (temperatureC >= 9) return "No thermal stress";
+    if (temperatureC >= 0) return "Slight cold stress";
+    if (temperatureC >= -13) return "Moderate cold stress";
+    if (temperatureC >= -27) return "Strong cold stress";
+    if (temperatureC >= -40) return "Very strong cold stress";
+    return "Extreme cold stress";
 }
 
 /**
@@ -208,7 +163,6 @@ export function humidexText(humidex: number): null | {lowerLimit: number, text: 
 export function calculateLapseRate(altitude1: number, T1: number, altitude2: number, T2: number) {
     return (T2 - T1) / (altitude2 - altitude1); // Kelvin/m
 }
-
 
 /**
  * Calculate dynamic lapse rate based on a range of altitude and temperature data
@@ -276,10 +230,12 @@ export function calculateWeightedAverageTemperature(readings: Reading[], hours =
  * @returns Readings within the given hours
  */
 export function filterReadingsByTimeRange(readings: Reading[], hours: number, filterByLastReading = false) {
-    readings.sort((a, b) => a.datetime.getTime() - b.datetime.getTime()); //oldest to newest
-    const cutoffTime = filterByLastReading ? readings[readings.length - 1].datetime.getTime() - hours * 60 * 60 * 1000 : Date.now() - hours * 60 * 60 * 1000; // Convert hours to milliseconds
+    readings.sort((a, b) => a.timestamp - b.timestamp); //oldest to newest
+    const cutoffTime = filterByLastReading
+        ? readings[readings.length - 1].timestamp - hours * 60 * 60 * 1000
+        : Date.now() - hours * 60 * 60 * 1000; // Convert hours to milliseconds
 
-    const filteredReadings = readings.filter((reading) => reading.datetime.getTime() >= cutoffTime);
+    const filteredReadings = readings.filter((reading) => reading.timestamp >= cutoffTime);
 
     return filteredReadings;
 }
@@ -397,4 +353,38 @@ export function wetBulbTemperature(temperature: number, humidity: number): numbe
         4.686035;
 
     return celciusToKelvin(wetBulbCelsius);
+}
+
+
+/**
+ * Estimates dry bulb temperature in Kelvin from wet bulb temperature and relative humidity.
+ * Uses iterative search based on the Stull approximation.
+ * @param wetBulbTemperature - Wet bulb temperature in Kelvin
+ * @param relativeHumidity - Relative humidity in percentage (0–100)
+ * @returns Estimated dry bulb temperature in Kelvin
+ */
+export function estimateDryBulbTemperature(wetBulbTemperature: number, relativeHumidity: number): number {
+  const rh = Math.max(0, Math.min(100, relativeHumidity)); // Clamp RH
+  const wetBulbC = kelvinToCelcius(wetBulbTemperature);
+
+  // Search range: 0°C to 60°C
+  let bestMatch = 0;
+  let minError = Infinity;
+
+  for (let tC = 0; tC <= 60; tC += 0.01) {
+    const estimatedWetBulb =
+      tC * Math.atan(0.151977 * Math.sqrt(rh + 8.313659)) +
+      Math.atan(tC + rh) -
+      Math.atan(rh - 1.676331) +
+      0.00391838 * Math.pow(rh, 1.5) * Math.atan(0.023101 * rh) -
+      4.686035;
+
+    const error = Math.abs(estimatedWetBulb - wetBulbC);
+    if (error < minError) {
+      minError = error;
+      bestMatch = tC;
+    }
+  }
+
+  return celciusToKelvin(bestMatch);
 }

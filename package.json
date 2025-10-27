@@ -1,6 +1,6 @@
 {
   "name": "weather-formulas",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A collection of atmospheric, meteorological weather calculations",
   "type": "module",
   "main": "dist/cjs/index.cjs",
@@ -17,10 +17,15 @@
       "import": "./dist/esm/formulas/airDensity.js",
       "types": "./dist/types/formulas/airDensity.d.ts"
     },
+    "./altitude": {
+      "require": "./dist/cjs/formulas/altitude.cjs",
+      "import": "./dist/esm/formulas/altitude.js",
+      "types": "./dist/types/formulas/altitude.d.ts"
+    },
     "./diurnalRythm": {
-      "require": "./dist/cjs/formulas/diurnalRythm.cjs",
-      "import": "./dist/esm/formulas/diurnalRythm.js",
-      "types": "./dist/types/formulas/diurnalRythm.d.ts"
+      "require": "./dist/cjs/phenomena/diurnalRythm.cjs",
+      "import": "./dist/esm/phenomena/diurnalRythm.js",
+      "types": "./dist/types/phenomena/diurnalRythm.d.ts"
     },
     "./humidity": {
       "require": "./dist/cjs/formulas/humidity.cjs",
@@ -42,6 +47,21 @@
       "import": "./dist/esm/formulas/wind.js",
       "types": "./dist/types/formulas/wind.d.ts"
     },
+    "./heatIndex": {
+      "require": "./dist/cjs/scales/heatIndex.cjs",
+      "import": "./dist/esm/scales/heatIndex.js",
+      "types": "./dist/types/scales/heatIndex.d.ts"
+    },
+    "./humidex": {
+      "require": "./dist/cjs/indices/humidex.cjs",
+      "import": "./dist/esm/indices/humidex.js",
+      "types": "./dist/types/indices/humidex.d.ts"
+    },
+    "./fog": {
+      "require": "./dist/cjs/phenomena/fog.cjs",
+      "import": "./dist/esm/phenomena/fog.js",
+      "types": "./dist/types/phenomena/fog.d.ts"
+    },
     "./beaufort": {
       "require": "./dist/cjs/scales/beaufort.cjs",
       "import": "./dist/esm/scales/beaufort.js",
@@ -51,6 +71,11 @@
       "require": "./dist/cjs/scales/saffirSimpson.cjs",
       "import": "./dist/esm/scales/saffirSimpson.js",
       "types": "./dist/types/scales/saffirSimpson.d.ts"
+    },
+    "./uvindex": {
+      "require": "./dist/cjs/scales/uvindex.cjs",
+      "import": "./dist/esm/scales/uvindex.js",
+      "types": "./dist/types/scales/uvindex.d.ts"
     }
   },
   "files": [
@@ -104,9 +129,15 @@
   "homepage": "https://github.com/oyve/weather-formulas#readme",
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "@types/regression": "^2.0.6",
+    "@types/suncalc": "^1.9.2",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "regression": "^2.0.1",
+    "suncalc": "^1.9.0"
   }
 }

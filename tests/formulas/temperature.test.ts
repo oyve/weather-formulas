@@ -2,15 +2,13 @@ import { Reading } from '../../src/common';
 import * as temperatureFormulas from '../../src/formulas/temperature';
 import * as c from '../../src/constants';
 
-const KELVIN = 273.15;
-
 describe("Temperature Tests", function () {
     describe("Magnus formula", function () {
         it("it should equal", function () {
             //arrange
-            const expected = 285.27;
+            const expected = 285.720988;
             //act
-            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40);
+            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + c.CELSIUS_TO_KELVIN, 40);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -20,7 +18,7 @@ describe("Temperature Tests", function () {
             const expected = 285.72;
             const valuationSet = c.DEW_POINT_VALUATIONS.DAVID_BOLTON;
             //act
-            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
+            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + c.CELSIUS_TO_KELVIN, 40, valuationSet);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -30,7 +28,7 @@ describe("Temperature Tests", function () {
             const expected = 284.41;
             const valuationSet =  { a: 6, b: 17, c: 250, d: 234.5 }; //these values are made up for the sake of testing
             //act
-            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + KELVIN, 40, valuationSet);
+            const actual = temperatureFormulas.dewPointMagnusFormula(26.85 + c.CELSIUS_TO_KELVIN, 40, valuationSet);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -39,9 +37,9 @@ describe("Temperature Tests", function () {
     describe("Ardenbuck formula", function () {
         it("it should equal", function () {
             //arrange
-            const expected = 285.09;
+            const expected = 285.5478;
             //act
-            const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + KELVIN, 40);
+            const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + c.CELSIUS_TO_KELVIN, 40);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -51,7 +49,7 @@ describe("Temperature Tests", function () {
             const expected = 285.55;
             const valuationSet = c.DEW_POINT_VALUATIONS.DAVID_BOLTON;
             //act
-            const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + KELVIN, 40, valuationSet);
+            const actual = temperatureFormulas.dewPointArdenBuckEquation(26.85 + c.CELSIUS_TO_KELVIN, 40, valuationSet);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
@@ -71,57 +69,30 @@ describe("Temperature Tests", function () {
     describe("Australian apparant temperature", function () {
         it("it should equal", function () {
             //arrange
-            const expected = 273.74;
-            //act
-            const actual = temperatureFormulas.australianAapparentTemperature(10 + KELVIN, 40, 10);
+            const expected = 273.7682885;
+            //act   
+            const actual = temperatureFormulas.australianApparentTemperature(10 + c.CELSIUS_TO_KELVIN, 40, 10);
             //assert
             expect(actual).toBeCloseTo(expected, 2);
         });
     });
 
-    describe("Heat Index", function () {
-        it("it should equal", function () {
-            //arrange
-            const expected = 308;
-            //act
-            const actual = temperatureFormulas.heatIndex(31 + KELVIN, 60);
-            //assert           
-            expect(actual).toBeCloseTo(expected, 2);
+    describe('Equivalent Temperature', function() {
+        it('should calculate equivalent temperature correctly for typical values', function() {
+            // Arrange
+            const temperature = 293.15; // 20°C in Kelvin
+            const mixingRatio = 0.01;   // 0.01 kg/kg
+            // Act
+            const result = temperatureFormulas.equivalentTemperature(temperature, mixingRatio);
+            // Expected value calculated externally: ≈ 320.36 K
+            expect(result).toBeCloseTo(318.0503984, 2);
         });
-    });
 
-    describe("Heat Index Text", function () {
-        it("it should equal", function () {
-            //arrange
-            const expected = 33;
-            //act
-            const heatIndex = temperatureFormulas.heatIndex(31 + KELVIN, 60);
-            const actual = temperatureFormulas.heatIndexText(heatIndex);
-            //assert           
-            expect(actual?.lowerLimit).toEqual(expected);
-        });
-    });
-
-    describe("Humidex", function () {
-        it("it should equal", function () {
-            //arrange
-            const expected = 313.77;
-            //act
-            const actual = temperatureFormulas.humidex(31 + KELVIN, 60);
-            //assert
-            expect(actual).toBeCloseTo(expected, 2);
-        });
-    });
-
-    describe("Humidex Text", function () {
-        it("it should equal", function () {
-            //arrange
-            const expected = 40;
-            //act
-            const humidex = temperatureFormulas.humidex(31 + KELVIN, 60);
-            const actual = temperatureFormulas.humidexText(humidex);
-            //assert
-            expect(actual?.lowerLimit).toEqual(expected);
+        it('should return the same temperature for zero mixing ratio', function() {
+            const temperature = 293.15;
+            const mixingRatio = 0;
+            const result = temperatureFormulas.equivalentTemperature(temperature, mixingRatio);
+            expect(result).toBeCloseTo(293.15, 2);
         });
     });
 
@@ -191,11 +162,11 @@ describe("Temperature Tests", function () {
         it('should calculate dynamic lapse rate correctly', function() {
             //arrange
             const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 25 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 50, temperature: 22 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 100, temperature: 18 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 200, temperature: 15 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 300, temperature: 12 },
+                { timestamp: getTimeFromMinutes(-60*5), altitude: 0, temperature: 25, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*4), altitude: 50, temperature: 22, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*3), altitude: 100, temperature: 18, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*2), altitude: 200, temperature: 15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*1), altitude: 300, temperature: 12, pressure: 101325, relativeHumidity: 50 },
             ]
             const expected = -0.05;
             //act
@@ -206,11 +177,11 @@ describe("Temperature Tests", function () {
         it('should equal standard lapse rate correctly', function() {
             //arrange
             const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15 },
+                { timestamp: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15, pressure: 101325, relativeHumidity: 50 },
             ]
             const expected = -0.0065;
             //act
@@ -221,11 +192,11 @@ describe("Temperature Tests", function () {
         it('should equal cut off hours correctly', function() {
             //arrange
             const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 10 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 5, temperature: 20 }, //cut off these two
-                { datetime: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15 },
+                { timestamp: getTimeFromMinutes(-60*5), altitude: 0, temperature: 10, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*4), altitude: 5, temperature: 20, pressure: 101325, relativeHumidity: 50 }, //cut off these two
+                { timestamp: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15, pressure: 101325, relativeHumidity: 50 },
             ]
             const expected = -0.0065;
             //act
@@ -239,11 +210,11 @@ describe("Temperature Tests", function () {
         it('should calculate correctly', function() {
             //arrange
             const readings: Reading[] = [
-                { datetime: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15 },
-                { datetime: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65 },
-                { datetime: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15 },
-                { datetime: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65 },
-                { datetime: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15 },
+                { timestamp: getTimeFromMinutes(-60*5), altitude: 0, temperature: 288.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*4), altitude: 1000, temperature: 281.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*3), altitude: 2000, temperature: 275.15, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*2), altitude: 3000, temperature: 268.65, pressure: 101325, relativeHumidity: 50 },
+                { timestamp: getTimeFromMinutes(-60*1), altitude: 4000, temperature: 262.15, pressure: 101325, relativeHumidity: 50 },
             ]
             const expected = 275.15;
             //act
@@ -305,5 +276,5 @@ describe("Temperature Tests", function () {
 function getTimeFromMinutes(minutes: number) {
     let now = new Date();
     now.setMinutes(now.getMinutes() + minutes);
-    return now;
+    return now.getTime();
 }

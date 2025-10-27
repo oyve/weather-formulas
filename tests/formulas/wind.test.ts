@@ -187,3 +187,25 @@ describe('apparentWind', () => {
         expect(result.direction).toBeCloseTo(296.565, 3);
     });
 });
+
+describe('windGustFactor', () => {
+    it('should estimate gust speed with default gust factor', () => {
+        expect(windFormulas.windGustFactor(10)).toBeCloseTo(15, 3); // 10 * 1.5
+    });
+
+    it('should estimate gust speed with custom gust factor', () => {
+        expect(windFormulas.windGustFactor(10, 2)).toBeCloseTo(20, 3); // 10 * 2
+    });
+
+    it('should return 0 for zero mean wind speed', () => {
+        expect(windFormulas.windGustFactor(0)).toBe(0);
+    });
+
+    it('should handle very low gust factor', () => {
+        expect(windFormulas.windGustFactor(10, 1.1)).toBeCloseTo(11, 3);
+    });
+
+    it('should handle very high mean wind speed', () => {
+        expect(windFormulas.windGustFactor(50)).toBeCloseTo(75, 3); // 50 * 1.5
+    });
+});
