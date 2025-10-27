@@ -77,6 +77,11 @@
       "import": "./dist/esm/phenomena/fog.js",
       "types": "./dist/types/phenomena/fog.d.ts"
     },
+    "./snow": {
+      "require": "./dist/cjs/phenomena/snow.cjs",
+      "import": "./dist/esm/phenomena/snow.js",
+      "types": "./dist/types/phenomena/snow.d.ts"
+    },
     "./beaufort": {
       "require": "./dist/cjs/scales/beaufort.cjs",
       "import": "./dist/esm/scales/beaufort.js",
