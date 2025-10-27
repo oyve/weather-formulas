@@ -1,8 +1,6 @@
 import { 
     snowToLiquidRatio, 
     snowfallEquivalent, 
-    snowToLiquidRatioContinuous,
-    snowfallEquivalentContinuous,
     snowToLiquidEquivalent
 } from '../../src/phenomena/snow';
 
@@ -15,40 +13,34 @@ describe('snowToLiquidRatio', () => {
         expect(snowToLiquidRatio(280)).toBe(5);
     });
 
-    it('returns 10 for wet snow temperatures (-5°C to 0°C)', () => {
-        // -1°C
-        expect(snowToLiquidRatio(272.15)).toBe(10);
-        // -3°C
-        expect(snowToLiquidRatio(270.15)).toBe(10);
-        // -5°C
-        expect(snowToLiquidRatio(268.15)).toBe(10);
+    it('returns 30 for very cold temperatures', () => {
+        expect(snowToLiquidRatio(253.15)).toBeCloseTo(30, 2); // -20°C exactly
+        expect(snowToLiquidRatio(243.15)).toBe(30); // -30°C
     });
 
-    it('returns 15 for typical snow temperatures (-10°C to -5°C)', () => {
-        // -6°C
-        expect(snowToLiquidRatio(267.15)).toBe(15);
-        // -8°C
-        expect(snowToLiquidRatio(265.15)).toBe(15);
-        // -10°C
-        expect(snowToLiquidRatio(263.15)).toBe(15);
+    it('provides continuous values in the transition range', () => {
+        // -2°C should be 7.5
+        const ratio1 = snowToLiquidRatio(271.15);
+        expect(ratio1).toBeCloseTo(7.5, 1);
+        
+        // -10°C should be 17.5
+        const ratio2 = snowToLiquidRatio(263.15);
+        expect(ratio2).toBeCloseTo(17.5, 1);
+        
+        // -20°C boundary (exactly 30, with floating point tolerance)
+        const ratio3 = snowToLiquidRatio(253.15);
+        expect(ratio3).toBeCloseTo(30, 2);
     });
 
-    it('returns 20 for dry snow temperatures (-15°C to -10°C)', () => {
-        // -11°C
-        expect(snowToLiquidRatio(262.15)).toBe(20);
-        // -13°C
-        expect(snowToLiquidRatio(260.15)).toBe(20);
-        // -15°C
-        expect(snowToLiquidRatio(258.15)).toBe(20);
-    });
-
-    it('returns 30 for very cold temperatures (below -15°C)', () => {
-        // -16°C
-        expect(snowToLiquidRatio(257.15)).toBe(30);
-        // -20°C
-        expect(snowToLiquidRatio(253.15)).toBe(30);
-        // -30°C
-        expect(snowToLiquidRatio(243.15)).toBe(30);
+    it('increases ratio as temperature decreases', () => {
+        const ratio1 = snowToLiquidRatio(271.15); // -2°C
+        const ratio2 = snowToLiquidRatio(268.15); // -5°C
+        const ratio3 = snowToLiquidRatio(263.15); // -10°C
+        const ratio4 = snowToLiquidRatio(258.15); // -15°C
+        
+        expect(ratio2).toBeGreaterThan(ratio1);
+        expect(ratio3).toBeGreaterThan(ratio2);
+        expect(ratio4).toBeGreaterThan(ratio3);
     });
 });
 
@@ -57,17 +49,21 @@ describe('snowfallEquivalent', () => {
         // 10mm liquid at 0°C (ratio 5:1) = 50mm snow
         expect(snowfallEquivalent(10, 273.15)).toBe(50);
         
-        // 10mm liquid at -3°C (ratio 10:1) = 100mm snow
-        expect(snowfallEquivalent(10, 270.15)).toBe(100);
+        // 10mm liquid at -3°C (ratio ~8.75:1) 
+        const snow1 = snowfallEquivalent(10, 270.15);
+        expect(snow1).toBeCloseTo(87.5, 1);
         
-        // 10mm liquid at -8°C (ratio 15:1) = 150mm snow
-        expect(snowfallEquivalent(10, 265.15)).toBe(150);
+        // 10mm liquid at -8°C (ratio ~15:1) 
+        const snow2 = snowfallEquivalent(10, 265.15);
+        expect(snow2).toBeCloseTo(150, 1);
         
-        // 10mm liquid at -12°C (ratio 20:1) = 200mm snow
-        expect(snowfallEquivalent(10, 261.15)).toBe(200);
+        // 10mm liquid at -12°C (ratio ~20:1) 
+        const snow3 = snowfallEquivalent(10, 261.15);
+        expect(snow3).toBeCloseTo(200, 1);
         
         // 10mm liquid at -20°C (ratio 30:1) = 300mm snow
-        expect(snowfallEquivalent(10, 253.15)).toBe(300);
+        const snow4 = snowfallEquivalent(10, 253.15);
+        expect(snow4).toBeCloseTo(300, 1);
     });
 
     it('returns 0 for 0mm liquid precipitation', () => {
@@ -76,92 +72,45 @@ describe('snowfallEquivalent', () => {
     });
 
     it('handles small amounts of precipitation', () => {
-        // 1mm liquid at -10°C (ratio 15:1) = 15mm snow
-        expect(snowfallEquivalent(1, 263.15)).toBe(15);
+        // 1mm liquid at -10°C (ratio ~17.5:1)
+        const snow1 = snowfallEquivalent(1, 263.15);
+        expect(snow1).toBeCloseTo(17.5, 1);
         
-        // 0.5mm liquid at -8°C (ratio 15:1) = 7.5mm snow
-        expect(snowfallEquivalent(0.5, 265.15)).toBe(7.5);
+        // 0.5mm liquid at -8°C (ratio ~15:1)
+        const snow2 = snowfallEquivalent(0.5, 265.15);
+        expect(snow2).toBeCloseTo(7.5, 1);
     });
 
     it('handles large amounts of precipitation', () => {
-        // 100mm liquid at -10°C (ratio 15:1) = 1500mm snow
-        expect(snowfallEquivalent(100, 263.15)).toBe(1500);
+        // 100mm liquid at -10°C (ratio ~17.5:1)
+        const snow = snowfallEquivalent(100, 263.15);
+        expect(snow).toBeCloseTo(1750, 1);
     });
-});
-
-describe('snowToLiquidRatioContinuous', () => {
-    it('returns 5 for temperatures at or above freezing', () => {
-        expect(snowToLiquidRatioContinuous(273.15)).toBe(5);
-        expect(snowToLiquidRatioContinuous(275)).toBe(5);
-    });
-
-    it('returns 30 for very cold temperatures', () => {
-        expect(snowToLiquidRatioContinuous(253.15)).toBeCloseTo(30, 2); // -20°C exactly
-        expect(snowToLiquidRatioContinuous(243.15)).toBe(30); // -30°C
-    });
-
-    it('provides continuous values in the transition range', () => {
-        // -2°C should be 7.5
-        const ratio1 = snowToLiquidRatioContinuous(271.15);
-        expect(ratio1).toBeCloseTo(7.5, 1);
-        
-        // -10°C should be 17.5
-        const ratio2 = snowToLiquidRatioContinuous(263.15);
-        expect(ratio2).toBeCloseTo(17.5, 1);
-        
-        // -20°C boundary (exactly 30, with floating point tolerance)
-        const ratio3 = snowToLiquidRatioContinuous(253.15);
-        expect(ratio3).toBeCloseTo(30, 2);
-    });
-
-    it('increases ratio as temperature decreases', () => {
-        const ratio1 = snowToLiquidRatioContinuous(271.15); // -2°C
-        const ratio2 = snowToLiquidRatioContinuous(268.15); // -5°C
-        const ratio3 = snowToLiquidRatioContinuous(263.15); // -10°C
-        const ratio4 = snowToLiquidRatioContinuous(258.15); // -15°C
-        
-        expect(ratio2).toBeGreaterThan(ratio1);
-        expect(ratio3).toBeGreaterThan(ratio2);
-        expect(ratio4).toBeGreaterThan(ratio3);
-    });
-});
-
-describe('snowfallEquivalentContinuous', () => {
-    it('calculates snow depth using continuous ratio', () => {
-        // Test at various temperatures
-        const snow1 = snowfallEquivalentContinuous(10, 273.15); // 0°C
-        expect(snow1).toBe(50); // ratio is 5
-        
-        const snow2 = snowfallEquivalentContinuous(10, 253.15); // -20°C
-        expect(snow2).toBeCloseTo(300, 2); // ratio is 30 (with floating point tolerance)
-    });
-
+    
     it('provides smoother transitions than step function', () => {
         // The continuous version should give different values for close temperatures
-        const snow1 = snowfallEquivalentContinuous(10, 267.15); // -6°C
-        const snow2 = snowfallEquivalentContinuous(10, 266.15); // -7°C
+        const snow1 = snowfallEquivalent(10, 267.15); // -6°C
+        const snow2 = snowfallEquivalent(10, 266.15); // -7°C
         
         // Both should be positive and snow2 should be >= snow1
         expect(snow1).toBeGreaterThan(0);
         expect(snow2).toBeGreaterThanOrEqual(snow1);
     });
-
-    it('returns 0 for 0mm liquid precipitation', () => {
-        expect(snowfallEquivalentContinuous(0, 270)).toBe(0);
-        expect(snowfallEquivalentContinuous(0, 260)).toBe(0);
-    });
 });
+
 
 describe('snowToLiquidEquivalent', () => {
     it('converts snow depth to liquid precipitation', () => {
         // 50mm snow at 0°C (ratio 5:1) = 10mm liquid
         expect(snowToLiquidEquivalent(50, 273.15)).toBe(10);
         
-        // 150mm snow at -8°C (ratio 15:1) = 10mm liquid
-        expect(snowToLiquidEquivalent(150, 265.15)).toBe(10);
+        // 150mm snow at -8°C (ratio ~15:1) = ~10mm liquid
+        const liquid1 = snowToLiquidEquivalent(150, 265.15);
+        expect(liquid1).toBeCloseTo(10, 1);
         
         // 300mm snow at -20°C (ratio 30:1) = 10mm liquid
-        expect(snowToLiquidEquivalent(300, 253.15)).toBe(10);
+        const liquid2 = snowToLiquidEquivalent(300, 253.15);
+        expect(liquid2).toBeCloseTo(10, 1);
     });
 
     it('is the inverse of snowfallEquivalent', () => {
@@ -181,8 +130,10 @@ describe('snowToLiquidEquivalent', () => {
     });
 
     it('handles fractional values', () => {
-        // 75mm snow at -10°C (ratio 15:1) = 5mm liquid
-        expect(snowToLiquidEquivalent(75, 263.15)).toBe(5);
+        // At -10°C, ratio is ~17.5:1
+        // So 87.5mm snow should give ~5mm liquid
+        const liquid = snowToLiquidEquivalent(87.5, 263.15);
+        expect(liquid).toBeCloseTo(5, 1);
     });
 });
 
@@ -201,16 +152,16 @@ describe('Integration tests', () => {
     });
 
     it('handles realistic weather scenarios', () => {
-        // Light snow: 2mm liquid at -5°C
+        // Light snow: 2mm liquid at -5°C (ratio ~11.25:1)
         const lightSnow = snowfallEquivalent(2, 268.15);
-        expect(lightSnow).toBe(20); // 10:1 ratio
+        expect(lightSnow).toBeCloseTo(22.5, 1);
         
-        // Moderate snow: 10mm liquid at -10°C
+        // Moderate snow: 10mm liquid at -10°C (ratio ~17.5:1)
         const moderateSnow = snowfallEquivalent(10, 263.15);
-        expect(moderateSnow).toBe(150); // 15:1 ratio
+        expect(moderateSnow).toBeCloseTo(175, 1);
         
-        // Heavy snow: 25mm liquid at -15°C
+        // Heavy snow: 25mm liquid at -15°C (ratio ~23.75:1)
         const heavySnow = snowfallEquivalent(25, 258.15);
-        expect(heavySnow).toBe(500); // 20:1 ratio
+        expect(heavySnow).toBeCloseTo(593.75, 1);
     });
 });
