@@ -117,10 +117,15 @@ export function dewPointDepression(airTemperature: number, dewPointTemperature: 
 /**
  * Calculate the Lifting Condensation Level (LCL) in meters.
  * If LCL is near the surface, fog is likely.
+ * This uses the empirical approximation from meteorological practice:
+ * approximately 124.7 meters for every degree (Celsius/Kelvin) of spread.
  * @param {number} temperature - Air temperature in Kelvin
  * @param {number} dewPoint - Dew point temperature in Kelvin
  * @returns {number} LCL in meters
  */
 export function liftingCondensationLevel(temperature: number, dewPoint: number): number {
-    return 125 * (temperature - dewPoint);
+    if (dewPoint > temperature) {
+        throw new Error("Dew point cannot be greater than temperature.");
+    }
+    return 124.7 * (temperature - dewPoint);
 }
