@@ -3,88 +3,72 @@
   "version": "1.0.9",
   "description": "A collection of atmospheric, meteorological weather calculations",
   "type": "module",
-  "main": "dist/cjs/index.cjs",
-  "module": "dist/esm/index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/cjs/index.cjs",
-      "import": "./dist/esm/index.js",
+      "import": "./dist/index.js",
       "types": "./dist/types/index.d.ts"
     },
     "./airDensity": {
-      "require": "./dist/cjs/formulas/airDensity.cjs",
-      "import": "./dist/esm/formulas/airDensity.js",
+      "import": "./dist/formulas/airDensity.js",
       "types": "./dist/types/formulas/airDensity.d.ts"
     },
     "./altitude": {
-      "require": "./dist/cjs/formulas/altitude.cjs",
-      "import": "./dist/esm/formulas/altitude.js",
+      "import": "./dist/formulas/altitude.js",
       "types": "./dist/types/formulas/altitude.d.ts"
     },
     "./humidity": {
-      "require": "./dist/cjs/formulas/humidity.cjs",
-      "import": "./dist/esm/formulas/humidity.js",
+      "import": "./dist/formulas/humidity.js",
       "types": "./dist/types/formulas/humidity.d.ts"
     },
     "./pressure": {
-      "require": "./dist/cjs/formulas/pressure.cjs",
-      "import": "./dist/esm/formulas/pressure.js",
+      "import": "./dist/formulas/pressure.js",
       "types": "./dist/types/formulas/pressure.d.ts"
     },
     "./temperature": {
-      "require": "./dist/cjs/formulas/temperature.cjs",
-      "import": "./dist/esm/formulas/temperature.js",
+      "import": "./dist/formulas/temperature.js",
       "types": "./dist/types/formulas/temperature.d.ts"
     },
     "./wind": {
-      "require": "./dist/cjs/formulas/wind.cjs",
-      "import": "./dist/esm/formulas/wind.js",
+      "import": "./dist/formulas/wind.js",
       "types": "./dist/types/formulas/wind.d.ts"
     },
     "./PET": {
-      "require": "./dist/cjs/indices/PET.cjs",
-      "import": "./dist/esm/indices/PET.js",
+      "import": "./dist/indices/PET.js",
       "types": "./dist/types/indices/PET.d.ts"
     },
     "./UTCI": {
-      "require": "./dist/cjs/indices/UTCI.cjs",
-      "import": "./dist/esm/indices/UTCI.js",
+      "import": "./dist/indices/UTCI.js",
       "types": "./dist/types/indices/UTCI.d.ts"
     },
     "./heatIndex": {
-      "require": "./dist/cjs/indices/heatIndex.cjs",
-      "import": "./dist/esm/indices/heatIndex.js",
+      "import": "./dist/indices/heatIndex.js",
       "types": "./dist/types/indices/heatIndex.d.ts"
     },
     "./humidex": {
-      "require": "./dist/cjs/indices/humidex.cjs",
-      "import": "./dist/esm/indices/humidex.js",
+      "import": "./dist/indices/humidex.js",
       "types": "./dist/types/indices/humidex.d.ts"
     },
     "./diurnalRythm": {
-      "require": "./dist/cjs/phenomena/diurnalRythm.cjs",
-      "import": "./dist/esm/phenomena/diurnalRythm.js",
+      "import": "./dist/phenomena/diurnalRythm.js",
       "types": "./dist/types/phenomena/diurnalRythm.d.ts"
     },
     "./fog": {
-      "require": "./dist/cjs/phenomena/fog.cjs",
-      "import": "./dist/esm/phenomena/fog.js",
+      "import": "./dist/phenomena/fog.js",
       "types": "./dist/types/phenomena/fog.d.ts"
     },
     "./beaufort": {
-      "require": "./dist/cjs/scales/beaufort.cjs",
-      "import": "./dist/esm/scales/beaufort.js",
+      "import": "./dist/scales/beaufort.js",
       "types": "./dist/types/scales/beaufort.d.ts"
     },
     "./saffirSimpson": {
-      "require": "./dist/cjs/scales/saffirSimpson.cjs",
-      "import": "./dist/esm/scales/saffirSimpson.js",
+      "import": "./dist/scales/saffirSimpson.js",
       "types": "./dist/types/scales/saffirSimpson.d.ts"
     },
     "./uvindex": {
-      "require": "./dist/cjs/scales/uvindex.cjs",
-      "import": "./dist/esm/scales/uvindex.js",
+      "import": "./dist/scales/uvindex.js",
       "types": "./dist/types/scales/uvindex.d.ts"
     }
   },
@@ -94,7 +78,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc && tsc --project tsconfig.cjs.json && node scripts/rename-cjs-files.cjs && node scripts/add-js-extensions.cjs && node scripts/generate-exports.cjs",
+    "build": "tsc",
     "watch": "tsc --watch",
     "test": "jest"
   },
