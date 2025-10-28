@@ -1,5 +1,5 @@
 import { kelvinToCelcius, celciusToKelvin } from '../formulas/temperature';
-import { saturationVaporPressure } from '../formulas/humidity';
+import { saturationVaporPressure, actualVaporPressure } from '../formulas/humidity';
 
 /**
  * PET (Physiological Equivalent Temperature) Thermal Comfort Index
@@ -51,9 +51,9 @@ export function calculatePET(
   const RH = humidity; // Relative humidity %
   const v = windSpeed; // Wind speed m/s
 
-  // Calculate vapor pressure
+  // Calculate vapor pressure using existing library functions
   const es = saturationVaporPressure(temperature); // Pa
-  const ea = (RH / 100) * es; // Actual vapor pressure in Pa
+  const ea = actualVaporPressure(es, RH); // Actual vapor pressure in Pa
   const vp = ea / 100; // Convert to hPa for calculation
 
   // Simplified PET approximation based on empirical relationships
