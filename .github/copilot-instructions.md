@@ -24,6 +24,70 @@ weather-formulas is a TypeScript library that provides atmospheric and meteorolo
 
 ## Coding Guidelines
 
+### Code Reuse and Avoiding Duplication
+**CRITICAL**: Always reuse existing formulas, functions, and utilities from the library instead of reimplementing them.
+
+Before writing any new calculation or utility function:
+1. **Search the codebase** for existing implementations in:
+   - `src/formulas/` - Core calculations (temperature, pressure, humidity, altitude, air density)
+   - `src/indices/` - Weather indices (heat index, humidex, UTCI, PET)
+   - `src/phenomena/` - Weather phenomena (fog, clouds, snow, wind)
+   - `src/constants.ts` - Physical constants and valuation sets
+   - `src/common.ts` - Shared utility types and interfaces
+
+2. **Common reusable functions** already available:
+   - **Temperature conversions**: `kelvinToCelcius()`, `celciusToKelvin()`, `kelvinToFahrenheit()`, `fahrenheitToKelvin()`, `celciusToFahrenheit()`, `fahrenheitToCelcius()`
+   - **Humidity calculations**: `saturationVaporPressure()`, `vaporPressure()`, `actualVaporPressure()`, `relativeHumidity()`, `absoluteHumidity()`, `mixingRatio()`, `specificHumidity()`, `dewPointDepression()`, `liftingCondensationLevel()`
+   - **Temperature metrics**: `dewPointMagnusFormula()`, `dewPointArdenBuckEquation()`, `potentialTemperature()`, `virtualTemperature()`, `equivalentTemperature()`, `wetBulbTemperature()`, `windChillIndex()`, `australianApparentTemperature()`
+   - **Pressure calculations**: Functions in `src/formulas/pressure.ts` and `src/formulas/altitude.ts`
+   - **Conversion utilities**: `meterPerSecondToKilometerPerHour()`, `roundToTwoDecimals()`
+   - **Constants**: Use predefined constants from `constants.ts` like `CELSIUS_TO_KELVIN`, `STANDARD_ATMOSPHERIC_CONSTANTS`, `DEW_POINT_VALUATIONS`, etc.
+
+3. **How to discover existing functions**:
+   - Use file search to find keywords related to what you need (e.g., "vapor", "pressure", "temperature")
+   - Check the module index files to see exported functions
+   - Look at similar formulas to see what they import and reuse
+   - Review test files to understand how existing functions are used
+
+4. **Benefits of reusing existing code**:
+   - Maintains consistency across the library
+   - Reduces bugs and inconsistencies
+   - Leverages tested and validated implementations
+   - Keeps the codebase maintainable and DRY (Don't Repeat Yourself)
+   - Ensures consistent units and conventions
+
+**Example of proper code reuse**:
+```typescript
+// ❌ BAD - Reimplementing temperature conversion
+export function myNewFormula(tempK: number): number {
+  const tempC = tempK - 273.15; // Don't do this!
+  // ... calculations
+}
+
+// ✅ GOOD - Reusing existing function
+import { kelvinToCelcius, celciusToKelvin } from './temperature';
+
+export function myNewFormula(tempK: number): number {
+  const tempC = kelvinToCelcius(tempK);
+  // ... calculations
+  return celciusToKelvin(result);
+}
+
+// ❌ BAD - Reimplementing saturation vapor pressure
+export function badHumidityCalc(temperature: number): number {
+  const svp = 611.2 * Math.exp((17.62 * (temperature - 273.15)) / (243.12 + (temperature - 273.15)));
+  // Don't reimplement existing formulas!
+}
+
+// ✅ GOOD - Reusing existing saturation vapor pressure
+import { saturationVaporPressure } from './humidity';
+
+export function goodHumidityCalc(temperature: number): number {
+  const svp = saturationVaporPressure(temperature);
+  // ... rest of calculation
+}
+```
+
 ### Units and Measurements
 **CRITICAL**: All temperature values MUST be in Kelvin (K)
 - Input parameters: Kelvin
@@ -265,11 +329,17 @@ Keep dependencies minimal and well-justified.
 ### New Formula Checklist
 When adding a new formula:
 
+0. **Check for Existing Code**
+   - [ ] Search the codebase for similar formulas or components
+   - [ ] Identify existing functions that can be reused (conversions, calculations, constants)
+   - [ ] Review `src/formulas/`, `src/constants.ts`, and related modules
+
 1. **Source Code**
    - [ ] Add function to appropriate module in `src/`
    - [ ] Include complete JSDoc documentation
    - [ ] Export function and any related types/constants
    - [ ] Use TypeScript strict typing
+   - [ ] **Reuse existing library functions** wherever possible
 
 2. **Tests**
    - [ ] Create or update test file in `tests/`
@@ -290,12 +360,14 @@ When adding a new formula:
 
 ## Common Mistakes to Avoid
 
-1. **Temperature Units**: Never mix Celsius/Fahrenheit with Kelvin without explicit conversion
-2. **Floating Point**: Use `toBeCloseTo()` in tests, not exact equality
-3. **Magic Numbers**: Define constants in `constants.ts` or as named variables
-4. **Missing Tests**: All exported functions must have tests
-5. **Documentation**: Always include JSDoc comments with parameter units
-6. **Type Safety**: Don't use `any` - use proper types or `unknown` with validation
+1. **Code Duplication**: Never reimplement existing formulas or functions - always search the codebase first and reuse existing implementations
+2. **Temperature Units**: Never mix Celsius/Fahrenheit with Kelvin without explicit conversion
+3. **Temperature Conversions**: Always use the conversion functions from `temperature.ts` - never write manual conversion formulas
+4. **Floating Point**: Use `toBeCloseTo()` in tests, not exact equality
+5. **Magic Numbers**: Define constants in `constants.ts` or as named variables, or use existing constants if they already exist
+6. **Missing Tests**: All exported functions must have tests
+7. **Documentation**: Always include JSDoc comments with parameter units
+8. **Type Safety**: Don't use `any` - use proper types or `unknown` with validation
 
 ## Performance Considerations
 
