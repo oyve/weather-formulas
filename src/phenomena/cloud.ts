@@ -2,15 +2,40 @@ import { liftingCondensationLevel } from '../formulas/humidity';
 import { DRY_ADIABATIC_LAPSE_RATE } from '../constants';
 
 /**
- * Estimate the altitude of the cloud base (in meters) from temperature and dew point.
- * This uses the lifting condensation level formula with the empirical approximation 
- * from meteorological practice: approximately 124.7 meters for every degree (Celsius/Kelvin) of spread.
- * Formula: cloud_base_height = (T - Td) * 124.7 meters
+ * Estimate the altitude of the cloud base from temperature and dew point.
+ * 
+ * This function calculates the lifting condensation level (LCL), which is the height
+ * above the surface where air reaches saturation and clouds begin to form. It uses the
+ * empirical approximation from meteorological practice: approximately 124.7 meters for
+ * every degree (Celsius/Kelvin) of temperature-dewpoint spread.
+ * 
+ * **Important:** The return value depends on the altitude parameter:
+ * - When altitude = 0 (default): Returns cloud base height above ground level (AGL)
+ * - When altitude > 0: Returns cloud base height above mean sea level (MSL)
+ * 
+ * Formula:
+ * - Height above surface (AGL) = (T - Td) × 124.7 meters
+ * - Height above MSL = altitude + (T - Td) × 124.7 meters
+ * 
  * @param {number} temperature - Air temperature in Kelvin.
  * @param {number} dewPoint - Dew point temperature in Kelvin.
- * @param {number} altitude - Surface altitude in meters (default: 0).
- * @returns {number} Cloud base altitude in meters above mean sea level.
+ * @param {number} altitude - Surface altitude in meters above mean sea level (default: 0).
+ * @returns {number} Cloud base height in meters. When altitude is 0 or omitted, returns height 
+ *                   above ground level (AGL). When altitude is provided, returns height above 
+ *                   mean sea level (MSL).
  * @throws {Error} If dew point is greater than temperature (physically impossible).
+ * 
+ * @example
+ * // At sea level (altitude = 0): returns height above ground
+ * const cloudHeightAGL = cloudBaseHeight(293.15, 283.15);
+ * console.log(cloudHeightAGL); // 1247 meters above ground level
+ * 
+ * @example
+ * // At elevated location: returns height above mean sea level
+ * const cloudHeightMSL = cloudBaseHeight(293.15, 283.15, 500);
+ * console.log(cloudHeightMSL); // 1747 meters above mean sea level (500m surface + 1247m cloud base)
+ * 
+ * @see https://en.wikipedia.org/wiki/Lifted_condensation_level
  */
 export function cloudBaseHeight(
     temperature: number,
