@@ -1,4 +1,4 @@
-import { Reading, sortReadingsByTimestamp } from '../common';
+import { Reading, sortOldestToNewest } from '../common';
 import * as c from '../constants'
 import { IValuationSet } from '../constants';
 
@@ -230,7 +230,7 @@ export function calculateWeightedAverageTemperature(readings: Reading[], hours =
  * @returns Readings within the given hours
  */
 export function filterReadingsByTimeRange(readings: Reading[], hours: number, filterByLastReading = false) {
-    const sortedReadings = sortReadingsByTimestamp(readings);
+    const sortedReadings = sortOldestToNewest(readings);
     const cutoffTime = filterByLastReading
         ? sortedReadings[sortedReadings.length - 1].timestamp - hours * 60 * 60 * 1000
         : Date.now() - hours * 60 * 60 * 1000; // Convert hours to milliseconds

@@ -13,6 +13,6 @@ export interface Reading {
  * @param {Reading[]} readings - Array of readings to sort.
  * @returns {Reading[]} New array of readings sorted by timestamp (oldest to newest).
  */
-export function sortReadingsByTimestamp(readings: Reading[]): Reading[] {
+export function sortOldestToNewest(readings: Reading[]): Reading[] {
     return [...readings].sort((a, b) => a.timestamp - b.timestamp);
 }
