@@ -1,4 +1,10 @@
-import { freezingLevelAltitude } from '../../src/formulas/altitude';
+import { 
+    freezingLevelAltitude, 
+    altitudeFromPressureDifference, 
+    calculateAltitudesFromPressureSeries,
+    PressureReading,
+    AltitudeResult
+} from '../../src/formulas/altitude';
 import { cloudBaseHeight } from '../../src/phenomena/cloud';
 
 describe('freezingLevelHeight', () => {
@@ -86,5 +92,223 @@ describe('cloudBaseHeight', () => {
         // Total: 1000 + 249.4 = 1249.4 m
         const result = cloudBaseHeight(283.15, 281.15, 1000);
         expect(result).toBeCloseTo(1249.4, 2);
+    });
+});
+
+describe('altitudeFromPressureDifference', () => {
+    it('should return 0 when pressures are equal', () => {
+        const result = altitudeFromPressureDifference(101325, 101325);
+        expect(result).toBe(0);
+    });
+
+    it('should calculate positive altitude difference when current pressure is lower', () => {
+        // Sea level pressure to ~1000m altitude pressure
+        // Using standard temperature 288.15K (15°C)
+        const result = altitudeFromPressureDifference(101325, 89874.46, 288.15);
+        // Expected: ~1000m (approximately, based on barometric formula)
+        // The hypsometric formula may give slightly different results than barometric
+        expect(result).toBeCloseTo(1011, 0); // Within 1 meter
+    });
+
+    it('should calculate negative altitude difference when current pressure is higher', () => {
+        // From higher altitude to sea level (going down)
+        const result = altitudeFromPressureDifference(89874.46, 101325, 288.15);
+        // Expected: ~-1000m (going down)
+        expect(result).toBeCloseTo(-1011, 0); // Within 1 meter
+    });
+
+    it('should calculate altitude difference at standard sea level to 500m', () => {
+        // Sea level standard: 101325 Pa
+        // At 500m altitude: ~95461 Pa (approximately)
+        // Using hypsometric formula: Δh = (R * T / g) * ln(P1/P2)
+        // With R=287.05, T=288.15K, g=9.80665
+        // Scale height = 287.05 * 288.15 / 9.80665 = 8434.5 m
+        // For ~500m: P2 = P1 * exp(-500/8434.5) = 101325 * 0.9424 = 95461 Pa
+        const result = altitudeFromPressureDifference(101325, 95461, 288.15);
+        expect(result).toBeCloseTo(500, -1); // Within 10 meters
+    });
+
+    it('should account for temperature in calculations', () => {
+        // Same pressure difference at different temperatures should yield different altitudes
+        const coldTemp = 273.15; // 0°C
+        const warmTemp = 303.15; // 30°C
+        
+        const resultCold = altitudeFromPressureDifference(101325, 95000, coldTemp);
+        const resultWarm = altitudeFromPressureDifference(101325, 95000, warmTemp);
+        
+        // Warmer air is less dense, so same pressure drop represents larger altitude change
+        expect(resultWarm).toBeGreaterThan(resultCold);
+    });
+
+    it('should use default temperature when not provided', () => {
+        const resultWithDefault = altitudeFromPressureDifference(101325, 95000);
+        const resultWithExplicit = altitudeFromPressureDifference(101325, 95000, 288.15);
+        
+        expect(resultWithDefault).toBe(resultWithExplicit);
+    });
+});
+
+describe('calculateAltitudesFromPressureSeries', () => {
+    it('should return empty array for empty readings', () => {
+        const result = calculateAltitudesFromPressureSeries([]);
+        expect(result).toEqual([]);
+    });
+
+    it('should return start altitude for single reading', () => {
+        const readings: PressureReading[] = [
+            { timestamp: 1000, pressure: 101325 }
+        ];
+        const result = calculateAltitudesFromPressureSeries(readings, 100);
+        
+        expect(result).toHaveLength(1);
+        expect(result[0].altitude).toBe(100);
+        expect(result[0].pressure).toBe(101325);
+        expect(result[0].timestamp).toBe(1000);
+    });
+
+    it('should calculate increasing altitudes for decreasing pressures', () => {
+        const baseTimestamp = Date.now();
+        const readings: PressureReading[] = [
+            { timestamp: baseTimestamp, pressure: 101325 },
+            { timestamp: baseTimestamp + 3600000, pressure: 98000 },
+            { timestamp: baseTimestamp + 7200000, pressure: 95000 }
+        ];
+        
+        const result = calculateAltitudesFromPressureSeries(readings, 0);
+        
+        expect(result).toHaveLength(3);
+        expect(result[0].altitude).toBe(0);
+        expect(result[1].altitude).toBeGreaterThan(result[0].altitude);
+        expect(result[2].altitude).toBeGreaterThan(result[1].altitude);
+    });
+
+    it('should calculate decreasing altitudes for increasing pressures', () => {
+        const baseTimestamp = Date.now();
+        const readings: PressureReading[] = [
+            { timestamp: baseTimestamp, pressure: 95000 },
+            { timestamp: baseTimestamp + 3600000, pressure: 98000 },
+            { timestamp: baseTimestamp + 7200000, pressure: 101325 }
+        ];
+        
+        const result = calculateAltitudesFromPressureSeries(readings, 500);
+        
+        expect(result).toHaveLength(3);
+        expect(result[0].altitude).toBe(500);
+        expect(result[1].altitude).toBeLessThan(result[0].altitude);
+        expect(result[2].altitude).toBeLessThan(result[1].altitude);
+    });
+
+    it('should sort readings by timestamp', () => {
+        const baseTimestamp = Date.now();
+        // Readings out of order
+        const readings: PressureReading[] = [
+            { timestamp: baseTimestamp + 7200000, pressure: 95000 },
+            { timestamp: baseTimestamp, pressure: 101325 },
+            { timestamp: baseTimestamp + 3600000, pressure: 98000 }
+        ];
+        
+        const result = calculateAltitudesFromPressureSeries(readings, 0);
+        
+        expect(result).toHaveLength(3);
+        // Results should be in timestamp order
+        expect(result[0].timestamp).toBe(baseTimestamp);
+        expect(result[1].timestamp).toBe(baseTimestamp + 3600000);
+        expect(result[2].timestamp).toBe(baseTimestamp + 7200000);
+        // First reading should use start altitude
+        expect(result[0].altitude).toBe(0);
+    });
+
+    it('should use temperature from readings when provided', () => {
+        const baseTimestamp = Date.now();
+        const readings: PressureReading[] = [
+            { timestamp: baseTimestamp, pressure: 101325, temperature: 293.15 }, // 20°C
+            { timestamp: baseTimestamp + 3600000, pressure: 98000, temperature: 288.15 } // 15°C
+        ];
+        
+        const result = calculateAltitudesFromPressureSeries(readings, 0);
+        
+        expect(result).toHaveLength(2);
+        expect(result[1].altitude).toBeGreaterThan(0);
+    });
+
+    it('should use default temperature when not provided in readings', () => {
+        const baseTimestamp = Date.now();
+        const readings: PressureReading[] = [
+            { timestamp: baseTimestamp, pressure: 101325 },
+            { timestamp: baseTimestamp + 3600000, pressure: 98000 }
+        ];
+        
+        const resultDefault = calculateAltitudesFromPressureSeries(readings, 0);
+        const resultExplicit = calculateAltitudesFromPressureSeries(readings, 0, 288.15);
+        
+        expect(resultDefault[1].altitude).toBe(resultExplicit[1].altitude);
+    });
+
+    it('should use custom default temperature', () => {
+        const baseTimestamp = Date.now();
+        const readings: PressureReading[] = [
+            { timestamp: baseTimestamp, pressure: 101325 },
+            { timestamp: baseTimestamp + 3600000, pressure: 98000 }
+        ];
+        
+        const resultCold = calculateAltitudesFromPressureSeries(readings, 0, 273.15); // 0°C
+        const resultWarm = calculateAltitudesFromPressureSeries(readings, 0, 303.15); // 30°C
+        
+        // Warmer temperatures result in larger altitude changes
+        expect(resultWarm[1].altitude).toBeGreaterThan(resultCold[1].altitude);
+    });
+
+    it('should preserve pressure values in results', () => {
+        const baseTimestamp = Date.now();
+        const readings: PressureReading[] = [
+            { timestamp: baseTimestamp, pressure: 101325 },
+            { timestamp: baseTimestamp + 3600000, pressure: 98000 },
+            { timestamp: baseTimestamp + 7200000, pressure: 95000 }
+        ];
+        
+        const result = calculateAltitudesFromPressureSeries(readings, 100);
+        
+        expect(result[0].pressure).toBe(101325);
+        expect(result[1].pressure).toBe(98000);
+        expect(result[2].pressure).toBe(95000);
+    });
+
+    it('should simulate a hiking trip scenario', () => {
+        // Simulating a hike starting at 200m elevation
+        // Going up a mountain over 3 hours
+        const baseTimestamp = Date.now();
+        const readings: PressureReading[] = [
+            { timestamp: baseTimestamp, pressure: 99000, temperature: 288.15 },           // Start at 200m
+            { timestamp: baseTimestamp + 3600000, pressure: 96000, temperature: 286.15 }, // 1 hour later
+            { timestamp: baseTimestamp + 7200000, pressure: 93000, temperature: 284.15 }, // 2 hours later
+            { timestamp: baseTimestamp + 10800000, pressure: 90000, temperature: 282.15 } // 3 hours later (summit)
+        ];
+        
+        const result = calculateAltitudesFromPressureSeries(readings, 200);
+        
+        expect(result).toHaveLength(4);
+        expect(result[0].altitude).toBe(200);
+        // Each subsequent altitude should be higher
+        for (let i = 1; i < result.length; i++) {
+            expect(result[i].altitude).toBeGreaterThan(result[i - 1].altitude);
+        }
+        // Final altitude should be significantly higher than start
+        expect(result[3].altitude).toBeGreaterThan(500);
+    });
+
+    it('should handle constant pressure (no altitude change)', () => {
+        const baseTimestamp = Date.now();
+        const readings: PressureReading[] = [
+            { timestamp: baseTimestamp, pressure: 101325 },
+            { timestamp: baseTimestamp + 3600000, pressure: 101325 },
+            { timestamp: baseTimestamp + 7200000, pressure: 101325 }
+        ];
+        
+        const result = calculateAltitudesFromPressureSeries(readings, 100);
+        
+        expect(result).toHaveLength(3);
+        expect(result[0].altitude).toBe(100);
+        expect(result[1].altitude).toBe(100);
+        expect(result[2].altitude).toBe(100);
     });
 });
