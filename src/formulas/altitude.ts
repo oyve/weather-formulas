@@ -1,4 +1,4 @@
-import { Reading } from '../common';
+import { Reading, sortReadingsByTimestamp } from '../common';
 import * as c from '../constants';
 
 /**
@@ -96,7 +96,7 @@ export function calculateAltitudesFromPressureSeries(
     }
     
     // Sort readings by timestamp (oldest to newest)
-    const sortedReadings = [...readings].sort((a, b) => a.timestamp - b.timestamp);
+    const sortedReadings = sortReadingsByTimestamp(readings);
     
     const results: Reading[] = [];
     let currentAltitude = startAltitude;
