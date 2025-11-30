@@ -1,10 +1,9 @@
 import { 
     freezingLevelAltitude, 
     altitudeFromPressureDifference, 
-    calculateAltitudesFromPressureSeries,
-    PressureReading,
-    AltitudeResult
+    calculateAltitudesFromPressureSeries
 } from '../../src/formulas/altitude';
+import { Reading } from '../../src/common';
 import { cloudBaseHeight } from '../../src/phenomena/cloud';
 
 describe('freezingLevelHeight', () => {
@@ -149,14 +148,23 @@ describe('altitudeFromPressureDifference', () => {
 });
 
 describe('calculateAltitudesFromPressureSeries', () => {
+    // Helper function to create a Reading with default values
+    const createReading = (timestamp: number, pressure: number, temperature: number = 288.15): Reading => ({
+        timestamp,
+        pressure,
+        temperature,
+        altitude: 0,
+        relativeHumidity: 50
+    });
+
     it('should return empty array for empty readings', () => {
         const result = calculateAltitudesFromPressureSeries([]);
         expect(result).toEqual([]);
     });
 
     it('should return start altitude for single reading', () => {
-        const readings: PressureReading[] = [
-            { timestamp: 1000, pressure: 101325 }
+        const readings: Reading[] = [
+            createReading(1000, 101325)
         ];
         const result = calculateAltitudesFromPressureSeries(readings, 100);
         
@@ -168,10 +176,10 @@ describe('calculateAltitudesFromPressureSeries', () => {
 
     it('should calculate increasing altitudes for decreasing pressures', () => {
         const baseTimestamp = Date.now();
-        const readings: PressureReading[] = [
-            { timestamp: baseTimestamp, pressure: 101325 },
-            { timestamp: baseTimestamp + 3600000, pressure: 98000 },
-            { timestamp: baseTimestamp + 7200000, pressure: 95000 }
+        const readings: Reading[] = [
+            createReading(baseTimestamp, 101325),
+            createReading(baseTimestamp + 3600000, 98000),
+            createReading(baseTimestamp + 7200000, 95000)
         ];
         
         const result = calculateAltitudesFromPressureSeries(readings, 0);
@@ -184,10 +192,10 @@ describe('calculateAltitudesFromPressureSeries', () => {
 
     it('should calculate decreasing altitudes for increasing pressures', () => {
         const baseTimestamp = Date.now();
-        const readings: PressureReading[] = [
-            { timestamp: baseTimestamp, pressure: 95000 },
-            { timestamp: baseTimestamp + 3600000, pressure: 98000 },
-            { timestamp: baseTimestamp + 7200000, pressure: 101325 }
+        const readings: Reading[] = [
+            createReading(baseTimestamp, 95000),
+            createReading(baseTimestamp + 3600000, 98000),
+            createReading(baseTimestamp + 7200000, 101325)
         ];
         
         const result = calculateAltitudesFromPressureSeries(readings, 500);
@@ -201,10 +209,10 @@ describe('calculateAltitudesFromPressureSeries', () => {
     it('should sort readings by timestamp', () => {
         const baseTimestamp = Date.now();
         // Readings out of order
-        const readings: PressureReading[] = [
-            { timestamp: baseTimestamp + 7200000, pressure: 95000 },
-            { timestamp: baseTimestamp, pressure: 101325 },
-            { timestamp: baseTimestamp + 3600000, pressure: 98000 }
+        const readings: Reading[] = [
+            createReading(baseTimestamp + 7200000, 95000),
+            createReading(baseTimestamp, 101325),
+            createReading(baseTimestamp + 3600000, 98000)
         ];
         
         const result = calculateAltitudesFromPressureSeries(readings, 0);
@@ -220,9 +228,9 @@ describe('calculateAltitudesFromPressureSeries', () => {
 
     it('should use temperature from readings when provided', () => {
         const baseTimestamp = Date.now();
-        const readings: PressureReading[] = [
-            { timestamp: baseTimestamp, pressure: 101325, temperature: 293.15 }, // 20°C
-            { timestamp: baseTimestamp + 3600000, pressure: 98000, temperature: 288.15 } // 15°C
+        const readings: Reading[] = [
+            createReading(baseTimestamp, 101325, 293.15), // 20°C
+            createReading(baseTimestamp + 3600000, 98000, 288.15) // 15°C
         ];
         
         const result = calculateAltitudesFromPressureSeries(readings, 0);
@@ -233,9 +241,9 @@ describe('calculateAltitudesFromPressureSeries', () => {
 
     it('should use default temperature when not provided in readings', () => {
         const baseTimestamp = Date.now();
-        const readings: PressureReading[] = [
-            { timestamp: baseTimestamp, pressure: 101325 },
-            { timestamp: baseTimestamp + 3600000, pressure: 98000 }
+        const readings: Reading[] = [
+            createReading(baseTimestamp, 101325),
+            createReading(baseTimestamp + 3600000, 98000)
         ];
         
         const resultDefault = calculateAltitudesFromPressureSeries(readings, 0);
@@ -246,13 +254,18 @@ describe('calculateAltitudesFromPressureSeries', () => {
 
     it('should use custom default temperature', () => {
         const baseTimestamp = Date.now();
-        const readings: PressureReading[] = [
-            { timestamp: baseTimestamp, pressure: 101325 },
-            { timestamp: baseTimestamp + 3600000, pressure: 98000 }
+        // Create readings with different temperatures to test temperature impact
+        const coldReadings: Reading[] = [
+            createReading(baseTimestamp, 101325, 273.15), // 0°C
+            createReading(baseTimestamp + 3600000, 98000, 273.15)
+        ];
+        const warmReadings: Reading[] = [
+            createReading(baseTimestamp, 101325, 303.15), // 30°C
+            createReading(baseTimestamp + 3600000, 98000, 303.15)
         ];
         
-        const resultCold = calculateAltitudesFromPressureSeries(readings, 0, 273.15); // 0°C
-        const resultWarm = calculateAltitudesFromPressureSeries(readings, 0, 303.15); // 30°C
+        const resultCold = calculateAltitudesFromPressureSeries(coldReadings, 0);
+        const resultWarm = calculateAltitudesFromPressureSeries(warmReadings, 0);
         
         // Warmer temperatures result in larger altitude changes
         expect(resultWarm[1].altitude).toBeGreaterThan(resultCold[1].altitude);
@@ -260,10 +273,10 @@ describe('calculateAltitudesFromPressureSeries', () => {
 
     it('should preserve pressure values in results', () => {
         const baseTimestamp = Date.now();
-        const readings: PressureReading[] = [
-            { timestamp: baseTimestamp, pressure: 101325 },
-            { timestamp: baseTimestamp + 3600000, pressure: 98000 },
-            { timestamp: baseTimestamp + 7200000, pressure: 95000 }
+        const readings: Reading[] = [
+            createReading(baseTimestamp, 101325),
+            createReading(baseTimestamp + 3600000, 98000),
+            createReading(baseTimestamp + 7200000, 95000)
         ];
         
         const result = calculateAltitudesFromPressureSeries(readings, 100);
@@ -277,11 +290,11 @@ describe('calculateAltitudesFromPressureSeries', () => {
         // Simulating a hike starting at 200m elevation
         // Going up a mountain over 3 hours
         const baseTimestamp = Date.now();
-        const readings: PressureReading[] = [
-            { timestamp: baseTimestamp, pressure: 99000, temperature: 288.15 },           // Start at 200m
-            { timestamp: baseTimestamp + 3600000, pressure: 96000, temperature: 286.15 }, // 1 hour later
-            { timestamp: baseTimestamp + 7200000, pressure: 93000, temperature: 284.15 }, // 2 hours later
-            { timestamp: baseTimestamp + 10800000, pressure: 90000, temperature: 282.15 } // 3 hours later (summit)
+        const readings: Reading[] = [
+            createReading(baseTimestamp, 99000, 288.15),           // Start at 200m
+            createReading(baseTimestamp + 3600000, 96000, 286.15), // 1 hour later
+            createReading(baseTimestamp + 7200000, 93000, 284.15), // 2 hours later
+            createReading(baseTimestamp + 10800000, 90000, 282.15) // 3 hours later (summit)
         ];
         
         const result = calculateAltitudesFromPressureSeries(readings, 200);
@@ -298,10 +311,10 @@ describe('calculateAltitudesFromPressureSeries', () => {
 
     it('should handle constant pressure (no altitude change)', () => {
         const baseTimestamp = Date.now();
-        const readings: PressureReading[] = [
-            { timestamp: baseTimestamp, pressure: 101325 },
-            { timestamp: baseTimestamp + 3600000, pressure: 101325 },
-            { timestamp: baseTimestamp + 7200000, pressure: 101325 }
+        const readings: Reading[] = [
+            createReading(baseTimestamp, 101325),
+            createReading(baseTimestamp + 3600000, 101325),
+            createReading(baseTimestamp + 7200000, 101325)
         ];
         
         const result = calculateAltitudesFromPressureSeries(readings, 100);

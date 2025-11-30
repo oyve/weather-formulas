@@ -1,28 +1,5 @@
+import { Reading } from '../common';
 import * as c from '../constants';
-
-/**
- * A pressure reading with timestamp for time series altitude calculations.
- */
-export interface PressureReading {
-    /** Timestamp in milliseconds since epoch */
-    timestamp: number;
-    /** Pressure in Pascals (Pa) */
-    pressure: number;
-    /** Optional temperature in Kelvin (K) for more accurate calculations */
-    temperature?: number;
-}
-
-/**
- * Result of altitude calculation from a pressure reading.
- */
-export interface AltitudeResult {
-    /** Timestamp of the reading in milliseconds since epoch */
-    timestamp: number;
-    /** Calculated altitude in meters (m) */
-    altitude: number;
-    /** Pressure at this reading in Pascals (Pa) */
-    pressure: number;
-}
 
 /**
  * Estimate the altitude (in meters) where the temperature drops below freezing (0°C).
@@ -87,33 +64,33 @@ export function altitudeFromPressureDifference(
  * This function processes a series of pressure readings and calculates the altitude at each point
  * relative to the starting altitude using the hypsometric formula.
  * 
- * @param {PressureReading[]} readings - Array of pressure readings with timestamps. Must contain at least one reading.
+ * @param {Reading[]} readings - Array of readings with timestamps and pressure. Must contain at least one reading.
  * @param {number} startAltitude - The known altitude at the first reading in meters (m). Defaults to 0 (sea level).
  * @param {number} defaultTemperature - Default temperature to use if not provided in readings, in Kelvin (K). Defaults to 288.15 K (15°C).
- * @returns {AltitudeResult[]} Array of altitude results corresponding to each pressure reading.
+ * @returns {Reading[]} Array of readings with calculated altitudes corresponding to each pressure reading.
  * 
  * @example
  * // Track altitude during a hiking trip using barometer readings
- * const readings: PressureReading[] = [
- *   { timestamp: Date.now() - 3600000, pressure: 101325, temperature: 288.15 },
- *   { timestamp: Date.now() - 1800000, pressure: 98000, temperature: 286.15 },
- *   { timestamp: Date.now(), pressure: 95000, temperature: 284.15 }
+ * const readings: Reading[] = [
+ *   { timestamp: Date.now() - 3600000, pressure: 101325, temperature: 288.15, altitude: 0, relativeHumidity: 50 },
+ *   { timestamp: Date.now() - 1800000, pressure: 98000, temperature: 286.15, altitude: 0, relativeHumidity: 55 },
+ *   { timestamp: Date.now(), pressure: 95000, temperature: 284.15, altitude: 0, relativeHumidity: 60 }
  * ];
  * const altitudes = calculateAltitudesFromPressureSeries(readings, 100); // Starting at 100m
  * console.log(altitudes);
  * // [
- * //   { timestamp: ..., altitude: 100, pressure: 101325 },
- * //   { timestamp: ..., altitude: ~380, pressure: 98000 },
- * //   { timestamp: ..., altitude: ~640, pressure: 95000 }
+ * //   { timestamp: ..., altitude: 100, pressure: 101325, ... },
+ * //   { timestamp: ..., altitude: ~380, pressure: 98000, ... },
+ * //   { timestamp: ..., altitude: ~640, pressure: 95000, ... }
  * // ]
  * 
  * @see https://en.wikipedia.org/wiki/Barometric_formula
  */
 export function calculateAltitudesFromPressureSeries(
-    readings: PressureReading[],
+    readings: Reading[],
     startAltitude: number = 0,
     defaultTemperature: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN
-): AltitudeResult[] {
+): Reading[] {
     if (readings.length === 0) {
         return [];
     }
@@ -121,14 +98,13 @@ export function calculateAltitudesFromPressureSeries(
     // Sort readings by timestamp (oldest to newest)
     const sortedReadings = [...readings].sort((a, b) => a.timestamp - b.timestamp);
     
-    const results: AltitudeResult[] = [];
+    const results: Reading[] = [];
     let currentAltitude = startAltitude;
     
     // First reading uses the start altitude
     results.push({
-        timestamp: sortedReadings[0].timestamp,
-        altitude: currentAltitude,
-        pressure: sortedReadings[0].pressure
+        ...sortedReadings[0],
+        altitude: currentAltitude
     });
     
     // Calculate altitude for each subsequent reading based on pressure difference from previous
@@ -151,9 +127,8 @@ export function calculateAltitudesFromPressureSeries(
         currentAltitude += altitudeChange;
         
         results.push({
-            timestamp: currentReading.timestamp,
-            altitude: Math.round(currentAltitude * 100) / 100,
-            pressure: currentReading.pressure
+            ...currentReading,
+            altitude: Math.round(currentAltitude * 100) / 100
         });
     }
     
