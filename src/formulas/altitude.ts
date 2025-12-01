@@ -1,3 +1,4 @@
+import { Reading } from '../common';
 import * as c from '../constants';
 
 /**

@@ -1,4 +1,4 @@
-import * as wind from "../formulas/wind";
+import * as wind from "../phenomena/wind";
 
 export interface SaffirSimpsonScale  {
     min: number;

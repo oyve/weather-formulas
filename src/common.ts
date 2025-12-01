@@ -5,3 +5,14 @@ export interface Reading {
     relativeHumidity: number, //relative humidity in %
     timestamp: number
 }
+
+/**
+ * Sort readings by timestamp (oldest to newest).
+ * Returns a new sorted array without modifying the original.
+ * 
+ * @param {Reading[]} readings - Array of readings to sort.
+ * @returns {Reading[]} New array of readings sorted by timestamp (oldest to newest).
+ */
+export function sortOldestToNewest(readings: Reading[]): Reading[] {
+    return [...readings].sort((a, b) => a.timestamp - b.timestamp);
+}

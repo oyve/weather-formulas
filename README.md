@@ -136,6 +136,7 @@ console.log(`Dew Point: ${dewPoint} K`);
 |-----------------------------|---------------------------------------------------------------------------|
 | **Heat Index**              | Measure the perceived temperature based on air temperature and humidity. [🔗](https://en.wikipedia.org/wiki/Heat_index) |
 | **Humidex**                 | Calculate the humidex, a Canadian measure of perceived temperature. [🔗](https://en.wikipedia.org/wiki/Humidex) |
+| **PET (Physiological Equivalent Temperature)** | Calculate the perceived temperature based on air temperature, humidity, wind speed, and mean radiant temperature. Includes thermal comfort categories. [🔗](https://en.wikipedia.org/wiki/Thermal_comfort) |
 | **UTCI Assessment Scale**   | Universal Thermal Climate Index for assessing thermal stress. [🔗](https://en.wikipedia.org/wiki/UTCI) |
 
 ### Scales

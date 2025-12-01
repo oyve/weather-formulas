@@ -141,3 +141,4 @@ describe('cloudBaseHeight', () => {
         expect(result).toBeCloseTo(1249.4, 2);
     });
 });
+

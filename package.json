@@ -37,11 +37,6 @@
       "import": "./dist/esm/formulas/temperature.js",
       "types": "./dist/types/formulas/temperature.d.ts"
     },
-    "./wind": {
-      "require": "./dist/cjs/formulas/wind.cjs",
-      "import": "./dist/esm/formulas/wind.js",
-      "types": "./dist/types/formulas/wind.d.ts"
-    },
     "./PET": {
       "require": "./dist/cjs/indices/PET.cjs",
       "import": "./dist/esm/indices/PET.js",
@@ -81,6 +76,11 @@
       "require": "./dist/cjs/phenomena/snow.cjs",
       "import": "./dist/esm/phenomena/snow.js",
       "types": "./dist/types/phenomena/snow.d.ts"
+    },
+    "./wind": {
+      "require": "./dist/cjs/phenomena/wind.cjs",
+      "import": "./dist/esm/phenomena/wind.js",
+      "types": "./dist/types/phenomena/wind.d.ts"
     },
     "./beaufort": {
       "require": "./dist/cjs/scales/beaufort.cjs",
