@@ -106,7 +106,11 @@
   "scripts": {
     "build": "tsc && tsc --project tsconfig.cjs.json && node scripts/rename-cjs-files.cjs && node scripts/add-js-extensions.cjs && node scripts/generate-exports.cjs",
     "watch": "tsc --watch",
-    "test": "jest"
+    "test": "jest",
+    "test:esm": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.esm.mjs",
+    "test:cjs": "jest --config jest.config.cjs.cjs",
+    "test:dist": "npm run test:esm && npm run test:cjs",
+    "test:all": "npm run test && npm run test:dist"
   },
   "repository": {
     "type": "git",
