@@ -1,4 +1,4 @@
-import { freezingLevelAltitude } from '../../src/formulas/altitude';
+import { freezingLevelAltitude, altitudeFromPressureDifference } from '../../src/formulas/altitude';
 import { cloudBaseHeight } from '../../src/phenomena/cloud';
 
 describe('freezingLevelHeight', () => {
@@ -26,6 +26,59 @@ describe('freezingLevelHeight', () => {
         const result = freezingLevelAltitude(283.15, 0, 0.01);
         // (283.15 - 273.15) / 0.01 = 1000 m
         expect(result).toBeCloseTo(1000, 2);
+    });
+});
+
+describe('altitudeFromPressureDifference', () => {
+    it('should calculate altitude from sea level pressure', () => {
+        // Sea level pressure: 101325 Pa, pressure at ~1000m: ~89874 Pa
+        // Using hypsometric formula: h = (R * T / g) * ln(P1 / P2)
+        // With R = 287.05 J/(kg·K), T = 288.15 K, g = 9.80665 m/s²
+        const result = altitudeFromPressureDifference(101325, 89874, 0, 288.15);
+        // Calculated: (287.05 * 288.15 / 9.80665) * ln(101325 / 89874) ≈ 1011.49 m
+        expect(result).toBeCloseTo(1011.49, 0);
+    });
+
+    it('should return the final altitude, not just the difference', () => {
+        // If reference altitude is 500 m, the result should be 500 + altitude difference
+        const result = altitudeFromPressureDifference(101325, 89874, 500, 288.15);
+        // Should be approximately 500 + 1011.49 = 1511.49 m
+        expect(result).toBeCloseTo(1511.49, 0);
+    });
+
+    it('should return reference altitude when pressures are equal', () => {
+        // If pressures are equal, altitude difference is 0
+        const result = altitudeFromPressureDifference(101325, 101325, 100, 288.15);
+        expect(result).toBeCloseTo(100, 2);
+    });
+
+    it('should calculate lower altitude when observed pressure is higher', () => {
+        // Higher pressure means lower altitude
+        const result = altitudeFromPressureDifference(89874, 101325, 1000, 288.15);
+        // Should be approximately 1000 - 1011.49 ≈ -11.49 m
+        expect(result).toBeCloseTo(-11.49, 0);
+    });
+
+    it('should calculate altitude at high elevation from sea level', () => {
+        // Sea level pressure: 101325 Pa, pressure at ~5000m: ~54020 Pa
+        const result = altitudeFromPressureDifference(101325, 54020, 0, 288.15);
+        // Calculated value using hypsometric formula
+        expect(result).toBeCloseTo(5305.07, 0);
+    });
+
+    it('should work with default parameters', () => {
+        // Uses default referenceAltitude = 0 and temperature = 288.15 K
+        const result = altitudeFromPressureDifference(101325, 89874);
+        expect(result).toBeCloseTo(1011.49, 0);
+    });
+
+    it('should account for different temperatures', () => {
+        // Colder temperature should result in slightly different altitude calculation
+        const coldResult = altitudeFromPressureDifference(101325, 89874, 0, 273.15); // 0°C
+        const warmResult = altitudeFromPressureDifference(101325, 89874, 0, 303.15); // 30°C
+        
+        // Warmer air is less dense, so same pressure difference = larger altitude change
+        expect(warmResult).toBeGreaterThan(coldResult);
     });
 });
 
