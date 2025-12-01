@@ -1,7 +1,3 @@
-import { 
-    freezingLevelAltitude, 
-    altitudeFromPressureDifference
-} from '../../src/formulas/altitude';
 import { freezingLevelAltitude, altitudeFromPressureDifference } from '../../src/formulas/altitude';
 import { cloudBaseHeight } from '../../src/phenomena/cloud';
 
