@@ -3,6 +3,7 @@ import * as temperature from "./formulas/temperature";
 import * as pressure from "./formulas/pressure";
 import * as wind from "./phenomena/wind";
 import * as airDensity from "./formulas/airDensity";
+import * as altitude from "./formulas/altitude";
 
 import * as beaufort from "./scales/beaufort";
 import * as saffirSimpson from "./scales/saffirSimpson";
@@ -18,5 +19,6 @@ export {
     pressure,
     wind,
     airDensity,
+    altitude,
     scales
 };

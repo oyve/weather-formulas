@@ -21,40 +21,37 @@ export function freezingLevelAltitude(
 }
 
 /**
- * Calculate the altitude difference based on the difference in pressure between two points.
- * Uses the hypsometric formula (barometric formula) to calculate altitude change.
+ * Calculate the final altitude from a pressure difference using the hypsometric formula.
+ * Given a reference pressure at a known altitude and an observed pressure, this function
+ * returns the altitude at which the observed pressure occurs.
  * 
- * The formula used is: Δh = (R * T_avg / g) * ln(P1 / P2)
- * where:
- * - R is the specific gas constant for dry air (287.05 J/(kg·K))
- * - T_avg is the average temperature between the two points
- * - g is gravitational acceleration (9.80665 m/s²)
- * - P1 is the pressure at the reference (lower) point
- * - P2 is the pressure at the higher point
- * 
- * @param {number} referencePressure - Pressure at the reference altitude in Pascals (Pa).
- * @param {number} currentPressure - Pressure at the current point in Pascals (Pa).
- * @param {number} temperature - Average temperature between the two points in Kelvin (K). Defaults to 288.15 K (15°C).
- * @returns {number} Altitude difference in meters (m). Positive values indicate higher altitude.
+ * @param {number} referencePressure - Reference pressure in Pascals (Pa) at the reference altitude.
+ * @param {number} observedPressure - Observed pressure in Pascals (Pa) at the unknown altitude.
+ * @param {number} referenceAltitude - Altitude in meters (m) where the reference pressure was measured. Defaults to 0 (sea level).
+ * @param {number} temperature - Average temperature in Kelvin (K) between the two altitudes. Defaults to 288.15 K (15°C).
+ * @returns {number} The final altitude in meters (m) where the observed pressure occurs.
  * 
  * @example
- * // Calculate altitude change from sea level pressure to current pressure
- * const altitudeDiff = altitudeFromPressureDifference(101325, 95000, 288.15);
- * console.log(altitudeDiff); // ~540 meters higher
+ * // Calculate altitude when pressure drops from 101325 Pa (sea level) to 89874 Pa
+ * const altitude = altitudeFromPressureDifference(101325, 89874, 0, 288.15);
+ * console.log(altitude); // ~1000 m
  * 
  * @see https://en.wikipedia.org/wiki/Hypsometric_equation
  */
 export function altitudeFromPressureDifference(
     referencePressure: number,
-    currentPressure: number,
+    observedPressure: number,
+    referenceAltitude: number = 0,
     temperature: number = c.STANDARD_MEAN_TEMPERATURE_KELVIN
 ): number {
-    const R = c.DRY_AIR_CONSTANTS.gasConstant; // 287.05 J/(kg·K) for dry air
-    const g = c.DRY_AIR_CONSTANTS.gravity; // 9.80665 m/s²
+    const g = c.DRY_AIR_CONSTANTS.gravity; // Gravitational acceleration (m/s²)
+    const R = c.DRY_AIR_CONSTANTS.gasConstant; // Specific gas constant for dry air (J/(kg·K))
     
-    // Hypsometric formula: Δh = (R * T / g) * ln(P1 / P2)
-    const scaleHeight = (R * temperature) / g;
-    const altitudeDifference = scaleHeight * Math.log(referencePressure / currentPressure);
+    // Using the hypsometric formula: h = (R * T / g) * ln(P1 / P2)
+    // Where h is the altitude difference, R is gas constant, T is temperature,
+    // g is gravity, P1 is reference pressure, P2 is observed pressure
+    const altitudeDifference = (R * temperature / g) * Math.log(referencePressure / observedPressure);
     
-    return Math.round(altitudeDifference * 100) / 100;
+    // Return the final altitude (reference altitude + altitude difference)
+    return referenceAltitude + altitudeDifference;
 }
