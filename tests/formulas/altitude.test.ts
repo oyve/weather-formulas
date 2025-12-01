@@ -1,4 +1,7 @@
-import { freezingLevelAltitude } from '../../src/formulas/altitude';
+import { 
+    freezingLevelAltitude, 
+    altitudeFromPressureDifference
+} from '../../src/formulas/altitude';
 import { cloudBaseHeight } from '../../src/phenomena/cloud';
 
 describe('freezingLevelHeight', () => {
@@ -86,5 +89,58 @@ describe('cloudBaseHeight', () => {
         // Total: 1000 + 249.4 = 1249.4 m
         const result = cloudBaseHeight(283.15, 281.15, 1000);
         expect(result).toBeCloseTo(1249.4, 2);
+    });
+});
+
+describe('altitudeFromPressureDifference', () => {
+    it('should return 0 when pressures are equal', () => {
+        const result = altitudeFromPressureDifference(101325, 101325);
+        expect(result).toBe(0);
+    });
+
+    it('should calculate positive altitude difference when current pressure is lower', () => {
+        // Sea level pressure to ~1000m altitude pressure
+        // Using standard temperature 288.15K (15°C)
+        const result = altitudeFromPressureDifference(101325, 89874.46, 288.15);
+        // Expected: ~1000m (approximately, based on barometric formula)
+        // The hypsometric formula may give slightly different results than barometric
+        expect(result).toBeCloseTo(1011, 0); // Within 1 meter
+    });
+
+    it('should calculate negative altitude difference when current pressure is higher', () => {
+        // From higher altitude to sea level (going down)
+        const result = altitudeFromPressureDifference(89874.46, 101325, 288.15);
+        // Expected: ~-1000m (going down)
+        expect(result).toBeCloseTo(-1011, 0); // Within 1 meter
+    });
+
+    it('should calculate altitude difference at standard sea level to 500m', () => {
+        // Sea level standard: 101325 Pa
+        // At 500m altitude: ~95461 Pa (approximately)
+        // Using hypsometric formula: Δh = (R * T / g) * ln(P1/P2)
+        // With R=287.05, T=288.15K, g=9.80665
+        // Scale height = 287.05 * 288.15 / 9.80665 = 8434.5 m
+        // For ~500m: P2 = P1 * exp(-500/8434.5) = 101325 * 0.9424 = 95461 Pa
+        const result = altitudeFromPressureDifference(101325, 95461, 288.15);
+        expect(result).toBeCloseTo(500, -1); // Within 10 meters
+    });
+
+    it('should account for temperature in calculations', () => {
+        // Same pressure difference at different temperatures should yield different altitudes
+        const coldTemp = 273.15; // 0°C
+        const warmTemp = 303.15; // 30°C
+        
+        const resultCold = altitudeFromPressureDifference(101325, 95000, coldTemp);
+        const resultWarm = altitudeFromPressureDifference(101325, 95000, warmTemp);
+        
+        // Warmer air is less dense, so same pressure drop represents larger altitude change
+        expect(resultWarm).toBeGreaterThan(resultCold);
+    });
+
+    it('should use default temperature when not provided', () => {
+        const resultWithDefault = altitudeFromPressureDifference(101325, 95000);
+        const resultWithExplicit = altitudeFromPressureDifference(101325, 95000, 288.15);
+        
+        expect(resultWithDefault).toBe(resultWithExplicit);
     });
 });
