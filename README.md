@@ -66,7 +66,7 @@ console.log(`Dew Point: ${dewPoint} K`);
 | Formula                     | Description                                                               |
 |-----------------------------|---------------------------------------------------------------------------|
 | **Freezing Level Altitude**  | Estimate the altitude where temperature drops below freezing. [🔗](https://en.wikipedia.org/wiki/Freezing_level) |
-| **Altitude From Pressure Difference** | Calculate the final altitude from a pressure difference using the hypsometric formula. [🔗](https://en.wikipedia.org/wiki/Hypsometric_equation) |
+| **Altitude From Pressure Difference** | Calculate the final altitude from a pressure difference using the hypsometric formula. Supports moist air correction via optional relative humidity parameter using virtual temperature. [🔗](https://en.wikipedia.org/wiki/Hypsometric_equation) |
 
 ### Humidity
 | Formula                     | Description                                                               |

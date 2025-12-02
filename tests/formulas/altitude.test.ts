@@ -80,6 +80,68 @@ describe('altitudeFromPressureDifference', () => {
         // Warmer air is less dense, so same pressure difference = larger altitude change
         expect(warmResult).toBeGreaterThan(coldResult);
     });
+
+    // New tests for moist air (relative humidity) support
+    it('should calculate higher altitude for moist air than dry air', () => {
+        // Moist air is less dense than dry air at the same temperature and pressure
+        // so the same pressure difference corresponds to a greater altitude change
+        const dryResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15);
+        const moistResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 60);
+        
+        // Moist air result should be higher than dry air result
+        expect(moistResult).toBeGreaterThan(dryResult);
+    });
+
+    it('should show increasing altitude difference with increasing humidity', () => {
+        // Higher humidity means more water vapor, which is lighter than dry air
+        const result0 = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 0);   // 0% RH
+        const result50 = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 50); // 50% RH
+        const result100 = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 100); // 100% RH
+        
+        expect(result50).toBeGreaterThan(result0);
+        expect(result100).toBeGreaterThan(result50);
+    });
+
+    it('should have minimal humidity effect at low temperatures', () => {
+        // At low temperatures, saturation vapor pressure is low, so humidity effect is minimal
+        const dryResult = altitudeFromPressureDifference(101325, 89874, 0, 263.15); // -10°C dry
+        const moistResult = altitudeFromPressureDifference(101325, 89874, 0, 263.15, 100); // -10°C, 100% RH
+        
+        // The difference should be small (less than 1% of altitude)
+        const percentDiff = ((moistResult - dryResult) / dryResult) * 100;
+        expect(percentDiff).toBeLessThan(1);
+    });
+
+    it('should have larger humidity effect at high temperatures', () => {
+        // At high temperatures, saturation vapor pressure is high, so humidity effect is larger
+        const dryResult = altitudeFromPressureDifference(101325, 89874, 0, 303.15); // 30°C dry
+        const moistResult = altitudeFromPressureDifference(101325, 89874, 0, 303.15, 100); // 30°C, 100% RH
+        
+        // The difference should be noticeable (more than 1% of altitude)
+        const percentDiff = ((moistResult - dryResult) / dryResult) * 100;
+        expect(percentDiff).toBeGreaterThan(1);
+    });
+
+    it('should return same result with 0% humidity as with no humidity parameter', () => {
+        // At 0% relative humidity, no water vapor is present, so result should match dry air
+        const dryResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15);
+        const zeroHumidityResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 0);
+        
+        // Results should be very close (within 0.01%)
+        expect(zeroHumidityResult).toBeCloseTo(dryResult, 1);
+    });
+
+    it('should handle high altitude pressure differences with humidity', () => {
+        // Sea level pressure: 101325 Pa, pressure at ~5000m: ~54020 Pa
+        const dryResult = altitudeFromPressureDifference(101325, 54020, 0, 288.15);
+        const moistResult = altitudeFromPressureDifference(101325, 54020, 0, 288.15, 60);
+        
+        // Moist air should give higher altitude
+        expect(moistResult).toBeGreaterThan(dryResult);
+        // The humidity effect at 60% RH at 15°C should add approximately 0.5% to altitude
+        // Dry result is ~5305 m, moist result should be ~5333 m
+        expect(moistResult).toBeCloseTo(5333, 0);
+    });
 });
 
 describe('cloudBaseHeight', () => {
