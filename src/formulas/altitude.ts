@@ -71,7 +71,9 @@ export function altitudeFromPressureDifference(
         // Virtual temperature accounts for the effect of water vapor on air density
         // by treating moist air as dry air at a slightly higher temperature
         
-        // Calculate average pressure for mixing ratio calculation (geometric mean)
+        // Calculate average pressure for mixing ratio calculation
+        // Using geometric mean because pressure varies exponentially with altitude,
+        // so geometric mean better represents the average pressure in the layer
         const avgPressure = Math.sqrt(referencePressure * observedPressure);
         
         // Calculate saturation vapor pressure at the given temperature
