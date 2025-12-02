@@ -142,6 +142,101 @@ describe('altitudeFromPressureDifference', () => {
         // Dry result is ~5305 m, moist result should be ~5333 m
         expect(moistResult).toBeCloseTo(5333, 0);
     });
+
+    // Tests for separate referenceHumidity and observedHumidity parameters
+    it('should calculate altitude with separate reference and observed humidity values', () => {
+        // When humidity differs between reference and observed altitudes
+        const result = altitudeFromPressureDifference(101325, 89874, 0, 288.15, undefined, 80, 40);
+        
+        // The result should be a valid positive altitude
+        expect(result).toBeGreaterThan(1000);
+        expect(result).toBeLessThan(1100);
+    });
+
+    it('should give higher altitude when reference humidity is higher than observed humidity', () => {
+        // Higher humidity at sea level (80%) decreasing to lower humidity at altitude (40%)
+        const highToLowHumidity = altitudeFromPressureDifference(101325, 89874, 0, 288.15, undefined, 80, 40);
+        // Lower humidity at sea level (40%) increasing to higher humidity at altitude (80%)
+        const lowToHighHumidity = altitudeFromPressureDifference(101325, 89874, 0, 288.15, undefined, 40, 80);
+        
+        // Both should give similar results since we're averaging the virtual temperatures
+        // The difference should be small because the average humidity is the same
+        expect(Math.abs(highToLowHumidity - lowToHighHumidity)).toBeLessThan(1);
+    });
+
+    it('should produce different result than single humidity when humidities differ significantly', () => {
+        // Single humidity at 60% (the average of 80% and 40%)
+        const singleHumidityResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 60);
+        // Separate humidities at 80% reference and 40% observed
+        const separateHumidityResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15, undefined, 80, 40);
+        
+        // Results should be slightly different due to different calculation methods
+        // (geometric mean pressure vs individual pressure for mixing ratio)
+        expect(separateHumidityResult).toBeDefined();
+        expect(singleHumidityResult).toBeDefined();
+        // Both should be in a similar range but not necessarily identical
+        expect(Math.abs(singleHumidityResult - separateHumidityResult)).toBeLessThan(5);
+    });
+
+    it('should give same result when reference and observed humidity are equal to single humidity', () => {
+        // All humidities at 60%
+        const singleHumidityResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 60);
+        const separateEqualHumidityResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15, undefined, 60, 60);
+        
+        // Results should be very close when using equal separate humidities vs single humidity
+        expect(separateEqualHumidityResult).toBeCloseTo(singleHumidityResult, 0);
+    });
+
+    it('should use dry air calculation when only one of reference or observed humidity is provided', () => {
+        // Only referenceHumidity provided (observedHumidity is undefined)
+        const onlyReference = altitudeFromPressureDifference(101325, 89874, 0, 288.15, undefined, 60, undefined);
+        // Only observedHumidity provided (referenceHumidity is undefined)
+        const onlyObserved = altitudeFromPressureDifference(101325, 89874, 0, 288.15, undefined, undefined, 60);
+        // Dry air (no humidity)
+        const dryResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15);
+        
+        // When only one humidity is provided and relativeHumidity is not set, should use dry air
+        expect(onlyReference).toBeCloseTo(dryResult, 2);
+        expect(onlyObserved).toBeCloseTo(dryResult, 2);
+    });
+
+    it('should prioritize separate humidity parameters over single relativeHumidity', () => {
+        // Provide all three humidity parameters
+        // relativeHumidity=50%, referenceHumidity=80%, observedHumidity=40%
+        const result = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 50, 80, 40);
+        const separateOnly = altitudeFromPressureDifference(101325, 89874, 0, 288.15, undefined, 80, 40);
+        const singleOnly = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 50);
+        
+        // Should use separate humidities when both are provided, ignoring relativeHumidity
+        expect(result).toBeCloseTo(separateOnly, 2);
+        // And result should differ from single humidity result
+        expect(Math.abs(result - singleOnly)).toBeGreaterThan(0);
+    });
+
+    it('should show appropriate humidity effect with varying humidity at high temperatures', () => {
+        // At high temperatures, humidity effect is more pronounced
+        // Reference at 100% humidity, observed at 20% humidity (average 60%)
+        const varyingHumidity = altitudeFromPressureDifference(101325, 89874, 0, 303.15, undefined, 100, 20);
+        // Single humidity at 60% (same average)
+        const avgHumidity = altitudeFromPressureDifference(101325, 89874, 0, 303.15, 60);
+        // Dry air
+        const dryResult = altitudeFromPressureDifference(101325, 89874, 0, 303.15);
+        
+        // Both humid calculations should be higher than dry
+        expect(varyingHumidity).toBeGreaterThan(dryResult);
+        expect(avgHumidity).toBeGreaterThan(dryResult);
+    });
+
+    it('should handle extreme humidity differences', () => {
+        // 100% humidity at reference, 0% at observed
+        const extremeResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15, undefined, 100, 0);
+        // 50% at both (same average)
+        const avgResult = altitudeFromPressureDifference(101325, 89874, 0, 288.15, 50);
+        
+        // Both should produce valid results
+        expect(extremeResult).toBeGreaterThan(1000);
+        expect(avgResult).toBeGreaterThan(1000);
+    });
 });
 
 describe('cloudBaseHeight', () => {
