@@ -83,10 +83,10 @@ export function altitudeFromPressureDifference(
     
     // Determine which humidity values to use
     // Priority: referenceHumidity/observedHumidity pair > relativeHumidity > no humidity (dry air)
-    const hasSeperateHumidities = referenceHumidity !== undefined && observedHumidity !== undefined;
+    const hasSeparateHumidities = referenceHumidity !== undefined && observedHumidity !== undefined;
     const hasSingleHumidity = relativeHumidity !== undefined;
     
-    if (hasSeperateHumidities || hasSingleHumidity) {
+    if (hasSeparateHumidities || hasSingleHumidity) {
         // For moist air, use the virtual temperature approach
         // Virtual temperature accounts for the effect of water vapor on air density
         // by treating moist air as dry air at a slightly higher temperature
@@ -94,17 +94,17 @@ export function altitudeFromPressureDifference(
         // Calculate saturation vapor pressure at the given temperature
         const svp = saturationVaporPressure(temperature);
         
-        if (hasSeperateHumidities) {
+        if (hasSeparateHumidities) {
             // Use separate humidity values for reference and observed altitudes
             // Calculate virtual temperature for each level and use their average
             
             // Reference level calculations
-            const refAvp = actualVaporPressure(svp, referenceHumidity);
+            const refAvp = actualVaporPressure(svp, referenceHumidity!);
             const refMixRatio = calcMixingRatio(refAvp, referencePressure);
             const refVirtualTemp = virtualTemperature(temperature, refMixRatio);
             
             // Observed level calculations
-            const obsAvp = actualVaporPressure(svp, observedHumidity);
+            const obsAvp = actualVaporPressure(svp, observedHumidity!);
             const obsMixRatio = calcMixingRatio(obsAvp, observedPressure);
             const obsVirtualTemp = virtualTemperature(temperature, obsMixRatio);
             
