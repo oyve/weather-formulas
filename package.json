@@ -158,6 +158,6 @@
   },
   "dependencies": {
     "regression": "^2.0.1",
-    "suncalc": "^1.9.0"
+    "suncalc": "^2.1.4"
   }
 }
